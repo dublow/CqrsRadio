@@ -5,6 +5,7 @@ namespace CqrsRadio.Domain.EventHandlers
 {
     public interface IPlaylistHandler<in TEvent> : 
         IHandler<PlaylistAdded>, 
-        IHandler<PlaylistCreated> where TEvent : IDomainEvent
+        IHandler<PlaylistCreated>,
+        IHandler<PlaylistDeleted> where TEvent : IDomainEvent
     { }
 }
