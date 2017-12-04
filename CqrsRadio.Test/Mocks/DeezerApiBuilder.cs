@@ -8,6 +8,7 @@ namespace CqrsRadio.Test.Mocks
     {
         private readonly Mock<IDeezerApi> _mock;
         public string PlaylistAdded { get; private set; }
+        public string PlaylistDeleted { get; private set; }
 
         public DeezerApiBuilder()
         {
@@ -28,6 +29,14 @@ namespace CqrsRadio.Test.Mocks
         {
             _mock.Setup(x => x.CreatePlaylist(It.IsAny<UserId>(), It.IsAny<string>()))
                 .Callback(() => PlaylistAdded = $"{name}-added");
+
+            return this;
+        }
+
+        public DeezerApiBuilder SetDeletePlaylist(string playlistId)
+        {
+            _mock.Setup(x => x.DeletePlaylist(It.IsAny<string>()))
+                .Callback(() => PlaylistDeleted = $"{playlistId}-deleted");
 
             return this;
         }
