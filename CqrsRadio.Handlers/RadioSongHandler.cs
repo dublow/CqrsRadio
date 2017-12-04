@@ -26,7 +26,7 @@ namespace CqrsRadio.Handlers
 
         public void Handle(RadioSongError evt)
         {
-            throw new NotImplementedException();
+            _radioSongRepository.AddToError(evt.RadioName, evt.Error);
         }
     }
 }
