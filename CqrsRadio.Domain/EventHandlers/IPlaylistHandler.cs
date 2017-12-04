@@ -3,9 +3,9 @@ using CqrsRadio.Domain.Handlers;
 
 namespace CqrsRadio.Domain.EventHandlers
 {
-    public interface IPlaylistHandler<in TEvent> : 
+    public interface IPlaylistHandler : 
         IHandler<PlaylistAdded>, 
         IHandler<PlaylistCreated>,
-        IHandler<PlaylistDeleted> where TEvent : IDomainEvent
+        IHandler<PlaylistDeleted>
     { }
 }
