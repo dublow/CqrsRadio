@@ -42,5 +42,11 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CqrsRadio.Domain\CqrsRadio.Domain.csproj">
+      <Project>{FEF41B95-8212-4312-BBE5-D3EE409BF6F4}</Project>
+      <Name>CqrsRadio.Domain</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
