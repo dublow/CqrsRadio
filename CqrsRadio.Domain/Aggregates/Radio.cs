@@ -43,7 +43,7 @@ namespace CqrsRadio.Domain.Aggregates
         {
             if (_decision.IsDeleted) return;
 
-            PublishAndApply(new RadioDeleted());
+            PublishAndApply(new RadioDeleted(Name));
         }
 
         public void SearchSong()
@@ -54,10 +54,10 @@ namespace CqrsRadio.Domain.Aggregates
             {
                 var song = _radioEngine.Parse(Url);
 
-                if (_decision.RadioSongExists(song))
+                if (_decision.RadioSongExists(Name, song))
                     _publisher.Publish(new RadioSongDuplicate(Name, song.Title, song.Artist));
                 else
-                    _publisher.Publish(new RadioSongParsed(song.Title, song.Artist));
+                    _publisher.Publish(new RadioSongParsed(Name, song.Title, song.Artist));
             }
             catch (Exception e)
             {
@@ -103,10 +103,10 @@ namespace CqrsRadio.Domain.Aggregates
                 IsDeleted = true;
             }
 
-            public bool RadioSongExists(RadioSong radioSong)
+            public bool RadioSongExists(string name, RadioSong radioSong)
             {
                 return _stream.GetEvents().OfType<RadioSongParsed>()
-                    .Any(x => x == new RadioSongParsed(radioSong.Title, radioSong.Artist));
+                    .Any(x => x == new RadioSongParsed(name, radioSong.Title, radioSong.Artist));
             }
         }
     }

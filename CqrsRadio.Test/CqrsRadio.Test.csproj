@@ -42,6 +42,9 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.4.0\lib\net461\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -51,7 +54,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DeezerTests\DeezerShould.cs" />
-    <Compile Include="EventBusTests\EventBusShould.cs" />
+    <Compile Include="HandlerTests\PlaylistHandlerShould.cs" />
+    <Compile Include="HandlerTests\RadioHandlerShould.cs" />
+    <Compile Include="HandlerTests\RadioSongHandlerShould.cs" />
+    <Compile Include="HandlerTests\SongHandlerShould.cs" />
+    <Compile Include="HandlerTests\UserHandlerShould.cs" />
+    <Compile Include="Mocks\UserRepositoryBuilder.cs" />
+    <Compile Include="Mocks\SongRepositoryBuilder.cs" />
+    <Compile Include="Mocks\RadioSongRepositoryBuilder.cs" />
+    <Compile Include="Mocks\RadioRepositoryBuilder.cs" />
+    <Compile Include="Mocks\PlaylistRepositoryBuilder.cs" />
     <Compile Include="Mocks\DeezerApiBuilder.cs" />
     <Compile Include="Mocks\RadioEngineBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -71,6 +83,10 @@
     <ProjectReference Include="..\CqrsRadio.Domain\CqrsRadio.Domain.csproj">
       <Project>{FEF41B95-8212-4312-BBE5-D3EE409BF6F4}</Project>
       <Name>EventSourcing.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CqrsRadio.Handlers\CqrsRadio.Handlers.csproj">
+      <Project>{84127A74-3FB6-48CF-A662-A99AF5493FE8}</Project>
+      <Name>CqrsRadio.Handlers</Name>
     </ProjectReference>
     <ProjectReference Include="..\CqrsRadio.Infrastructure\CqrsRadio.Infrastructure.csproj">
       <Project>{F99A77B5-79C3-47D0-802D-2BB0D8C5CC63}</Project>

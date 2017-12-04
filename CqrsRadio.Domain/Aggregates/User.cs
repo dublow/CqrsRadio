@@ -43,7 +43,7 @@ namespace CqrsRadio.Domain.Aggregates
         {
             if(_decision.IsDeleted) return;
 
-            PublishAndApply(new UserDeleted());
+            PublishAndApply(new UserDeleted(Identity.UserId));
         }
 
         public void AddPlaylist(string name)
@@ -69,7 +69,7 @@ namespace CqrsRadio.Domain.Aggregates
 
             _playlists.Remove(new Playlist(Identity.UserId, name));
 
-            _publisher.Publish(new PlaylistDeleted(name));
+            _publisher.Publish(new PlaylistDeleted(Identity.UserId, name));
         }
 
         public void AddSongToPlaylist(string playlistName, string title, string artist)
@@ -87,7 +87,7 @@ namespace CqrsRadio.Domain.Aggregates
 
             playlist.AddSong(song);
 
-            _publisher.Publish(new SongAdded(playlistName, title, artist));
+            _publisher.Publish(new SongAdded(Identity.UserId, playlistName, title, artist));
         }
 
         private void PublishAndApply(IDomainEvent evt)
