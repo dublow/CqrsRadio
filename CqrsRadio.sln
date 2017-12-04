@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2009
+VisualStudioVersion = 15.0.27004.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CqrsRadio.Main", "CqrsRadio.Main\CqrsRadio.Main.csproj", "{00D84C3F-0C8C-4392-ADFC-1AD55FC51706}"
 EndProject
@@ -12,6 +12,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CqrsRadio.Infrastructure", "CqrsRadio.Infrastructure\CqrsRadio.Infrastructure.csproj", "{F99A77B5-79C3-47D0-802D-2BB0D8C5CC63}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CqrsRadio.Test", "CqrsRadio.Test\CqrsRadio.Test.csproj", "{DA69DB5B-FDE2-4157-88F3-8E2825694085}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CqrsRadio.Handlers", "CqrsRadio.Handlers\CqrsRadio.Handlers.csproj", "{84127A74-3FB6-48CF-A662-A99AF5493FE8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{DA69DB5B-FDE2-4157-88F3-8E2825694085}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA69DB5B-FDE2-4157-88F3-8E2825694085}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA69DB5B-FDE2-4157-88F3-8E2825694085}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84127A74-3FB6-48CF-A662-A99AF5493FE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84127A74-3FB6-48CF-A662-A99AF5493FE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84127A74-3FB6-48CF-A662-A99AF5493FE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84127A74-3FB6-48CF-A662-A99AF5493FE8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
