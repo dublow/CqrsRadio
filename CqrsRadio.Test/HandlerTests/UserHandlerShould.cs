@@ -32,6 +32,7 @@ namespace CqrsRadio.Test.HandlerTests
         {
             // arrange
             var mockedUserRepository = UserRepositoryBuilder.Create();
+            mockedUserRepository.Users.Add(("email@email.fr", "nickname", "12345"));
             var userRepository = mockedUserRepository.Build();
             var userHandler = new UserHandler(userRepository);
             // act

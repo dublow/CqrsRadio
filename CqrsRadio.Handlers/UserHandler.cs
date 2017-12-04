@@ -1,5 +1,4 @@
-﻿using System;
-using CqrsRadio.Domain.EventHandlers;
+﻿using CqrsRadio.Domain.EventHandlers;
 using CqrsRadio.Domain.Events;
 using CqrsRadio.Domain.Repositories;
 
@@ -22,7 +21,7 @@ namespace CqrsRadio.Handlers
 
         public void Handle(UserDeleted evt)
         {
-            throw new NotImplementedException();
+            _userRepository.Delete(evt.UserId.Value.ToString());
         }
     }
 }

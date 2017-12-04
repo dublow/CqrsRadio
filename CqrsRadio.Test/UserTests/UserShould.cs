@@ -34,8 +34,8 @@ namespace CqrsRadio.Test.UserTests
             var user = new User(stream, publisher);
 
             user.Delete();
-
-            Assert.AreEqual(1, stream.GetEvents().OfType<UserDeleted>().Count());
+            
+            Assert.IsTrue(stream.GetEvents().Contains(new UserDeleted("12345")));
         }
 
         [Test]
@@ -43,7 +43,7 @@ namespace CqrsRadio.Test.UserTests
         {
             var stream = new MemoryEventStream();
             stream.Add(new UserCreated(Identity.Create("nicolas.dfr@gmail.com", "dublow", "12345")));
-            stream.Add(new UserDeleted());
+            stream.Add(new UserDeleted("12345"));
 
             var publisher = new EventBus(stream);
 
@@ -51,7 +51,7 @@ namespace CqrsRadio.Test.UserTests
 
             user.Delete();
 
-            Assert.AreEqual(1, stream.GetEvents().OfType<UserDeleted>().Count());
+            Assert.IsTrue(stream.GetEvents().Contains(new UserDeleted("12345")));
         }
 
         [Test]
@@ -67,7 +67,7 @@ namespace CqrsRadio.Test.UserTests
             user.Delete();
             user.Delete();
 
-            Assert.AreEqual(1, stream.GetEvents().OfType<UserDeleted>().Count());
+            Assert.IsTrue(stream.GetEvents().Contains(new UserDeleted("12345")));
         }
 
         [Test]
