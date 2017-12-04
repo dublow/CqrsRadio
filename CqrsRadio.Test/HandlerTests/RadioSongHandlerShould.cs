@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using CqrsRadio.Domain.EventHandlers;
 using CqrsRadio.Domain.Events;
 using CqrsRadio.Domain.ValueTypes;
+using Moq;
 using NUnit.Framework;
 
 namespace CqrsRadio.Test.HandlerTests
@@ -20,11 +21,12 @@ namespace CqrsRadio.Test.HandlerTests
             var mockedRadioSongRepository = RadioSongRepositoryBuilder.Create();
             var radioSongRepository = mockedRadioSongRepository.Build();
             var radioSongHandler = new RadioSongHandler(radioSongRepository);
-            (string title, string artist) = ("title", "artist");
+            (string name, string title, string artist) = ("djam", "title", "artist");
             // act
-            radioSongHandler.Handle(new RadioSongParsed("title", "artist"));
+            radioSongHandler.Handle(new RadioSongParsed("djam", "title", "artist"));
             // assert
-            var (actualTitle, actualArtist) = mockedRadioSongRepository.RadioSongs.First();
+            var (actualName, actualTitle, actualArtist) = mockedRadioSongRepository.RadioSongs.First();
+            Assert.AreEqual(name, actualName);
             Assert.AreEqual(title, actualTitle);
             Assert.AreEqual(artist, actualArtist);
         }
@@ -32,14 +34,16 @@ namespace CqrsRadio.Test.HandlerTests
 
     public class RadioSongHandler : IRadioSongHandler
     {
+        private readonly IRadioSongRepository _radioSongRepository;
+
         public RadioSongHandler(IRadioSongRepository radioSongRepository)
         {
-            throw new NotImplementedException();
+            _radioSongRepository = radioSongRepository;
         }
 
         public void Handle(RadioSongParsed evt)
         {
-            throw new NotImplementedException();
+            _radioSongRepository.Add(evt.RadioName, evt.Title, evt.Artist);
         }
 
         public void Handle(RadioSongDuplicate evt)
@@ -55,20 +59,32 @@ namespace CqrsRadio.Test.HandlerTests
 
     public interface IRadioSongRepository
     {
+        void Add(string radioName, string title, string artist);
     }
 
     public class RadioSongRepositoryBuilder     
     {
+        private Mock<IRadioSongRepository> _mock;
+
+        public RadioSongRepositoryBuilder()
+        {
+            _mock = new Mock<IRadioSongRepository>();
+            RadioSongs = new List<(string name, string title, string artist)>();
+        }
+
         public static RadioSongRepositoryBuilder Create()
         {
-            throw new NotImplementedException();
+            return new RadioSongRepositoryBuilder();
         }
 
         public IRadioSongRepository Build()
         {
-            throw new NotImplementedException();
+            _mock.Setup(x => x.Add(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Callback<string, string, string>((name, title, artist) => RadioSongs.Add((name, title, artist)));
+
+            return _mock.Object;
         }
 
-        public List<(string title, string artist)> RadioSongs { get; set; }
+        public List<(string name, string title, string artist)> RadioSongs { get; set; }
     }
 }

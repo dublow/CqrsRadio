@@ -45,7 +45,7 @@ namespace CqrsRadio.Test.ScenarioTests
             radio.SearchSong();
 
             Assert.IsTrue(stream.GetEvents().Contains(new RadioCreated("djam", new Uri("http://djam.fr"))));
-            Assert.IsTrue(stream.GetEvents().Contains(new RadioSongParsed("title", "artist")));
+            Assert.IsTrue(stream.GetEvents().Contains(new RadioSongParsed("djam", "title", "artist")));
         }
     }
 }
