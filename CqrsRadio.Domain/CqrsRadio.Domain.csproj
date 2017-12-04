@@ -46,6 +46,9 @@
     <Compile Include="Entities\RadioSong.cs" />
     <Compile Include="Entities\Song.cs" />
     <Compile Include="EventHandlers\IPlaylistHandler.cs" />
+    <Compile Include="EventHandlers\ISongHandler.cs" />
+    <Compile Include="EventHandlers\IRadioHandler.cs" />
+    <Compile Include="EventHandlers\IRadioSongHandler.cs" />
     <Compile Include="EventStores\IEventStream.cs" />
     <Compile Include="Events\IDomainEvent.cs" />
     <Compile Include="Events\PlaylistAdded.cs" />
