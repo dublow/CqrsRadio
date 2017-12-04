@@ -25,5 +25,19 @@ namespace CqrsRadio.Test.HandlerTests
             Assert.AreEqual(name, actualName);
             Assert.AreEqual(url, actualUrl);
         }
+
+        [Test]
+        public void UseRepositoryWhenRadioIsDeleted()
+        {
+            // arrange
+            var mockedRadioRepository = RadioRepositoryBuilder.Create();
+            mockedRadioRepository.Radios.Add(("djam", new Uri("http://djam.fr")));
+            var radioRepository = mockedRadioRepository.Build();
+            var radioHandler = new RadioHandler(radioRepository);
+            // act
+            radioHandler.Handle(new RadioDeleted());
+            // assert
+            Assert.AreEqual(0, mockedRadioRepository.Radios.Count);
+        }
     }
 }
