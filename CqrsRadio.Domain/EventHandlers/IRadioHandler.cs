@@ -3,7 +3,7 @@ using CqrsRadio.Domain.Handlers;
 
 namespace CqrsRadio.Domain.EventHandlers
 {
-    interface IRadioHandler :
+    public interface IRadioHandler :
         IHandler<RadioCreated>,
         IHandler<RadioDeleted>
     { }
