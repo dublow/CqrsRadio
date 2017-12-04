@@ -1,9 +1,11 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using CqrsRadio.Domain.Aggregates;
 using CqrsRadio.Domain.Events;
 using CqrsRadio.Domain.ValueTypes;
 using CqrsRadio.Infrastructure.Bus;
 using CqrsRadio.Infrastructure.EventStores;
+using CqrsRadio.Test.Mocks;
 using NUnit.Framework;
 
 namespace CqrsRadio.Test.ScenarioTests
@@ -26,6 +28,24 @@ namespace CqrsRadio.Test.ScenarioTests
             Assert.IsTrue(stream.GetEvents().Contains(new PlaylistAdded("12345", "bestof")));
             Assert.IsTrue(stream.GetEvents().Contains(new SongAdded("bestof", "titleOne", "artistOne")));
             Assert.IsTrue(stream.GetEvents().Contains(new SongAdded("bestof", "titleTwo", "artistOne")));
+        }
+
+        [Test]
+        public void CreateRadioAndSearchSong()
+        {
+            var stream = new MemoryEventStream();
+            var publisher = new EventBus(stream);
+
+            var radioEngine = RadioEngineBuilder
+                .Create()
+                .SetParser("title", "artist")
+                .Build();
+
+            var radio = Radio.Create(stream, publisher, radioEngine, "djam", "http://djam.fr");
+            radio.SearchSong();
+
+            Assert.IsTrue(stream.GetEvents().Contains(new RadioCreated("djam", new Uri("http://djam.fr"))));
+            Assert.IsTrue(stream.GetEvents().Contains(new RadioSongParsed("title", "artist")));
         }
     }
 }
