@@ -21,7 +21,7 @@ namespace CqrsRadio.Handlers
 
         public void Handle(RadioSongDuplicate evt)
         {
-            throw new NotImplementedException();
+            _radioSongRepository.AddToDuplicate(evt.RadioName, evt.Title, evt.Artist);
         }
 
         public void Handle(RadioSongError evt)

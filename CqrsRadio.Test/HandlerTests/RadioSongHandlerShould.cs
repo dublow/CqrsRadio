@@ -25,5 +25,22 @@ namespace CqrsRadio.Test.HandlerTests
             Assert.AreEqual(title, actualTitle);
             Assert.AreEqual(artist, actualArtist);
         }
+
+        [Test]
+        public void UseRepositoryWhenRadioSongIsDuplicated()
+        {
+            // arrange
+            var mockedRadioSongRepository = RadioSongRepositoryBuilder.Create();
+            var radioSongRepository = mockedRadioSongRepository.Build();
+            var radioSongHandler = new RadioSongHandler(radioSongRepository);
+            (string name, string title, string artist) = ("djam", "title", "artist");
+            // act
+            radioSongHandler.Handle(new RadioSongDuplicate("djam", "title", "artist"));
+            // assert
+            var (actualName, actualTitle, actualArtist) = mockedRadioSongRepository.RadioSongDuplicate.First();
+            Assert.AreEqual(name, actualName);
+            Assert.AreEqual(title, actualTitle);
+            Assert.AreEqual(artist, actualArtist);
+        }
     }
 }
