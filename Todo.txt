@@ -1,0 +1,14 @@
+* Ajouter Projet tools:
+	-> Récuperer les données des playlists deezer (SongId, radio, title, artist) et les stocker dans une base de données + events store
+* Ajouter metriques:
+	-> Timer
+	-> Counter
+* Ajouter logs:
+* Ajouter front:
+	-> Connecter deezer
+	-> Home page:
+		-> Signin
+		-> Signout
+		-> Delete
+* Heberger sur Raspberry pi
+* Ajouter docker
