@@ -87,7 +87,7 @@ namespace CqrsRadio.Domain.Aggregates
 
             playlist.AddSong(song);
 
-            _publisher.Publish(new SongAdded(playlistName, title, artist));
+            _publisher.Publish(new SongAdded(Identity.UserId, playlistName, title, artist));
         }
 
         private void PublishAndApply(IDomainEvent evt)

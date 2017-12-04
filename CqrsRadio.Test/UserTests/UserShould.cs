@@ -183,7 +183,7 @@ namespace CqrsRadio.Test.UserTests
 
             user.AddSongToPlaylist("name", "title", "artist");
 
-            Assert.IsTrue(stream.GetEvents().Contains(new SongAdded("name", "title", "artist")));
+            Assert.IsTrue(stream.GetEvents().Contains(new SongAdded("12345", "name", "title", "artist")));
             Assert.AreEqual(1, stream.GetEvents().OfType<SongAdded>().Count());
         }
 
@@ -193,7 +193,7 @@ namespace CqrsRadio.Test.UserTests
             var stream = new MemoryEventStream();
             stream.Add(new UserCreated(Identity.Create("nicolas.dfr@gmail.com", "dublow", "12345")));
             stream.Add(new PlaylistAdded("12345", "name"));
-            stream.Add(new SongAdded("name", "title", "artist"));
+            stream.Add(new SongAdded("12345", "name", "title", "artist"));
 
             var publisher = new EventBus(stream);
 
@@ -201,7 +201,7 @@ namespace CqrsRadio.Test.UserTests
 
             user.AddSongToPlaylist("name", "title", "artist");
 
-            Assert.IsTrue(stream.GetEvents().Contains(new SongAdded("name", "title", "artist")));
+            Assert.IsTrue(stream.GetEvents().Contains(new SongAdded("12345", "name", "title", "artist")));
             Assert.AreEqual(1, stream.GetEvents().OfType<SongAdded>().Count());
         }
 
