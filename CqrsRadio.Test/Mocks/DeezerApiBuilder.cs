@@ -35,7 +35,10 @@ namespace CqrsRadio.Test.Mocks
 
         public DeezerApiBuilder SetDeletePlaylist(string playlistId)
         {
-            throw new System.NotImplementedException();
+            _mock.Setup(x => x.DeletePlaylist(It.IsAny<string>()))
+                .Callback(() => PlaylistDeleted = $"{playlistId}-deleted");
+
+            return this;
         }
     }
 }
