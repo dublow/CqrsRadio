@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using CqrsRadio.Domain.EventHandlers;
 using CqrsRadio.Domain.Events;
 using CqrsRadio.Domain.ValueTypes;
+using Moq;
 using NUnit.Framework;
 
 namespace CqrsRadio.Test.HandlerTests
@@ -32,14 +33,16 @@ namespace CqrsRadio.Test.HandlerTests
 
     public class RadioHandler : IRadioHandler
     {
+        private readonly IRadioRepository _radioRepository;
+
         public RadioHandler(IRadioRepository radioRepository)
         {
-            throw new NotImplementedException();
+            _radioRepository = radioRepository;
         }
 
         public void Handle(RadioCreated evt)
         {
-            throw new NotImplementedException();
+            _radioRepository.Create(evt.Name, evt.Url);
         }
 
         public void Handle(RadioDeleted evt)
@@ -50,18 +53,29 @@ namespace CqrsRadio.Test.HandlerTests
 
     public interface IRadioRepository   
     {
+        void Create(string name, Uri url);
     }
 
     public class RadioRepositoryBuilder     
     {
+        private Mock<IRadioRepository> _mock;
+
+        public RadioRepositoryBuilder()
+        {
+            _mock = new Mock<IRadioRepository>();
+            Radios = new List<(string name, Uri url)>();
+        }
         public static RadioRepositoryBuilder Create()
         {
-            throw new NotImplementedException();
+            return new RadioRepositoryBuilder();
         }
 
         public IRadioRepository Build()
         {
-            throw new NotImplementedException();
+            _mock.Setup(x => x.Create(It.IsAny<string>(), It.IsAny<Uri>()))
+                .Callback<string, Uri>((name, url) => Radios.Add((name, url)));
+
+            return _mock.Object;
         }
 
         public List<(string name, Uri url)> Radios { get; set; }
