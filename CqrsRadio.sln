@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2009
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CqrsRadio.Main", "CqrsRadio.Main\CqrsRadio.Main.csproj", "{00D84C3F-0C8C-4392-ADFC-1AD55FC51706}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CqrsRadio.Di", "CqrsRadio.Di\CqrsRadio.Di.csproj", "{F69097F3-EBB9-4EE3-8F24-85A59BC1E0FD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CqrsRadio.Domain", "CqrsRadio.Domain\CqrsRadio.Domain.csproj", "{FEF41B95-8212-4312-BBE5-D3EE409BF6F4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CqrsRadio.Infrastructure", "CqrsRadio.Infrastructure\CqrsRadio.Infrastructure.csproj", "{F99A77B5-79C3-47D0-802D-2BB0D8C5CC63}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CqrsRadio.Test", "CqrsRadio.Test\CqrsRadio.Test.csproj", "{DA69DB5B-FDE2-4157-88F3-8E2825694085}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{00D84C3F-0C8C-4392-ADFC-1AD55FC51706}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00D84C3F-0C8C-4392-ADFC-1AD55FC51706}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00D84C3F-0C8C-4392-ADFC-1AD55FC51706}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00D84C3F-0C8C-4392-ADFC-1AD55FC51706}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F69097F3-EBB9-4EE3-8F24-85A59BC1E0FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F69097F3-EBB9-4EE3-8F24-85A59BC1E0FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F69097F3-EBB9-4EE3-8F24-85A59BC1E0FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F69097F3-EBB9-4EE3-8F24-85A59BC1E0FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEF41B95-8212-4312-BBE5-D3EE409BF6F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEF41B95-8212-4312-BBE5-D3EE409BF6F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEF41B95-8212-4312-BBE5-D3EE409BF6F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEF41B95-8212-4312-BBE5-D3EE409BF6F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F99A77B5-79C3-47D0-802D-2BB0D8C5CC63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F99A77B5-79C3-47D0-802D-2BB0D8C5CC63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F99A77B5-79C3-47D0-802D-2BB0D8C5CC63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F99A77B5-79C3-47D0-802D-2BB0D8C5CC63}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA69DB5B-FDE2-4157-88F3-8E2825694085}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA69DB5B-FDE2-4157-88F3-8E2825694085}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA69DB5B-FDE2-4157-88F3-8E2825694085}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA69DB5B-FDE2-4157-88F3-8E2825694085}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {ABB2CD34-CD30-4BC3-BE64-91A8C05D3B70}
+	EndGlobalSection
+EndGlobal
