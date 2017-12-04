@@ -48,6 +48,7 @@
     <Compile Include="RadioHandler.cs" />
     <Compile Include="RadioSongHandler.cs" />
     <Compile Include="SongHandler.cs" />
+    <Compile Include="UserHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CqrsRadio.Domain\CqrsRadio.Domain.csproj">

@@ -43,7 +43,7 @@ namespace CqrsRadio.Domain.Aggregates
         {
             if(_decision.IsDeleted) return;
 
-            PublishAndApply(new UserDeleted());
+            PublishAndApply(new UserDeleted(Identity.UserId));
         }
 
         public void AddPlaylist(string name)
