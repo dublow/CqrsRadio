@@ -34,7 +34,7 @@ namespace CqrsRadio.Test.RadioTest
             var radio = new Radio(stream, publisher, radioEngine);
             radio.Delete();
 
-            Assert.AreEqual(1, stream.GetEvents().OfType<RadioDeleted>().Count());
+            Assert.IsTrue(stream.GetEvents().Contains(new RadioDeleted("djam")));
         }
 
         [Test]
@@ -42,14 +42,14 @@ namespace CqrsRadio.Test.RadioTest
         {
             var stream = new MemoryEventStream();
             stream.Add(new RadioCreated("djam", new Uri("http://djamradio.fr")));
-            stream.Add(new RadioDeleted());
+            stream.Add(new RadioDeleted("djam"));
             var publisher = new EventBus(stream);
             var radioEngine = RadioEngineBuilder.Create().Build();
 
             var radio = new Radio(stream, publisher, radioEngine);
             radio.Delete();
 
-            Assert.AreEqual(1, stream.GetEvents().OfType<RadioDeleted>().Count());
+            Assert.IsTrue(stream.GetEvents().Contains(new RadioDeleted("djam")));
         }
 
         [Test]
@@ -64,7 +64,7 @@ namespace CqrsRadio.Test.RadioTest
             radio.Delete();
             radio.Delete();
 
-            Assert.AreEqual(1, stream.GetEvents().OfType<RadioDeleted>().Count());
+            Assert.IsTrue(stream.GetEvents().Contains(new RadioDeleted("djam")));
         }
 
         [Test]

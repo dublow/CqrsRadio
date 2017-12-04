@@ -1,5 +1,4 @@
-﻿using System;
-using CqrsRadio.Domain.EventHandlers;
+﻿using CqrsRadio.Domain.EventHandlers;
 using CqrsRadio.Domain.Events;
 using CqrsRadio.Domain.Repositories;
 

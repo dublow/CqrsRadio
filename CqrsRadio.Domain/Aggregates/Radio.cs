@@ -43,7 +43,7 @@ namespace CqrsRadio.Domain.Aggregates
         {
             if (_decision.IsDeleted) return;
 
-            PublishAndApply(new RadioDeleted());
+            PublishAndApply(new RadioDeleted(Name));
         }
 
         public void SearchSong()
