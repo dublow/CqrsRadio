@@ -20,7 +20,7 @@ namespace CqrsRadio.Handlers
 
         public void Handle(PlaylistDeleted evt)
         {
-            throw new System.NotImplementedException();
+            _playlistRepository.Delete(evt.UserId, evt.Name);
         }
     }
 }

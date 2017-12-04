@@ -25,5 +25,19 @@ namespace CqrsRadio.Test.HandlerTests
             Assert.AreEqual(userId, actualUserId);
             Assert.AreEqual(name, actualName);
         }
+
+        [Test]
+        public void UseRepositoryWhenPlaylistIsDeleted()
+        {
+            // arrange
+            var mockedPlaylistRepository = PlaylistRepositoryBuilder.Create();
+            mockedPlaylistRepository.Playlists.Add(("12345", "bestof"));
+            var playlistRepository = mockedPlaylistRepository.Build();
+            var playlistHandler = new PlaylistHandler(playlistRepository);
+            // act
+            playlistHandler.Handle(new PlaylistDeleted("12345", "bestof"));
+            // assert
+            Assert.AreEqual(0, mockedPlaylistRepository.Playlists.Count);
+        }
     }
 }

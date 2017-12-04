@@ -131,7 +131,7 @@ namespace CqrsRadio.Test.UserTests
 
             user.DeletePlaylist("name");
 
-            Assert.IsTrue(stream.GetEvents().Contains(new PlaylistDeleted("name")));
+            Assert.IsTrue(stream.GetEvents().Contains(new PlaylistDeleted("12345", "name")));
             Assert.AreEqual(1, stream.GetEvents().OfType<PlaylistDeleted>().Count());
         }
 
@@ -141,7 +141,7 @@ namespace CqrsRadio.Test.UserTests
             var stream = new MemoryEventStream();
             stream.Add(new UserCreated(Identity.Create("nicolas.dfr@gmail.com", "dublow", "12345")));
             stream.Add(new PlaylistAdded("12345", "name"));
-            stream.Add(new PlaylistDeleted("name"));
+            stream.Add(new PlaylistDeleted("12345", "name"));
 
             var publisher = new EventBus(stream);
 
@@ -149,7 +149,7 @@ namespace CqrsRadio.Test.UserTests
 
             user.DeletePlaylist("name");
 
-            Assert.IsTrue(stream.GetEvents().Contains(new PlaylistDeleted("name")));
+            Assert.IsTrue(stream.GetEvents().Contains(new PlaylistDeleted("12345", "name")));
             Assert.AreEqual(1, stream.GetEvents().OfType<PlaylistDeleted>().Count());
         }
 

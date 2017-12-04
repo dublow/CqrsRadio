@@ -69,7 +69,7 @@ namespace CqrsRadio.Domain.Aggregates
 
             _playlists.Remove(new Playlist(Identity.UserId, name));
 
-            _publisher.Publish(new PlaylistDeleted(name));
+            _publisher.Publish(new PlaylistDeleted(Identity.UserId, name));
         }
 
         public void AddSongToPlaylist(string playlistName, string title, string artist)

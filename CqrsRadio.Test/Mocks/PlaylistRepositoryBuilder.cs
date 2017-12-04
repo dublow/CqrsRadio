@@ -24,8 +24,12 @@ namespace CqrsRadio.Test.Mocks
                 {
                     Playlists.Add((userId, name));
                 });
-                   
 
+            _mock.Setup(x => x.Delete(It.IsAny<UserId>(), It.IsAny<string>()))
+                .Callback<UserId, string>((userId, name) =>
+                {
+                    Playlists.Remove((userId, name));
+                });
             return _mock.Object;
         }
 
