@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using CqrsRadio.Domain.EventHandlers;
 using CqrsRadio.Domain.Events;
 using CqrsRadio.Domain.ValueTypes;
+using Moq;
 using NUnit.Framework;
 
 namespace CqrsRadio.Test.HandlerTests
@@ -33,14 +34,17 @@ namespace CqrsRadio.Test.HandlerTests
 
     public class UserHandler : IUserHandler
     {
+        private readonly IUserRepository _userRepository;
+
         public UserHandler(IUserRepository userRepository)
         {
-            throw new NotImplementedException();
+            _userRepository = userRepository;
         }
 
         public void Handle(UserCreated evt)
         {
-            throw new NotImplementedException();
+            _userRepository.Create(evt.Identity.Email.Value, evt.Identity.Nickname.Value,
+                evt.Identity.UserId.Value.ToString());
         }
 
         public void Handle(UserDeleted evt)
@@ -51,18 +55,29 @@ namespace CqrsRadio.Test.HandlerTests
 
     public interface IUserRepository    
     {
+        void Create(string email, string nickname, string userId);
     }
 
     public class UserRepositoryBuilder  
     {
+        private readonly Mock<IUserRepository> _mock;
+
+        public UserRepositoryBuilder()
+        {
+            _mock = new Mock<IUserRepository>();
+            Users = new List<(string email, string nickname, string userId)>();
+        }
         public static UserRepositoryBuilder Create()
         {
-            throw new NotImplementedException();
+            return new UserRepositoryBuilder();
         }
 
         public IUserRepository Build()
         {
-            throw new NotImplementedException();
+            _mock.Setup(x => x.Create(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Callback<string, string, string>((email, nickname, userId) => Users.Add((email, nickname, userId)));
+
+            return _mock.Object;
         }
 
         public List<(string email, string nickname, string userId)> Users { get; set; }
