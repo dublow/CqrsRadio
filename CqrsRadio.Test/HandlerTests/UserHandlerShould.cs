@@ -26,5 +26,19 @@ namespace CqrsRadio.Test.HandlerTests
             Assert.AreEqual(nickname, actualNickname);
             Assert.AreEqual(userId, actualUserId);
         }
+
+        [Test]
+        public void UseRepositoryWhenUserIsDeleted()
+        {
+            // arrange
+            var mockedUserRepository = UserRepositoryBuilder.Create();
+            var userRepository = mockedUserRepository.Build();
+            var userHandler = new UserHandler(userRepository);
+            // act
+            userHandler.Handle(new UserDeleted("12345"));
+            // assert
+            
+            Assert.AreEqual(0, mockedUserRepository.Users.Count);
+        }
     }
 }
