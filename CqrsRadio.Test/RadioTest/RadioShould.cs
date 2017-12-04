@@ -81,7 +81,7 @@ namespace CqrsRadio.Test.RadioTest
 
             radio.SearchSong();
 
-            Assert.IsTrue(stream.GetEvents().Contains(new RadioSongParsed("title", "artist")));
+            Assert.IsTrue(stream.GetEvents().Contains(new RadioSongParsed("djam", "title", "artist")));
         }
 
         [Test]
@@ -108,7 +108,7 @@ namespace CqrsRadio.Test.RadioTest
         {
             var stream = new MemoryEventStream();
             stream.Add(new RadioCreated("djam", new Uri("http://djamradio.fr")));
-            stream.Add(new RadioSongParsed("title", "artist"));
+            stream.Add(new RadioSongParsed("djam", "title", "artist"));
             var publisher = new EventBus(stream);
             var radioEngine = RadioEngineBuilder
                 .Create()
