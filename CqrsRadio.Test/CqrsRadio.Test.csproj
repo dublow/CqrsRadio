@@ -51,7 +51,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DeezerTests\DeezerShould.cs" />
-    <Compile Include="EventBusTests\EventBusShould.cs" />
     <Compile Include="Mocks\DeezerApiBuilder.cs" />
     <Compile Include="Mocks\RadioEngineBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

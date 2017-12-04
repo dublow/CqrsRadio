@@ -42,9 +42,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Handlers\SongCounterHandler.cs" />
-    <Compile Include="Handlers\SongTimelineHandler.cs" />
-    <Compile Include="Handlers\PlaylistHandler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
