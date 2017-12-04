@@ -58,6 +58,7 @@
     <Compile Include="HandlerTests\RadioHandlerShould.cs" />
     <Compile Include="HandlerTests\RadioSongHandlerShould.cs" />
     <Compile Include="HandlerTests\SongHandlerShould.cs" />
+    <Compile Include="HandlerTests\UserHandlerShould.cs" />
     <Compile Include="Mocks\SongRepositoryBuilder.cs" />
     <Compile Include="Mocks\RadioSongRepositoryBuilder.cs" />
     <Compile Include="Mocks\RadioRepositoryBuilder.cs" />
