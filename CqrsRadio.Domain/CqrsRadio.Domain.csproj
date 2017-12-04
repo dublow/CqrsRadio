@@ -71,6 +71,7 @@
     <Compile Include="Repositories\IPlaylistRepository.cs" />
     <Compile Include="Repositories\IRadioRepository.cs" />
     <Compile Include="Repositories\IRadioSongRepository.cs" />
+    <Compile Include="Repositories\ISongRepository.cs" />
     <Compile Include="Services\IDeezerApi.cs" />
     <Compile Include="Services\IRadioEngine.cs" />
     <Compile Include="Utilities\StringUtilities.cs" />

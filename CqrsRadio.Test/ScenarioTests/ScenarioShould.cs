@@ -26,8 +26,8 @@ namespace CqrsRadio.Test.ScenarioTests
 
             Assert.IsTrue(stream.GetEvents().Contains(new UserCreated(Identity.Create("nicolas.dfr@gmail.com", "nicolas", "12345"))));
             Assert.IsTrue(stream.GetEvents().Contains(new PlaylistAdded("12345", "bestof")));
-            Assert.IsTrue(stream.GetEvents().Contains(new SongAdded("bestof", "titleOne", "artistOne")));
-            Assert.IsTrue(stream.GetEvents().Contains(new SongAdded("bestof", "titleTwo", "artistOne")));
+            Assert.IsTrue(stream.GetEvents().Contains(new SongAdded("12345", "bestof", "titleOne", "artistOne")));
+            Assert.IsTrue(stream.GetEvents().Contains(new SongAdded("12345", "bestof", "titleTwo", "artistOne")));
         }
 
         [Test]
