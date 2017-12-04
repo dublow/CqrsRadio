@@ -44,7 +44,10 @@ namespace CqrsRadio.Test.Mocks
 
         public DeezerApiBuilder SetAddSongsToPlaylist()
         {
-            throw new System.NotImplementedException();
+            _mock.Setup(x => x.AddSongsToPlaylist(It.IsAny<string>(), It.IsAny<string[]>()))
+                .Callback(() => SongsAdded = true);
+
+            return this;
         }
     }
 }
