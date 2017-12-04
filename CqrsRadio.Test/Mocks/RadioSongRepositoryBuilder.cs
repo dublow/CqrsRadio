@@ -9,6 +9,7 @@ namespace CqrsRadio.Test.Mocks
         private readonly Mock<IRadioSongRepository> _mock;
         public readonly List<(string name, string title, string artist)> RadioSongs;
         public readonly List<(string name, string title, string artist)> RadioSongDuplicate;
+        public readonly List<(string name, string error)> RadioSongErrors;
 
         public RadioSongRepositoryBuilder()
         {

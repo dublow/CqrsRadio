@@ -42,5 +42,21 @@ namespace CqrsRadio.Test.HandlerTests
             Assert.AreEqual(title, actualTitle);
             Assert.AreEqual(artist, actualArtist);
         }
+
+        [Test]
+        public void UseRepositoryWhenRadioSongIsOnError()
+        {
+            // arrange
+            var mockedRadioSongRepository = RadioSongRepositoryBuilder.Create();
+            var radioSongRepository = mockedRadioSongRepository.Build();
+            var radioSongHandler = new RadioSongHandler(radioSongRepository);
+            (string name, string error) = ("djam", "error");
+            // act
+            radioSongHandler.Handle(new RadioSongError("djam", "error"));
+            // assert
+            var (actualName, actualError) = mockedRadioSongRepository.RadioSongErrors.First();
+            Assert.AreEqual(name, actualName);
+            Assert.AreEqual(error, actualError);
+        }
     }
 }
