@@ -15,7 +15,7 @@ namespace CqrsRadio.Handlers
 
         public void Handle(PlaylistAdded evt)
         {
-            _playlistRepository.AddPlaylist(evt.UserId, evt.Name);
+            _playlistRepository.Add(evt.UserId, evt.Name);
         }
 
         public void Handle(PlaylistDeleted evt)
