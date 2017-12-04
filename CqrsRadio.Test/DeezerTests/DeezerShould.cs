@@ -12,11 +12,11 @@ namespace CqrsRadio.Test.DeezerTests
             var userId = "12345";
             var playlistName = "name";
 
-            var deezerService = DeezerApiBuilder.Create().SetCreatePlaylist("name");
+            var deezerService = DeezerApiBuilder.Create();
 
             deezerService.Build().CreatePlaylist(userId, playlistName);
 
-            Assert.AreEqual("name-added", deezerService.PlaylistAdded);
+            Assert.IsTrue(deezerService.PlaylistAdded);
         }
 
         [Test]
@@ -24,11 +24,11 @@ namespace CqrsRadio.Test.DeezerTests
         {
             var playlistId = "67890";
 
-            var deezerService = DeezerApiBuilder.Create().SetDeletePlaylist("67890");
+            var deezerService = DeezerApiBuilder.Create();
 
             deezerService.Build().DeletePlaylist(playlistId);
 
-            Assert.AreEqual("67890-deleted", deezerService.PlaylistDeleted);
+            Assert.IsTrue(deezerService.PlaylistDeleted);
         }
 
         [Test]
@@ -37,7 +37,7 @@ namespace CqrsRadio.Test.DeezerTests
             var playlistId = "67890";
             var songIds = new[]{ "12345, 23456, 34567" };
 
-            var deezerService = DeezerApiBuilder.Create().SetAddSongsToPlaylist();
+            var deezerService = DeezerApiBuilder.Create();
 
             deezerService.Build().AddSongsToPlaylist(playlistId, songIds);
 
