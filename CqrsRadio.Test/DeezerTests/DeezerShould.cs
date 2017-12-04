@@ -18,9 +18,17 @@ namespace CqrsRadio.Test.DeezerTests
 
             Assert.AreEqual("name-added", deezerService.PlaylistAdded);
         }
+
+        [Test]
+        public void DeletePlaylistDeezer()
+        {
+            var playlistId = "67890";
+
+            var deezerService = DeezerApiBuilder.Create().SetDeletePlaylist("67890");
+
+            deezerService.Build().DeletePlaylist(playlistId);
+
+            Assert.AreEqual("67890-deleted", deezerService.PlaylistDeleted);
+        }
     }
-
-    
-
-    
 }
