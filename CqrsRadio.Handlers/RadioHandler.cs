@@ -21,7 +21,7 @@ namespace CqrsRadio.Handlers
 
         public void Handle(RadioDeleted evt)
         {
-            throw new NotImplementedException();
+            _radioRepository.Delete(evt.Name);
         }
     }
 }

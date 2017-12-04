@@ -35,7 +35,7 @@ namespace CqrsRadio.Test.HandlerTests
             var radioRepository = mockedRadioRepository.Build();
             var radioHandler = new RadioHandler(radioRepository);
             // act
-            radioHandler.Handle(new RadioDeleted());
+            radioHandler.Handle(new RadioDeleted("djam"));
             // assert
             Assert.AreEqual(0, mockedRadioRepository.Radios.Count);
         }
