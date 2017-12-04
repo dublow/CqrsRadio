@@ -9,6 +9,7 @@ namespace CqrsRadio.Test.Mocks
         private readonly Mock<IDeezerApi> _mock;
         public string PlaylistAdded { get; private set; }
         public string PlaylistDeleted { get; private set; }
+        public bool SongsAdded { get; private set; }
 
         public DeezerApiBuilder()
         {
@@ -39,6 +40,11 @@ namespace CqrsRadio.Test.Mocks
                 .Callback(() => PlaylistDeleted = $"{playlistId}-deleted");
 
             return this;
+        }
+
+        public DeezerApiBuilder SetAddSongsToPlaylist()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

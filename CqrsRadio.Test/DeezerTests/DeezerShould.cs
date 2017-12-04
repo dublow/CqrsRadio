@@ -30,5 +30,18 @@ namespace CqrsRadio.Test.DeezerTests
 
             Assert.AreEqual("67890-deleted", deezerService.PlaylistDeleted);
         }
+
+        [Test]
+        public void AddSongsToPlaylistDeezer()
+        {
+            var playlistId = "67890";
+            var songIds = new[]{ "12345, 23456, 34567" };
+
+            var deezerService = DeezerApiBuilder.Create().SetAddSongsToPlaylist();
+
+            deezerService.Build().AddSongsToPlaylist(playlistId, songIds);
+
+            Assert.IsTrue(deezerService.SongsAdded);
+        }
     }
 }
