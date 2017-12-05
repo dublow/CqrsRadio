@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Moq;
 using NUnit.Framework;
 
 namespace CqrsRadio.Test.SongEngine
@@ -29,19 +30,29 @@ namespace CqrsRadio.Test.SongEngine
 
     public class SongEngineBuilder  
     {
+        private readonly Mock<ISongEngine> _mock;
+
+        public SongEngineBuilder()
+        {
+            _mock = new Mock<ISongEngine>();
+        }
+
         public static SongEngineBuilder Create()
         {
-            throw new NotImplementedException();
+            return new SongEngineBuilder();
         }
 
         public SongEngineBuilder SetRandomisedSongs(string[] songIds)
         {
-            throw new NotImplementedException();
+            _mock.Setup(x => x.GetRandomisedSongs(It.IsAny<int>()))
+                .Returns(songIds);
+
+            return this;
         }
 
         public ISongEngine Build()
         {
-            throw new NotImplementedException();
+            return _mock.Object;
         }
     }
 
