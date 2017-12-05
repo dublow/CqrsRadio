@@ -14,5 +14,8 @@
             Title = title;
             Artist = artist;
         }
+
+        public static DeezerSong Empty =>
+            new DeezerSong();
     }
 }

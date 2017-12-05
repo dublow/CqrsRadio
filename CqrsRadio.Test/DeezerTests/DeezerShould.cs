@@ -62,5 +62,20 @@ namespace CqrsRadio.Test.DeezerTests
             Assert.AreEqual("title", actual.Title);
             Assert.AreEqual("artist", actual.Artist);
         }
+
+        [Test]
+        public void GetSongFromDeezerWhenSongNotFound()
+        {
+            // arrange
+            (string title, string artist) = ("title", "artist");
+            var deezerService = DeezerApiBuilder
+                .Create()
+                .SetSong(DeezerSong.Empty)
+                .Build();
+            // act
+            var actual = deezerService.GetSong(title, artist);
+            // assert
+            Assert.AreEqual(DeezerSong.Empty, actual);
+        }
     }
 }
