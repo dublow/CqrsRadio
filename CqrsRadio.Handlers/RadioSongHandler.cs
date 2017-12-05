@@ -25,6 +25,11 @@ namespace CqrsRadio.Handlers
                 _radioSongRepository.Add(song.Id, song.Genre, evt.RadioName, song.Title, song.Artist);
         }
 
+        public void Handle(RadioSongWithDeezerSongIdParsed radioSongParsed)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public void Handle(RadioSongDuplicate evt)
         {
             _radioSongRepository.AddToDuplicate(evt.RadioName, evt.Title, evt.Artist);
@@ -34,5 +39,7 @@ namespace CqrsRadio.Handlers
         {
             _radioSongRepository.AddToError(evt.RadioName, evt.Error);
         }
+
+        
     }
 }
