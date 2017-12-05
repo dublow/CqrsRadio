@@ -72,7 +72,7 @@ namespace CqrsRadio.Domain.Aggregates
             _publisher.Publish(new PlaylistDeleted(Identity.UserId, name));
         }
 
-        public void AddSongToPlaylist(string playlistName, string title, string artist)
+        public void AddSongToPlaylist(string playlistName, string songId, string genre, string title, string artist)
         {
             if (_decision.IsDeleted)
                 return;
@@ -81,13 +81,19 @@ namespace CqrsRadio.Domain.Aggregates
 
             var playlist = GetPlaylist(playlistName);
 
-            var song = new Song(title, artist);
+            var song = new Song(songId, genre, title, artist);
             if (playlist.Songs.Contains(song))
                 return;
 
             playlist.AddSong(song);
 
-            _publisher.Publish(new SongAdded(Identity.UserId, playlistName, title, artist));
+            _publisher.Publish(new SongAdded(Identity.UserId, playlistName, songId, genre, title, artist));
+        }
+
+        public Playlist GetPlaylist(string playlistName)
+        {
+            return _playlists
+                .Single(x => x.Name.Equals(playlistName, StringComparison.InvariantCultureIgnoreCase));
         }
 
         private void PublishAndApply(IDomainEvent evt)
@@ -116,7 +122,7 @@ namespace CqrsRadio.Domain.Aggregates
                 {
                     var playlist = GetPlaylist(songAdded.PlaylistName);
 
-                    playlist.AddSong(new Song(songAdded.Title, songAdded.Artist));
+                    playlist.AddSong(new Song(songAdded.SongId, songAdded.Genre, songAdded.Title, songAdded.Artist));
                 }
             }
         }
@@ -125,12 +131,6 @@ namespace CqrsRadio.Domain.Aggregates
         {
             return _playlists
                 .Any(x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
-        }
-
-        private Playlist GetPlaylist(string playlistName)
-        {
-            return _playlists
-                .Single(x => x.Name.Equals(playlistName, StringComparison.InvariantCultureIgnoreCase));
         }
 
         private class Decision

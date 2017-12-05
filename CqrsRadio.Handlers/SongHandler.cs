@@ -15,7 +15,7 @@ namespace CqrsRadio.Handlers
 
         public void Handle(SongAdded evt)
         {
-            _songRepository.Add(evt.UserId, evt.PlaylistName, evt.Title, evt.Artist);
+            _songRepository.Add(evt.UserId, evt.PlaylistName, evt.SongId, evt.Genre, evt.Title, evt.Artist);
         }
     }
 }

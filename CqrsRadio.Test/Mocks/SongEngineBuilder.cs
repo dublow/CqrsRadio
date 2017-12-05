@@ -1,4 +1,6 @@
-﻿using CqrsRadio.Test.SongEngine;
+﻿using System.Collections.Generic;
+using CqrsRadio.Domain.Entities;
+using CqrsRadio.Test.SongEngine;
 using Moq;
 
 namespace CqrsRadio.Test.Mocks
@@ -17,7 +19,7 @@ namespace CqrsRadio.Test.Mocks
             return new SongEngineBuilder();
         }
 
-        public SongEngineBuilder SetRandomisedSongs(string[] songIds)
+        public SongEngineBuilder SetRandomisedSongs(List<DeezerSong> songIds)
         {
             _mock.Setup(x => x.GetRandomisedSongs(It.IsAny<int>()))
                 .Returns(songIds);

@@ -8,12 +8,12 @@ namespace CqrsRadio.Test.Mocks
     public class SongRepositoryBuilder
     {
         private readonly Mock<ISongRepository> _mock;
-        public readonly List<(UserId userId, string playlistName, string title, string artist)> Songs;
+        public readonly List<(UserId userId, string playlistName, string songId, string genre, string title, string artist)> Songs;
 
         public SongRepositoryBuilder()
         {
             _mock = new Mock<ISongRepository>();
-            Songs = new List<(UserId userId, string playlistName, string title, string artist)>();
+            Songs = new List<(UserId userId, string playlistName, string songId, string genre, string title, string artist)>();
         }
         public static SongRepositoryBuilder Create()
         {
@@ -22,8 +22,8 @@ namespace CqrsRadio.Test.Mocks
 
         public ISongRepository Build()
         {
-            _mock.Setup(x => x.Add(It.IsAny<UserId>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
-                .Callback<UserId, string, string, string>((userId, name, title, artist) => Songs.Add((userId, name, title, artist)));
+            _mock.Setup(x => x.Add(It.IsAny<UserId>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Callback<UserId, string, string, string, string, string>((userId, name, songId, genre, title, artist) => Songs.Add((userId, name, songId, genre, title, artist)));
 
             return _mock.Object;
         }

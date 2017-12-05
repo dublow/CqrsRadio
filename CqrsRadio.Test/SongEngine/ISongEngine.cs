@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using CqrsRadio.Domain.Entities;
 
 namespace CqrsRadio.Test.SongEngine
 {
     public interface ISongEngine    
     {
-        IEnumerable<string> GetRandomisedSongs(int length);
+        IEnumerable<DeezerSong> GetRandomisedSongs(int length);
     }
 }

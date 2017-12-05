@@ -17,7 +17,7 @@ namespace CqrsRadio.Test.DeezerTests
 
             deezerService.Build().CreatePlaylist(userId, playlistName);
 
-            Assert.IsTrue(deezerService.PlaylistAdded);
+            Assert.AreEqual(1, deezerService.PlaylistAdded);
         }
 
         [Test]
@@ -29,7 +29,7 @@ namespace CqrsRadio.Test.DeezerTests
 
             deezerService.Build().DeletePlaylist(playlistId);
 
-            Assert.IsTrue(deezerService.PlaylistDeleted);
+            Assert.AreEqual(1, deezerService.PlaylistDeleted);
         }
 
         [Test]
@@ -42,7 +42,7 @@ namespace CqrsRadio.Test.DeezerTests
 
             deezerService.Build().AddSongsToPlaylist(playlistId, songIds);
 
-            Assert.IsTrue(deezerService.SongsAdded);
+            Assert.AreEqual(1, deezerService.SongsAdded);
         }
 
         [Test]
