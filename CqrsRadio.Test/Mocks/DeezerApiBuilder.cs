@@ -41,6 +41,8 @@ namespace CqrsRadio.Test.Mocks
             _mock.Setup(x => x.GetSong(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(deezerSong);
 
+            _mock.Setup(x => x.GetSong(It.IsAny<string>()))
+                .Returns(deezerSong);
             return this;
         }
     }
