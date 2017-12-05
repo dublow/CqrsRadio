@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Aggregates\Radio.cs" />
+    <Compile Include="Entities\DeezerSong.cs" />
     <Compile Include="Entities\Playlist.cs" />
     <Compile Include="Aggregates\User.cs" />
     <Compile Include="Entities\RadioSong.cs" />
