@@ -38,7 +38,10 @@ namespace CqrsRadio.Test.Mocks
 
         public DeezerApiBuilder SetSong(DeezerSong deezerSong)
         {
-            throw new System.NotImplementedException();
+            _mock.Setup(x => x.GetSong(It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(deezerSong);
+
+            return this;
         }
     }
 }
