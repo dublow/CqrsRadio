@@ -77,5 +77,22 @@ namespace CqrsRadio.Test.DeezerTests
             // assert
             Assert.AreEqual(DeezerSong.Empty, actual);
         }
+
+        [Test]
+        public void GetSongFromDeezerWithSongId()
+        {
+            // arrange
+            var deezerService = DeezerApiBuilder
+                .Create()
+                .SetSong(new DeezerSong("1234567890", "rock", "title", "artist"))
+                .Build();
+            // act
+            var actual = deezerService.GetSong("1234567890");
+            // assert
+            Assert.AreEqual("1234567890", actual.Id);
+            Assert.AreEqual("rock", actual.Genre);
+            Assert.AreEqual("title", actual.Title);
+            Assert.AreEqual("artist", actual.Artist);
+        }
     }
 }

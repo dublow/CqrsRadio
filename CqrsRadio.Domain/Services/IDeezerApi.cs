@@ -9,5 +9,6 @@ namespace CqrsRadio.Domain.Services
         void DeletePlaylist(string playlistId);
         void AddSongsToPlaylist(string playlistId, string[] songIds);
         DeezerSong GetSong(string title, string artist);
+        DeezerSong GetSong(string songId);
     }
 }
