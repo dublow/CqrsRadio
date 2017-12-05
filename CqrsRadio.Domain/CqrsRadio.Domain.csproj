@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Aggregates\Radio.cs" />
+    <Compile Include="Entities\DeezerSong.cs" />
     <Compile Include="Entities\Playlist.cs" />
     <Compile Include="Aggregates\User.cs" />
     <Compile Include="Entities\RadioSong.cs" />
@@ -61,6 +62,7 @@
     <Compile Include="Events\RadioDeleted.cs" />
     <Compile Include="Events\RadioSongDuplicate.cs" />
     <Compile Include="Events\RadioSongError.cs" />
+    <Compile Include="Events\RadioSongWithDeezerSongIdParsed.cs" />
     <Compile Include="Events\SongAdded.cs" />
     <Compile Include="Events\RadioSongParsed.cs" />
     <Compile Include="Events\UserCreated.cs" />

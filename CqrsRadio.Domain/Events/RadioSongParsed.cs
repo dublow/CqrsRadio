@@ -15,8 +15,6 @@ namespace CqrsRadio.Domain.Events
             Artist = artist;
         }
 
-        
-
         public bool Equals(RadioSongParsed other)
         {
             return string.Equals(RadioName, other.RadioName, StringComparison.InvariantCultureIgnoreCase) &&
