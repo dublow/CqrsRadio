@@ -25,9 +25,12 @@ namespace CqrsRadio.Handlers
                 _radioSongRepository.Add(song.Id, song.Genre, evt.RadioName, song.Title, song.Artist);
         }
 
-        public void Handle(RadioSongWithDeezerSongIdParsed radioSongParsed)
+        public void Handle(RadioSongWithDeezerSongIdParsed evt)
         {
-            throw new System.NotImplementedException();
+            var song = _deezerApi.GetSong(evt.SongId);
+
+            if (song != DeezerSong.Empty)
+                _radioSongRepository.Add(song.Id, song.Genre, evt.RadioName, song.Title, song.Artist);
         }
 
         public void Handle(RadioSongDuplicate evt)
