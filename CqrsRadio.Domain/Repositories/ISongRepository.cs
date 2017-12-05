@@ -4,6 +4,6 @@ namespace CqrsRadio.Domain.Repositories
 {
     public interface ISongRepository
     {
-        void Add(UserId userId, string playlistName, string title, string artist);
+        void Add(UserId userId, string playlistName, string songId, string genre, string title, string artist);
     }
 }

@@ -69,6 +69,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RadioTest\RadioShould.cs" />
     <Compile Include="ScenarioTests\ScenarioShould.cs" />
+    <Compile Include="SongEngine\ISongEngine.cs" />
+    <Compile Include="Mocks\SongEngineBuilder.cs" />
+    <Compile Include="SongEngine\SongEngineShould.cs" />
     <Compile Include="UserTests\UserShould.cs" />
     <Compile Include="UtilitiesTests\EmailShould.cs" />
     <Compile Include="ValueTypesTest\IdentityShould.cs" />
@@ -97,8 +100,6 @@
       <Name>EventSourcing.Main</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="PlaylistTests\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

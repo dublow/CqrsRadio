@@ -77,6 +77,7 @@
     <Compile Include="Repositories\IUserRepository.cs" />
     <Compile Include="Services\IDeezerApi.cs" />
     <Compile Include="Services\IRadioEngine.cs" />
+    <Compile Include="Services\ISongEngine.cs" />
     <Compile Include="Utilities\StringUtilities.cs" />
     <Compile Include="ValueTypes\Email.cs" />
     <Compile Include="ValueTypes\Identity.cs" />
