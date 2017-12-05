@@ -5,6 +5,7 @@ namespace CqrsRadio.Domain.EventHandlers
 {
     public interface IRadioSongHandler :
         IHandler<RadioSongParsed>,
+        IHandler<RadioSongWithDeezerSongIdParsed>,
         IHandler<RadioSongDuplicate>,
         IHandler<RadioSongError>
     {

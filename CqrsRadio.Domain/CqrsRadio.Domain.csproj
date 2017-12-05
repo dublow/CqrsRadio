@@ -62,6 +62,7 @@
     <Compile Include="Events\RadioDeleted.cs" />
     <Compile Include="Events\RadioSongDuplicate.cs" />
     <Compile Include="Events\RadioSongError.cs" />
+    <Compile Include="Events\RadioSongWithDeezerSongIdParsed.cs" />
     <Compile Include="Events\SongAdded.cs" />
     <Compile Include="Events\RadioSongParsed.cs" />
     <Compile Include="Events\UserCreated.cs" />
