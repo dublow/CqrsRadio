@@ -1,4 +1,5 @@
-﻿using CqrsRadio.Domain.Services;
+﻿using CqrsRadio.Domain.Entities;
+using CqrsRadio.Domain.Services;
 using CqrsRadio.Domain.ValueTypes;
 using Moq;
 
@@ -33,6 +34,11 @@ namespace CqrsRadio.Test.Mocks
                 .Callback(() => SongsAdded = true);
 
             return _mock.Object;
+        }
+
+        public DeezerApiBuilder SetSong(DeezerSong deezerSong)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
