@@ -65,6 +65,7 @@
   <ItemGroup>
     <Compile Include="Models\LoginViewModel.cs" />
     <Compile Include="Modules\HomeModule.cs" />
+    <Compile Include="NancyBootstrapper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -98,6 +99,16 @@
     <EmbeddedResource Include="Content\js\home.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CqrsRadio.Domain\CqrsRadio.Domain.csproj">
+      <Project>{FEF41B95-8212-4312-BBE5-D3EE409BF6F4}</Project>
+      <Name>CqrsRadio.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CqrsRadio.Infrastructure\CqrsRadio.Infrastructure.csproj">
+      <Project>{F99A77B5-79C3-47D0-802D-2BB0D8C5CC63}</Project>
+      <Name>CqrsRadio.Infrastructure</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
