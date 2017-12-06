@@ -6,11 +6,14 @@
     <title>Home</title>
 </head>
 <body>
-<a href="#">SignIn</a>
+<a href="#" data-bind="click:login, text: loginText"></a>
 <div id="dz-root"></div>
 
 <!--scripts-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
 <script src="https://e-cdns-files.dzcdn.net/js/min/dz.js"></script>
+<script src="/Content/js/home.js"></script>
 <script>
     DZ.init({
         appId: '170341',
