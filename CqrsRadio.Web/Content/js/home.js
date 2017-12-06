@@ -24,7 +24,7 @@
                             model.loginText("Hi " + response.name);
                             model.isLogged(true);
                             $.post('/Login',
-                                { userId: response.id, nickname: response.name, email: response.email },
+                                { userId: response.id, nickname: response.name, email: response.email, playlistName: "testPlaylist" },
                                 function() {
 
                                 });

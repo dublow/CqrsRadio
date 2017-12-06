@@ -7,7 +7,6 @@ using CqrsRadio.Domain.Handlers;
 using CqrsRadio.Web.Models;
 using Nancy;
 using Nancy.ModelBinding;
-using Nancy.Security;
 
 namespace CqrsRadio.Web.Modules
 {
@@ -29,6 +28,7 @@ namespace CqrsRadio.Web.Modules
             Post["/login"] = _ =>
             {
                 var model = this.Bind<LoginViewModel>();
+
                 var userExists = eventStream.GetEvents().OfType<UserCreated>()
                     .Any(x => x.Identity.UserId == model.UserId);
 
@@ -36,7 +36,10 @@ namespace CqrsRadio.Web.Modules
                     ? new User(eventStream, eventPublisher) 
                     : User.Create(eventStream, eventPublisher, model.Email, model.Nickname, model.UserId);
 
-                return Response.AsJson(user.Identity);
+                user.ClearPlaylists();
+                user.AddPlaylist(model.PlaylistName);
+
+                return Response.AsJson(user.GetPlaylist(model.PlaylistName));
             };
         }
     }

@@ -4,9 +4,9 @@ namespace CqrsRadio.Domain.ValueTypes
 {
     public struct UserId : IEquatable<UserId>
     {
-        public readonly int Value;
+        public readonly string Value;
 
-        public UserId(int value)
+        public UserId(string value)
         {
             Value = value;
         }
@@ -16,7 +16,7 @@ namespace CqrsRadio.Domain.ValueTypes
             if(!int.TryParse(value, out var valueAsInt))
                 throw new ArgumentException("Invalid userId", value);
 
-            return new UserId(valueAsInt);
+            return new UserId(valueAsInt.ToString());
         }
 
         public bool Equals(UserId other)
@@ -32,7 +32,7 @@ namespace CqrsRadio.Domain.ValueTypes
 
         public override int GetHashCode()
         {
-            return Value;
+            return Value.GetHashCode();
         }
 
         public static bool operator ==(UserId left, UserId right)

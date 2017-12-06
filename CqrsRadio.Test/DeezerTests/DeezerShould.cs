@@ -1,4 +1,5 @@
-﻿using CqrsRadio.Domain.Entities;
+﻿using System.Linq;
+using CqrsRadio.Domain.Entities;
 using CqrsRadio.Test.Mocks;
 using NUnit.Framework;
 
@@ -93,6 +94,24 @@ namespace CqrsRadio.Test.DeezerTests
             Assert.AreEqual("rock", actual.Genre);
             Assert.AreEqual("title", actual.Title);
             Assert.AreEqual("artist", actual.Artist);
+        }
+
+        [Test]
+        public void GetSongsByPlaylistIdWithPlaylistId()
+        {
+            // arrange
+            var deezerService = DeezerApiBuilder
+                .Create()
+                .SetSongsByPlaylistId(new []{new DeezerSong("1234567890", "rock", "title", "artist")})
+                .Build();
+            // act
+            var actual = deezerService.GetSongsByPlaylistId("123");
+            // assert
+            Assert.AreEqual(1, actual.Count());
+            Assert.AreEqual("1234567890", actual.First().Id);
+            Assert.AreEqual("rock", actual.First().Genre);
+            Assert.AreEqual("title", actual.First().Title);
+            Assert.AreEqual("artist", actual.First().Artist);
         }
     }
 }
