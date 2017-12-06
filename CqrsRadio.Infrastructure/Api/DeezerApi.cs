@@ -5,6 +5,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using CqrsRadio.Common.Net;
+using CqrsRadio.Deezer.Models;
 using CqrsRadio.Domain.Entities;
 using CqrsRadio.Domain.Services;
 using CqrsRadio.Domain.ValueTypes;
@@ -54,13 +55,22 @@ namespace CqrsRadio.Infrastructure.Api
 
         public IEnumerable<string> GetPlaylistIdsByUserId(string accessToken, UserId userId)
         {
-            var uri = $"{baseUri}/user/{userId.Value}/playlists?access_token={accessToken}";
+            var uri = $"{baseUri}/user/{userId.Value}/playlists?access_token={accessToken}&limit=100";
 
-            var response = _request.Get(uri, value =>
+            var playlistIds = new List<string>();
+            while (!string.IsNullOrEmpty(uri))
             {
-                return value;
-            });
-            throw new NotImplementedException();
+                var playlistDeezer = GetP(uri);
+                playlistIds.AddRange(playlistDeezer.Playlists.Select(x=>x.Id));
+                uri = playlistDeezer.Next;
+            }
+
+            return playlistIds;
+        }
+
+        private PlaylistDeezer GetP(string url)
+        {
+            return _request.Get(url, Newtonsoft.Json.JsonConvert.DeserializeObject<PlaylistDeezer>);
         }
     }
 }

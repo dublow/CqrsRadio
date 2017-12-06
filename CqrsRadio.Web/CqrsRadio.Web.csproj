@@ -105,6 +105,10 @@
       <Project>{F04A5A26-8C79-431E-B79D-F64862B75B8C}</Project>
       <Name>CqrsRadio.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CqrsRadio.Deezer\CqrsRadio.Deezer.csproj">
+      <Project>{21ac7ff1-1582-48cc-af97-3a6f66bc7906}</Project>
+      <Name>CqrsRadio.Deezer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CqrsRadio.Domain\CqrsRadio.Domain.csproj">
       <Project>{FEF41B95-8212-4312-BBE5-D3EE409BF6F4}</Project>
       <Name>CqrsRadio.Domain</Name>
