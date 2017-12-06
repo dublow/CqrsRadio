@@ -23,6 +23,11 @@
                         DZ.api('/user/me', function (response) {
                             model.loginText("Hi " + response.name);
                             model.isLogged(true);
+                            $.post('/Login',
+                                { userId: response.id, nickname: response.name, email: response.email },
+                                function() {
+
+                                });
                         });
                     } else {
                         console.log('User cancelled login or did not fully authorize.');

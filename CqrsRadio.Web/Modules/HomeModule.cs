@@ -1,5 +1,7 @@
 ﻿using System;
+using CqrsRadio.Web.Models;
 using Nancy;
+using Nancy.ModelBinding;
 
 namespace CqrsRadio.Web.Modules
 {
@@ -16,6 +18,12 @@ namespace CqrsRadio.Web.Modules
                     .WithHeader("Pragma", "public")
                     .WithHeader("Cache-Control", $"maxage={cacheExpire}")
                     .WithHeader("Expires", DateTime.Now.AddMinutes(cacheExpire).ToString("F"));
+            };
+
+            Post["/login"] = _ =>
+            {
+                var model = this.Bind<LoginViewModel>();
+                return Response.AsJson(true);
             };
         }
     }
