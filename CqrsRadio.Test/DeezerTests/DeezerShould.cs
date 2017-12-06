@@ -113,5 +113,20 @@ namespace CqrsRadio.Test.DeezerTests
             Assert.AreEqual("title", actual.First().Title);
             Assert.AreEqual("artist", actual.First().Artist);
         }
+
+        [Test]
+        public void GetPlaylistsByUserIdWithUserId()
+        {
+            // arrange
+            var deezerService = DeezerApiBuilder
+                .Create()
+                .SetPlaylistIdsByUserId(new[] { "123" })
+                .Build();
+            // act
+            var actual = deezerService.GetPlaylistIdsByUserId("12345");
+            // assert
+            Assert.AreEqual(1, actual.Count());
+            Assert.AreEqual("123", actual.First());
+        }
     }
 }

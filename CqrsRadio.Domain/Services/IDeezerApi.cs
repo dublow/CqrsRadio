@@ -12,5 +12,6 @@ namespace CqrsRadio.Domain.Services
         DeezerSong GetSong(string title, string artist);
         DeezerSong GetSong(string songId);
         IEnumerable<DeezerSong> GetSongsByPlaylistId(string playlistId);
+        IEnumerable<string> GetPlaylistIdsByUserId(UserId userId);
     }
 }

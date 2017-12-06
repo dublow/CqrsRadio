@@ -53,5 +53,13 @@ namespace CqrsRadio.Test.Mocks
                 .Returns(deezerSongs);
             return this;
         }
+
+        public DeezerApiBuilder SetPlaylistIdsByUserId(string[] playlistIds)
+        {
+            _mock.Setup(x => x.GetPlaylistIdsByUserId(It.IsAny<UserId>()))
+                .Returns(playlistIds);
+
+            return this;
+        }
     }
 }
