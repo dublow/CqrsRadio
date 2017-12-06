@@ -79,8 +79,8 @@ namespace CqrsRadio.Test.ScenarioTests
             }
 
             var playlist = user.GetPlaylist("bestof");
-            deezerApi.Build().CreatePlaylist(playlist.UserId, playlist.Name);
-            deezerApi.Build().AddSongsToPlaylist(playlist.Name, playlist.Songs.Select(x=>x.SongId).ToArray());
+            deezerApi.Build().CreatePlaylist("accessToken", playlist.UserId, playlist.Name);
+            deezerApi.Build().AddSongsToPlaylist("accessToken", playlist.Name, playlist.Songs.Select(x=>x.SongId).ToArray());
 
             // assert
             Assert.IsTrue(stream.GetEvents().Contains(new UserCreated(Identity.Create("nicolas.dfr@gmail.com", "nicolas", "12345"))));

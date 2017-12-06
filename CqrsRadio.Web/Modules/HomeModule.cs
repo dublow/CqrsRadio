@@ -4,6 +4,7 @@ using CqrsRadio.Domain.Aggregates;
 using CqrsRadio.Domain.Events;
 using CqrsRadio.Domain.EventStores;
 using CqrsRadio.Domain.Handlers;
+using CqrsRadio.Domain.Services;
 using CqrsRadio.Web.Models;
 using Nancy;
 using Nancy.ModelBinding;
@@ -12,7 +13,7 @@ namespace CqrsRadio.Web.Modules
 {
     public class HomeModule : NancyModule
     {
-        public HomeModule(IEventStream eventStream, IEventPublisher eventPublisher)
+        public HomeModule(IEventStream eventStream, IEventPublisher eventPublisher, IDeezerApi deezerApi)
         {
             Get["/"] = _ => View["index"];
             Get["/channel"] = _ =>
@@ -37,7 +38,11 @@ namespace CqrsRadio.Web.Modules
                     : User.Create(eventStream, eventPublisher, model.Email, model.Nickname, model.UserId);
 
                 user.ClearPlaylists();
+
+                user.AddAccessToken(model.AccessToken);
                 user.AddPlaylist(model.PlaylistName);
+
+                deezerApi.GetPlaylistIdsByUserId(user.AccessToken, user.Identity.UserId);
 
                 return Response.AsJson(user.GetPlaylist(model.PlaylistName));
             };

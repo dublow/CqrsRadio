@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F99A77B5-79C3-47D0-802D-2BB0D8C5CC63}</ProjectGuid>
+    <ProjectGuid>{F04A5A26-8C79-431E-B79D-F64862B75B8C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CqrsRadio.Infrastructure</RootNamespace>
-    <AssemblyName>CqrsRadio.Infrastructure</AssemblyName>
+    <RootNamespace>CqrsRadio.Common</RootNamespace>
+    <AssemblyName>CqrsRadio.Common</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,14 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ValueTuple.4.4.0\lib\net461\System.ValueTuple.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -46,23 +40,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Api\DeezerApi.cs" />
-    <Compile Include="Bus\EventBus.cs" />
-    <Compile Include="EventStores\MemoryEventsStream.cs" />
+    <Compile Include="Net\IRequest.cs" />
+    <Compile Include="Net\RadioRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CqrsRadio.Common\CqrsRadio.Common.csproj">
-      <Project>{F04A5A26-8C79-431E-B79D-F64862B75B8C}</Project>
-      <Name>CqrsRadio.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CqrsRadio.Domain\CqrsRadio.Domain.csproj">
-      <Project>{FEF41B95-8212-4312-BBE5-D3EE409BF6F4}</Project>
-      <Name>EventSourcing.Domain</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

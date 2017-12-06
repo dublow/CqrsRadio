@@ -55,6 +55,7 @@
     <Compile Include="EventHandlers\IRadioHandler.cs" />
     <Compile Include="EventHandlers\IRadioSongHandler.cs" />
     <Compile Include="EventStores\IEventStream.cs" />
+    <Compile Include="Events\AccessTokenAdded.cs" />
     <Compile Include="Events\IDomainEvent.cs" />
     <Compile Include="Events\PlaylistAdded.cs" />
     <Compile Include="Events\PlaylistDeleted.cs" />

@@ -25,13 +25,13 @@ namespace CqrsRadio.Test.Mocks
 
         public IDeezerApi Build()
         {
-            _mock.Setup(x => x.CreatePlaylist(It.IsAny<UserId>(), It.IsAny<string>()))
+            _mock.Setup(x => x.CreatePlaylist(It.IsAny<string>(), It.IsAny<UserId>(), It.IsAny<string>()))
                 .Callback(() => PlaylistAdded++);
 
-            _mock.Setup(x => x.DeletePlaylist(It.IsAny<string>()))
+            _mock.Setup(x => x.DeletePlaylist(It.IsAny<string>(), It.IsAny<string>()))
                 .Callback(() => PlaylistDeleted++);
 
-            _mock.Setup(x => x.AddSongsToPlaylist(It.IsAny<string>(), It.IsAny<string[]>()))
+            _mock.Setup(x => x.AddSongsToPlaylist(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string[]>()))
                 .Callback<string, string[]>((playlistName, songs) => SongsAdded = songs.Length);
 
             return _mock.Object;
@@ -42,21 +42,21 @@ namespace CqrsRadio.Test.Mocks
             _mock.Setup(x => x.GetSong(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(deezerSong);
 
-            _mock.Setup(x => x.GetSong(It.IsAny<string>()))
+            _mock.Setup(x => x.GetSong(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(deezerSong);
             return this;
         }
 
         public DeezerApiBuilder SetSongsByPlaylistId(IEnumerable<DeezerSong> deezerSongs)
         {
-            _mock.Setup(x => x.GetSongsByPlaylistId(It.IsAny<string>()))
+            _mock.Setup(x => x.GetSongsByPlaylistId(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(deezerSongs);
             return this;
         }
 
         public DeezerApiBuilder SetPlaylistIdsByUserId(string[] playlistIds)
         {
-            _mock.Setup(x => x.GetPlaylistIdsByUserId(It.IsAny<UserId>()))
+            _mock.Setup(x => x.GetPlaylistIdsByUserId(It.IsAny<string>(), It.IsAny<UserId>()))
                 .Returns(playlistIds);
 
             return this;

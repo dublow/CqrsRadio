@@ -239,5 +239,34 @@ namespace CqrsRadio.Test.UserTests
             Assert.AreEqual(1, stream.GetEvents().OfType<PlaylistsCleared>().Count());
         }
 
+        [Test]
+        public void RaiseMessageWhenAddAccessToken()
+        {
+            var stream = new MemoryEventStream();
+            stream.Add(new UserCreated(Identity.Create("nicolas.dfr@gmail.com", "dublow", "12345")));
+
+            var publisher = new EventBus(stream);
+
+            var user = new User(stream, publisher);
+
+            user.AddAccessToken("accessToken");
+            Assert.IsTrue(stream.GetEvents().Contains(new AccessTokenAdded("12345")));
+            Assert.AreEqual(1, stream.GetEvents().OfType<AccessTokenAdded>().Count());
+        }
+
+        [Test]
+        public void NoRaiseMessageWhenAddAccessTokenWithDeletedUser()
+        {
+            var stream = new MemoryEventStream();
+            stream.Add(new UserCreated(Identity.Create("nicolas.dfr@gmail.com", "dublow", "12345")));
+            stream.Add(new UserDeleted("12345"));
+
+            var publisher = new EventBus(stream);
+
+            var user = new User(stream, publisher);
+
+            user.AddAccessToken("accessToken");
+            Assert.AreEqual(0, stream.GetEvents().OfType<AccessTokenAdded>().Count());
+        }
     }
 }

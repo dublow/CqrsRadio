@@ -20,11 +20,18 @@
             else {
                 DZ.login(function (response) {
                     if (response.authResponse) {
+                        var accessToken = response.authResponse.accessToken;
                         DZ.api('/user/me', function (response) {
                             model.loginText("Hi " + response.name);
                             model.isLogged(true);
                             $.post('/Login',
-                                { userId: response.id, nickname: response.name, email: response.email, playlistName: "testPlaylist" },
+                                {
+                                    accessToken: accessToken,
+                                    userId: response.id,
+                                    nickname: response.name,
+                                    email: response.email,
+                                    playlistName: "testPlaylist"
+                                },
                                 function() {
 
                                 });

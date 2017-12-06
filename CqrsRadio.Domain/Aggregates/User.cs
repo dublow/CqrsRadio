@@ -16,6 +16,7 @@ namespace CqrsRadio.Domain.Aggregates
         private readonly List<Playlist> _playlists = new List<Playlist>();
 
         public Identity Identity { get; private set; }
+        public string AccessToken { get; private set; }
 
         public User(IEventStream stream, IEventPublisher publisher)
         {
@@ -37,6 +38,15 @@ namespace CqrsRadio.Domain.Aggregates
             publisher.Publish(new UserCreated(identity));
 
             return user;
+        }
+
+        public void AddAccessToken(string accessToken)
+        {
+            if (_decision.IsDeleted) return;
+
+            AccessToken = accessToken;
+
+            _publisher.Publish(new AccessTokenAdded(Identity.UserId));
         }
 
         public void Delete()
