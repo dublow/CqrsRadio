@@ -1,4 +1,5 @@
-﻿using CqrsRadio.Domain.Entities;
+﻿using System.Collections.Generic;
+using CqrsRadio.Domain.Entities;
 using CqrsRadio.Domain.Services;
 using CqrsRadio.Domain.ValueTypes;
 using Moq;
@@ -43,6 +44,21 @@ namespace CqrsRadio.Test.Mocks
 
             _mock.Setup(x => x.GetSong(It.IsAny<string>()))
                 .Returns(deezerSong);
+            return this;
+        }
+
+        public DeezerApiBuilder SetSongsByPlaylistId(IEnumerable<DeezerSong> deezerSongs)
+        {
+            _mock.Setup(x => x.GetSongsByPlaylistId(It.IsAny<string>()))
+                .Returns(deezerSongs);
+            return this;
+        }
+
+        public DeezerApiBuilder SetPlaylistIdsByUserId(string[] playlistIds)
+        {
+            _mock.Setup(x => x.GetPlaylistIdsByUserId(It.IsAny<UserId>()))
+                .Returns(playlistIds);
+
             return this;
         }
     }

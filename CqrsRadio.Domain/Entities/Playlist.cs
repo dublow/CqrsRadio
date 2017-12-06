@@ -39,7 +39,7 @@ namespace CqrsRadio.Domain.Entities
         {
             unchecked
             {
-                var hashCode = (UserId != null ? UserId.GetHashCode() : 0);
+                var hashCode = (UserId.Value != null ? UserId.Value.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (Name != null ? Name.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (Songs != null ? Songs.GetHashCode() : 0);
                 return hashCode;

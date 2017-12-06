@@ -1,4 +1,5 @@
-﻿using CqrsRadio.Domain.Entities;
+﻿using System.Collections.Generic;
+using CqrsRadio.Domain.Entities;
 using CqrsRadio.Domain.ValueTypes;
 
 namespace CqrsRadio.Domain.Services
@@ -10,5 +11,7 @@ namespace CqrsRadio.Domain.Services
         void AddSongsToPlaylist(string playlistId, string[] songIds);
         DeezerSong GetSong(string title, string artist);
         DeezerSong GetSong(string songId);
+        IEnumerable<DeezerSong> GetSongsByPlaylistId(string playlistId);
+        IEnumerable<string> GetPlaylistIdsByUserId(UserId userId);
     }
 }
