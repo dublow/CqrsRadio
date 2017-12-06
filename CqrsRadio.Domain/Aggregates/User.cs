@@ -72,6 +72,15 @@ namespace CqrsRadio.Domain.Aggregates
             _publisher.Publish(new PlaylistDeleted(Identity.UserId, name));
         }
 
+        public void ClearPlaylists()
+        {
+            if (_decision.IsDeleted)
+                return;
+
+            _playlists.Clear();
+            _publisher.Publish(new PlaylistsCleared(Identity.UserId));
+        }
+
         public void AddSongToPlaylist(string playlistName, string songId, string genre, string title, string artist)
         {
             if (_decision.IsDeleted)
@@ -114,15 +123,19 @@ namespace CqrsRadio.Domain.Aggregates
                 {
                     _playlists.Add(new Playlist(playlistAdded.UserId, playlistAdded.Name));
                 }
-                else if (domainEvent is PlaylistDeleted playlistDeleted)
-                {
-                    _playlists.Remove(new Playlist(Identity.UserId, playlistDeleted.Name));
-                }
                 else if (domainEvent is SongAdded songAdded)
                 {
                     var playlist = GetPlaylist(songAdded.PlaylistName);
 
                     playlist.AddSong(new Song(songAdded.SongId, songAdded.Genre, songAdded.Title, songAdded.Artist));
+                }
+                else if (domainEvent is PlaylistDeleted playlistDeleted)
+                {
+                    _playlists.Remove(new Playlist(Identity.UserId, playlistDeleted.Name));
+                }
+                else if (domainEvent is PlaylistsCleared playlistsCleared)
+                {
+                    _playlists.Clear();
                 }
             }
         }

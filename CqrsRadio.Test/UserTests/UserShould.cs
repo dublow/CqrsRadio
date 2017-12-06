@@ -221,5 +221,23 @@ namespace CqrsRadio.Test.UserTests
 
             Assert.AreEqual(0, stream.GetEvents().OfType<SongAdded>().Count());
         }
+
+        [Test]
+        public void RaiseMessageWhenClearPlaylist()
+        {
+            var stream = new MemoryEventStream();
+            stream.Add(new UserCreated(Identity.Create("nicolas.dfr@gmail.com", "dublow", "12345")));
+            stream.Add(new PlaylistAdded("12345", "name"));
+
+            var publisher = new EventBus(stream);
+
+            var user = new User(stream, publisher);
+
+            user.ClearPlaylists();
+
+            Assert.IsTrue(stream.GetEvents().Contains(new PlaylistsCleared("12345")));
+            Assert.AreEqual(1, stream.GetEvents().OfType<PlaylistsCleared>().Count());
+        }
+
     }
 }

@@ -58,6 +58,7 @@
     <Compile Include="Events\IDomainEvent.cs" />
     <Compile Include="Events\PlaylistAdded.cs" />
     <Compile Include="Events\PlaylistDeleted.cs" />
+    <Compile Include="Events\PlaylistsCleared.cs" />
     <Compile Include="Events\RadioCreated.cs" />
     <Compile Include="Events\RadioDeleted.cs" />
     <Compile Include="Events\RadioSongDuplicate.cs" />
