@@ -27,8 +27,8 @@ namespace CqrsRadio.Test.Mocks
             _mock.Setup(x => x.DeletePlaylist(It.IsAny<string>(), It.IsAny<PlaylistId>()))
                 .Callback(() => PlaylistDeleted++);
 
-            _mock.Setup(x => x.AddSongsToPlaylist(It.IsAny<string>(), It.IsAny<PlaylistId>(), It.IsAny<string[]>()))
-                .Callback<string, PlaylistId, string[]>((playlistName, playlistId, songs) => SongsAdded = songs.Length);
+            _mock.Setup(x => x.AddSongsToPlaylist(It.IsAny<string>(), It.IsAny<PlaylistId>(), It.IsAny<SongId[]>()))
+                .Callback<string, PlaylistId, SongId[]>((playlistName, playlistId, songs) => SongsAdded = songs.Length);
 
             return _mock.Object;
         }
@@ -46,7 +46,7 @@ namespace CqrsRadio.Test.Mocks
             _mock.Setup(x => x.GetSong(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(deezerSong);
 
-            _mock.Setup(x => x.GetSong(It.IsAny<string>(), It.IsAny<string>()))
+            _mock.Setup(x => x.GetSong(It.IsAny<string>(), It.IsAny<SongId>()))
                 .Returns(deezerSong);
             return this;
         }

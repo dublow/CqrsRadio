@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using CqrsRadio.Domain.Entities;
+using CqrsRadio.Domain.ValueTypes;
 using CqrsRadio.Test.Mocks;
 using NUnit.Framework;
 
@@ -26,9 +27,9 @@ namespace CqrsRadio.Test.SongEngine
             var actual = songEngine.GetRandomisedSongs(3);
             // assert
             Assert.AreEqual(3, actual.Count());
-            Assert.AreEqual("123", actual.ElementAt(0).Id);
-            Assert.AreEqual("456", actual.ElementAt(1).Id);
-            Assert.AreEqual("789", actual.ElementAt(2).Id);
+            Assert.AreEqual(SongId.Parse("123"), actual.ElementAt(0).Id);
+            Assert.AreEqual(SongId.Parse("456"), actual.ElementAt(1).Id);
+            Assert.AreEqual(SongId.Parse("789"), actual.ElementAt(2).Id);
             Assert.AreEqual("rock", actual.ElementAt(0).Genre);
             Assert.AreEqual("jazz", actual.ElementAt(1).Genre);
             Assert.AreEqual("rap", actual.ElementAt(2).Genre);

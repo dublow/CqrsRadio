@@ -91,7 +91,7 @@ namespace CqrsRadio.Domain.Aggregates
             _publisher.Publish(new PlaylistsCleared(Identity.UserId));
         }
 
-        public void AddSongToPlaylist(string playlistName, string songId, string genre, string title, string artist)
+        public void AddSongToPlaylist(string playlistName, SongId songId, string genre, string title, string artist)
         {
             if (_decision.IsDeleted)
                 return;

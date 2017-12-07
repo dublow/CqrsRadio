@@ -19,7 +19,7 @@ namespace CqrsRadio.Handlers
 
         public void Handle(RadioSongParsed evt)
         {
-            var song = _deezerApi.GetSong(evt.Title, evt.Artist);
+            var song = _deezerApi.GetSong("accessToken", evt.Title, evt.Artist);
             StoreSong(evt.RadioName, song);
         }
 

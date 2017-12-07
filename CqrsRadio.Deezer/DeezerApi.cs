@@ -40,7 +40,7 @@ namespace CqrsRadio.Deezer
             throw new NotImplementedException();
         }
 
-        public void AddSongsToPlaylist(string accessToken, PlaylistId playlistId, string[] songIds)
+        public void AddSongsToPlaylist(string accessToken, PlaylistId playlistId, SongId[] songIds)
         {
             throw new NotImplementedException();
         }
@@ -50,7 +50,7 @@ namespace CqrsRadio.Deezer
             throw new NotImplementedException();
         }
 
-        public DeezerSong GetSong(string accessToken, string songId)
+        public DeezerSong GetSong(string accessToken, SongId songId)
         {
             throw new NotImplementedException();
         }

@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using CqrsRadio.Domain.Entities;
 using CqrsRadio.Domain.Events;
+using CqrsRadio.Domain.ValueTypes;
 using CqrsRadio.Handlers;
 using CqrsRadio.Test.Mocks;
 using NUnit.Framework;
@@ -21,7 +22,7 @@ namespace CqrsRadio.Test.HandlerTests
                 .SetSong(new DeezerSong("1234567890", "rock", "title", "artist"))
                 .Build();
             var radioSongHandler = new RadioSongHandler(radioSongRepository, deezerApi);
-            var (songId, genre, name, title, artist) = ("1234567890", "rock", "djam", "title", "artist");
+            var (songId, genre, name, title, artist) = (SongId.Parse("1234567890"), "rock", "djam", "title", "artist");
             // act
 
             var radioSongParsed = new RadioSongParsed("djam", "title", "artist");
@@ -46,7 +47,7 @@ namespace CqrsRadio.Test.HandlerTests
                 .SetSong(new DeezerSong("1234567890", "rock", "title", "artist"))
                 .Build();
             var radioSongHandler = new RadioSongHandler(radioSongRepository, deezerApi);
-            var (songId, genre, name, title, artist) = ("1234567890", "rock", "djam", "title", "artist");
+            var (songId, genre, name, title, artist) = (SongId.Parse("1234567890"), "rock", "djam", "title", "artist");
             // act
 
             var radioSongParsed = new RadioSongWithDeezerSongIdParsed("djam", "1234567890");

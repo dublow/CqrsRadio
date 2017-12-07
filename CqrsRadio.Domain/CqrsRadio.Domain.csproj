@@ -80,6 +80,7 @@
     <Compile Include="Services\IDeezerApi.cs" />
     <Compile Include="Services\IRadioEngine.cs" />
     <Compile Include="Services\ISongEngine.cs" />
+    <Compile Include="ValueTypes\SongId.cs" />
     <Compile Include="ValueTypes\PlaylistId.cs" />
     <Compile Include="Utilities\StringUtilities.cs" />
     <Compile Include="ValueTypes\Email.cs" />

@@ -1,15 +1,16 @@
 ﻿using System;
+using CqrsRadio.Domain.ValueTypes;
 
 namespace CqrsRadio.Domain.Entities
 {
     public struct DeezerSong : IEquatable<DeezerSong>
     {
-        public readonly string Id;
+        public readonly SongId Id;
         public readonly string Genre;
         public readonly string Title;
         public readonly string Artist;
 
-        public DeezerSong(string id, string genre, string title, string artist)
+        public DeezerSong(SongId id, string genre, string title, string artist)
         {
             Id = id;
             Genre = genre;
@@ -35,7 +36,7 @@ namespace CqrsRadio.Domain.Entities
         {
             unchecked
             {
-                var hashCode = (Id != null ? Id.GetHashCode() : 0);
+                var hashCode = (Id.Value != null ? Id.Value.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (Genre != null ? Genre.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (Title != null ? Title.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (Artist != null ? Artist.GetHashCode() : 0);

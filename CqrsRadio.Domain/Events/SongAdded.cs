@@ -6,12 +6,12 @@ namespace CqrsRadio.Domain.Events
     {
         public readonly UserId UserId;
         public readonly string PlaylistName;
-        public readonly string SongId;
+        public readonly SongId SongId;
         public readonly string Genre;
         public readonly string Title;
         public readonly string Artist;
 
-        public SongAdded(UserId userId, string playlistName, string songId, string genre, string title, string artist)
+        public SongAdded(UserId userId, string playlistName, SongId songId, string genre, string title, string artist)
         {
             UserId = userId;
             PlaylistName = playlistName;
