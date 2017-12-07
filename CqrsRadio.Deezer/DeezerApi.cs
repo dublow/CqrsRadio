@@ -7,6 +7,7 @@ using CqrsRadio.Domain.Entities;
 using CqrsRadio.Domain.Services;
 using CqrsRadio.Domain.ValueTypes;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace CqrsRadio.Deezer
 {
@@ -19,9 +20,19 @@ namespace CqrsRadio.Deezer
             _request = request;
         }
 
-        public void CreatePlaylist(string accessToken, UserId userId, string playlistName)
+        public PlaylistId CreatePlaylist(string accessToken, UserId userId, string playlistName)
         {
-            throw new NotImplementedException();
+            return _request.Post(string.Format(Endpoints.CreatePlaylist, userId.Value, playlistName, accessToken), response =>
+            {
+                if (!JObject
+                    .Parse(response)
+                    .TryGetValue("id", StringComparison.InvariantCultureIgnoreCase, out var playlistId))
+                {
+                    return PlaylistId.Empty;
+                }
+
+                return PlaylistId.Parse(playlistId.ToString());
+            });
         }
 
         public void DeletePlaylist(string accessToken, string playlistId)
@@ -51,7 +62,12 @@ namespace CqrsRadio.Deezer
 
         public IEnumerable<string> GetPlaylistIdsByUserId(string accessToken, UserId userId)
         {
-            var uri = string.Format(Endpoints.Playlists, userId.Value, accessToken);
+            var uri = string.Format(Endpoints.GetPlaylists, userId.Value, accessToken);
+
+            PlaylistDeezer GetP(string url)
+            {
+                return _request.Get(url, JsonConvert.DeserializeObject<PlaylistDeezer>);
+            }
 
             var playlistIds = new List<string>();
             while (!string.IsNullOrEmpty(uri))
@@ -62,11 +78,6 @@ namespace CqrsRadio.Deezer
             }
 
             return playlistIds;
-        }
-
-        private PlaylistDeezer GetP(string url)
-        {
-            return _request.Get(url, JsonConvert.DeserializeObject<PlaylistDeezer>);
         }
     }
 }
