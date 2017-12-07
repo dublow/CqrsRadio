@@ -8,12 +8,12 @@ namespace CqrsRadio.Test.Mocks
     public class PlaylistRepositoryBuilder
     {
         private readonly Mock<IPlaylistRepository> _mock;
-        public readonly List<(UserId userId, string name)> Playlists;
+        public readonly List<(UserId userId, PlaylistId playlistId, string name)> Playlists;
 
         public PlaylistRepositoryBuilder()
         {
             _mock = new Mock<IPlaylistRepository>();
-            Playlists = new List<(UserId userId, string name)>();
+            Playlists = new List<(UserId userId, PlaylistId playlistId, string name)>();
         }
         public static PlaylistRepositoryBuilder Create()
         {
@@ -22,16 +22,16 @@ namespace CqrsRadio.Test.Mocks
 
         public IPlaylistRepository Build()
         {
-            _mock.Setup(x => x.Add(It.IsAny<UserId>(), It.IsAny<string>()))
-                .Callback<UserId, string>((userId, name) =>
+            _mock.Setup(x => x.Add(It.IsAny<UserId>(), It.IsAny<PlaylistId>(), It.IsAny<string>()))
+                .Callback<UserId, PlaylistId, string>((userId, playlistId, name) =>
                 {
-                    Playlists.Add((userId, name));
+                    Playlists.Add((userId, playlistId, name));
                 });
 
-            _mock.Setup(x => x.Delete(It.IsAny<UserId>(), It.IsAny<string>()))
-                .Callback<UserId, string>((userId, name) =>
+            _mock.Setup(x => x.Delete(It.IsAny<UserId>(), It.IsAny<PlaylistId>(), It.IsAny<string>()))
+                .Callback<UserId, PlaylistId, string>((userId, playlistId, name) =>
                 {
-                    Playlists.Remove((userId, name));
+                    Playlists.Remove((userId, playlistId, name));
                 });
             return _mock.Object;
         }

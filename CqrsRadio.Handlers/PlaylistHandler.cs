@@ -15,12 +15,12 @@ namespace CqrsRadio.Handlers
 
         public void Handle(PlaylistAdded evt)
         {
-            _playlistRepository.Add(evt.UserId, evt.Name);
+            _playlistRepository.Add(evt.UserId, evt.PlaylistId, evt.Name);
         }
 
         public void Handle(PlaylistDeleted evt)
         {
-            _playlistRepository.Delete(evt.UserId, evt.Name);
+            _playlistRepository.Delete(evt.UserId, evt.PlaylistId, evt.Name);
         }
     }
 }

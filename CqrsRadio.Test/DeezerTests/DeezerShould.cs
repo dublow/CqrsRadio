@@ -12,13 +12,17 @@ namespace CqrsRadio.Test.DeezerTests
         public void CreatePlaylistDeezer()
         {
             var userId = "12345";
+            var playlistId = "123";
             var playlistName = "name";
 
             var deezerService = DeezerApiBuilder.Create();
 
-            deezerService.Build().CreatePlaylist("", userId, playlistName);
+            var actualPlaylistId = deezerService
+                .SetCreatePlaylist(playlistId)
+                .Build()
+                .CreatePlaylist("accesstoken", userId, playlistName);
 
-            Assert.AreEqual(1, deezerService.PlaylistAdded);
+            Assert.AreEqual(actualPlaylistId, actualPlaylistId);
         }
 
         [Test]

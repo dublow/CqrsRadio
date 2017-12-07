@@ -7,11 +7,11 @@ namespace CqrsRadio.Domain.Services
     public interface IDeezerApi
     {
         PlaylistId CreatePlaylist(string accessToken, UserId userId, string playlistName);
-        void DeletePlaylist(string accessToken, string playlistId);
-        void AddSongsToPlaylist(string accessToken, string playlistId, string[] songIds);
+        void DeletePlaylist(string accessToken, PlaylistId playlistId);
+        void AddSongsToPlaylist(string accessToken, PlaylistId playlistId, string[] songIds);
         DeezerSong GetSong(string accessToken, string title, string artist);
         DeezerSong GetSong(string accessToken, string songId);
-        IEnumerable<DeezerSong> GetSongsByPlaylistId(string accessToken, string playlistId);
+        IEnumerable<DeezerSong> GetSongsByPlaylistId(string accessToken, PlaylistId playlistId);
         IEnumerable<string> GetPlaylistIdsByUserId(string accessToken, UserId userId);
     }
 }

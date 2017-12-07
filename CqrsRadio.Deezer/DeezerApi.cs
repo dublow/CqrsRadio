@@ -35,12 +35,12 @@ namespace CqrsRadio.Deezer
             });
         }
 
-        public void DeletePlaylist(string accessToken, string playlistId)
+        public void DeletePlaylist(string accessToken, PlaylistId playlistId)
         {
             throw new NotImplementedException();
         }
 
-        public void AddSongsToPlaylist(string accessToken, string playlistId, string[] songIds)
+        public void AddSongsToPlaylist(string accessToken, PlaylistId playlistId, string[] songIds)
         {
             throw new NotImplementedException();
         }
@@ -55,7 +55,7 @@ namespace CqrsRadio.Deezer
             throw new NotImplementedException();
         }
 
-        public IEnumerable<DeezerSong> GetSongsByPlaylistId(string accessToken, string playlistId)
+        public IEnumerable<DeezerSong> GetSongsByPlaylistId(string accessToken, PlaylistId playlistId)
         {
             throw new NotImplementedException();
         }
