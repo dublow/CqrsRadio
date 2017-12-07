@@ -46,7 +46,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Api\DeezerApi.cs" />
     <Compile Include="Bus\EventBus.cs" />
     <Compile Include="EventStores\MemoryEventsStream.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
