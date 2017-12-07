@@ -24,6 +24,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CqrsRadio.Web", "CqrsRadio.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CqrsRadio.Common", "CqrsRadio.Common\CqrsRadio.Common.csproj", "{F04A5A26-8C79-431E-B79D-F64862B75B8C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CqrsRadio.Deezer", "CqrsRadio.Deezer\CqrsRadio.Deezer.csproj", "{21AC7FF1-1582-48CC-AF97-3A6F66BC7906}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -62,6 +64,10 @@ Global
 		{F04A5A26-8C79-431E-B79D-F64862B75B8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F04A5A26-8C79-431E-B79D-F64862B75B8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F04A5A26-8C79-431E-B79D-F64862B75B8C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21AC7FF1-1582-48CC-AF97-3A6F66BC7906}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21AC7FF1-1582-48CC-AF97-3A6F66BC7906}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21AC7FF1-1582-48CC-AF97-3A6F66BC7906}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21AC7FF1-1582-48CC-AF97-3A6F66BC7906}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

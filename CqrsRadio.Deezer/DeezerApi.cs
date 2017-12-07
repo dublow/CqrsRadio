@@ -1,20 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using CqrsRadio.Common.Net;
+using CqrsRadio.Deezer.Models;
 using CqrsRadio.Domain.Entities;
 using CqrsRadio.Domain.Services;
 using CqrsRadio.Domain.ValueTypes;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
-namespace CqrsRadio.Infrastructure.Api
+namespace CqrsRadio.Deezer
 {
     public class DeezerApi : IDeezerApi
     {
-        private const string baseUri = "https://api.deezer.com";
-
         private readonly IRequest _request;
 
         public DeezerApi(IRequest request)
@@ -22,9 +20,19 @@ namespace CqrsRadio.Infrastructure.Api
             _request = request;
         }
 
-        public void CreatePlaylist(string accessToken, UserId userId, string playlistName)
+        public PlaylistId CreatePlaylist(string accessToken, UserId userId, string playlistName)
         {
-            throw new NotImplementedException();
+            return _request.Post(string.Format(Endpoints.CreatePlaylist, userId.Value, playlistName, accessToken), response =>
+            {
+                if (!JObject
+                    .Parse(response)
+                    .TryGetValue("id", StringComparison.InvariantCultureIgnoreCase, out var playlistId))
+                {
+                    return PlaylistId.Empty;
+                }
+
+                return PlaylistId.Parse(playlistId.ToString());
+            });
         }
 
         public void DeletePlaylist(string accessToken, string playlistId)
@@ -54,13 +62,22 @@ namespace CqrsRadio.Infrastructure.Api
 
         public IEnumerable<string> GetPlaylistIdsByUserId(string accessToken, UserId userId)
         {
-            var uri = $"{baseUri}/user/{userId.Value}/playlists?access_token={accessToken}";
+            var uri = string.Format(Endpoints.GetPlaylists, userId.Value, accessToken);
 
-            var response = _request.Get(uri, value =>
+            PlaylistDeezer GetP(string url)
             {
-                return value;
-            });
-            throw new NotImplementedException();
+                return _request.Get(url, JsonConvert.DeserializeObject<PlaylistDeezer>);
+            }
+
+            var playlistIds = new List<string>();
+            while (!string.IsNullOrEmpty(uri))
+            {
+                var playlistDeezer = GetP(uri);
+                playlistIds.AddRange(playlistDeezer.Playlists.Select(x=>x.Id));
+                uri = playlistDeezer.Next;
+            }
+
+            return playlistIds;
         }
     }
 }

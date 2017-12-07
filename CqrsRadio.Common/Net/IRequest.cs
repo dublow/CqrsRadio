@@ -11,5 +11,6 @@ namespace CqrsRadio.Common.Net
     {
         T Get<T>(string url, Func<string, T> parser);
         T Post<T>(string url, Dictionary<string, object> values, Func<string, T> parser);
+        T Post<T>(string url, Func<string, T> parser);
     }
 }
