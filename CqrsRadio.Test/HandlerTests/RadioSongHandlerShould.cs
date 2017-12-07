@@ -19,18 +19,17 @@ namespace CqrsRadio.Test.HandlerTests
             var radioSongRepository = mockedRadioSongRepository.Build();
             var deezerApi = DeezerApiBuilder
                 .Create()
-                .SetSong(new DeezerSong("1234567890", "rock", "title", "artist"))
+                .SetSong(new DeezerSong("1234567890", "title", "artist"))
                 .Build();
             var radioSongHandler = new RadioSongHandler(radioSongRepository, deezerApi);
-            var (songId, genre, name, title, artist) = (SongId.Parse("1234567890"), "rock", "djam", "title", "artist");
+            var (songId, name, title, artist) = (SongId.Parse("1234567890"), "djam", "title", "artist");
             // act
 
             var radioSongParsed = new RadioSongParsed("djam", "title", "artist");
             radioSongHandler.Handle(radioSongParsed);
             // assert
-            var (actualSongId, actualGenre, actualName, actualTitle, actualArtist) = mockedRadioSongRepository.RadioSongs.First();
+            var (actualSongId, actualName, actualTitle, actualArtist) = mockedRadioSongRepository.RadioSongs.First();
             Assert.AreEqual(songId, actualSongId);
-            Assert.AreEqual(genre, actualGenre);
             Assert.AreEqual(name, actualName);
             Assert.AreEqual(title, actualTitle);
             Assert.AreEqual(artist, actualArtist);
@@ -44,18 +43,17 @@ namespace CqrsRadio.Test.HandlerTests
             var radioSongRepository = mockedRadioSongRepository.Build();
             var deezerApi = DeezerApiBuilder
                 .Create()
-                .SetSong(new DeezerSong("1234567890", "rock", "title", "artist"))
+                .SetSong(new DeezerSong("1234567890",  "title", "artist"))
                 .Build();
             var radioSongHandler = new RadioSongHandler(radioSongRepository, deezerApi);
-            var (songId, genre, name, title, artist) = (SongId.Parse("1234567890"), "rock", "djam", "title", "artist");
+            var (songId, name, title, artist) = (SongId.Parse("1234567890"), "djam", "title", "artist");
             // act
 
             var radioSongParsed = new RadioSongWithDeezerSongIdParsed("djam", "1234567890");
             radioSongHandler.Handle(radioSongParsed);
             // assert
-            var (actualSongId, actualGenre, actualName, actualTitle, actualArtist) = mockedRadioSongRepository.RadioSongs.First();
+            var (actualSongId, actualName, actualTitle, actualArtist) = mockedRadioSongRepository.RadioSongs.First();
             Assert.AreEqual(songId, actualSongId);
-            Assert.AreEqual(genre, actualGenre);
             Assert.AreEqual(name, actualName);
             Assert.AreEqual(title, actualTitle);
             Assert.AreEqual(artist, actualArtist);

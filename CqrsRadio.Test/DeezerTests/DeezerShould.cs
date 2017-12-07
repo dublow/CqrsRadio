@@ -59,13 +59,12 @@ namespace CqrsRadio.Test.DeezerTests
             (string title, string artist) = ("title", "artist");
             var deezerService = DeezerApiBuilder
                 .Create()
-                .SetSong(new DeezerSong("1234567890", "rock", title, artist))
+                .SetSong(new DeezerSong("1234567890", title, artist))
                 .Build();
             // act
             var actual = deezerService.GetSong("accessToken", title, artist);
             // assert
             Assert.AreEqual(SongId.Parse("1234567890"), actual.Id);
-            Assert.AreEqual("rock", actual.Genre);
             Assert.AreEqual("title", actual.Title);
             Assert.AreEqual("artist", actual.Artist);
         }
@@ -91,13 +90,12 @@ namespace CqrsRadio.Test.DeezerTests
             // arrange
             var deezerService = DeezerApiBuilder
                 .Create()
-                .SetSong(new DeezerSong("1234567890", "rock", "title", "artist"))
+                .SetSong(new DeezerSong("1234567890", "title", "artist"))
                 .Build();
             // act
             var actual = deezerService.GetSong("accesstoken", "1234567890");
             // assert
             Assert.AreEqual(SongId.Parse("1234567890"), actual.Id);
-            Assert.AreEqual("rock", actual.Genre);
             Assert.AreEqual("title", actual.Title);
             Assert.AreEqual("artist", actual.Artist);
         }
@@ -108,14 +106,13 @@ namespace CqrsRadio.Test.DeezerTests
             // arrange
             var deezerService = DeezerApiBuilder
                 .Create()
-                .SetSongsByPlaylistId(new []{new DeezerSong("1234567890", "rock", "title", "artist")})
+                .SetSongsByPlaylistId(new []{new DeezerSong("1234567890", "title", "artist")})
                 .Build();
             // act
             var actual = deezerService.GetSongsByPlaylistId("accesstoken", "123");
             // assert
             Assert.AreEqual(1, actual.Count());
             Assert.AreEqual(SongId.Parse("1234567890"), actual.First().Id);
-            Assert.AreEqual("rock", actual.First().Genre);
             Assert.AreEqual("title", actual.First().Title);
             Assert.AreEqual("artist", actual.First().Artist);
         }

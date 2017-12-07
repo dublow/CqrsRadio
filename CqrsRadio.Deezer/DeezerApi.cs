@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using CqrsRadio.Common.Net;
 using CqrsRadio.Deezer.Models;
 using CqrsRadio.Domain.Entities;
@@ -57,7 +58,24 @@ namespace CqrsRadio.Deezer
 
         public IEnumerable<DeezerSong> GetSongsByPlaylistId(string accessToken, PlaylistId playlistId)
         {
-            throw new NotImplementedException();
+            var uri = String.Format(Endpoints.GetSongsByPlaylist, playlistId.Value, accessToken);
+
+            TrackDeezer GetT(string url)
+            {
+                Thread.Sleep(2000);
+                return _request.Get(url, JsonConvert.DeserializeObject<TrackDeezer>);
+            }
+
+            var trackItemDeezer = new List<TrackItemDeezer>();
+            while (!string.IsNullOrEmpty(uri))
+            {
+                
+                var trackDeezer = GetT(uri);
+                trackItemDeezer.AddRange(trackDeezer.Tracks);
+                uri = trackDeezer.Next;
+            }
+
+            return trackItemDeezer.Select(x=> new DeezerSong(x.Id, x.Title, x.Artist.Name));
         }
 
         public IEnumerable<string> GetPlaylistIdsByUserId(string accessToken, UserId userId)

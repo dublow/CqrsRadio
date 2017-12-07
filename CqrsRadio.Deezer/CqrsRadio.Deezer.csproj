@@ -46,6 +46,7 @@
     <Compile Include="DeezerApi.cs" />
     <Compile Include="Endpoints.cs" />
     <Compile Include="Models\PlaylistDeezer.cs" />
+    <Compile Include="Models\TrackDeezer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

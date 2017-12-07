@@ -5,7 +5,6 @@ using CqrsRadio.Domain.Events;
 using CqrsRadio.Domain.EventStores;
 using CqrsRadio.Domain.Handlers;
 using CqrsRadio.Domain.Services;
-using CqrsRadio.Domain.ValueTypes;
 using CqrsRadio.Web.Models;
 using Nancy;
 using Nancy.ModelBinding;
@@ -41,8 +40,9 @@ namespace CqrsRadio.Web.Modules
                 user.ClearPlaylists();
                 user.AddAccessToken(model.AccessToken);
 
-                var playlistId = deezerApi.CreatePlaylist(user.AccessToken, user.Identity.UserId, model.PlaylistName);
-                user.AddPlaylist(playlistId,  model.PlaylistName);
+                //var playlists = deezerApi.GetPlaylistIdsByUserId(user.AccessToken, user.Identity.UserId);
+
+                //var songs = deezerApi.GetSongsByPlaylistId(user.AccessToken, playlists.First());
                 
                 return Response.AsJson(user.GetPlaylist(model.PlaylistName));
             };

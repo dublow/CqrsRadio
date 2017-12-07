@@ -42,7 +42,7 @@ namespace CqrsRadio.Handlers
         private void StoreSong(string radioName, DeezerSong song)
         {
             if (song != DeezerSong.Empty)
-                _radioSongRepository.Add(song.Id, song.Genre, radioName, song.Title, song.Artist);
+                _radioSongRepository.Add(song.Id, radioName, song.Title, song.Artist);
         }
     }
 }
