@@ -28,7 +28,6 @@ namespace CqrsRadio.Infrastructure.Persistences
                 cnx.Open();
                 new SQLiteCommand(commandText, cnx)
                     .ExecuteNonQuery();
-
             }
         }
     }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CqrsRadio.Infrastructure.Persistences;
+﻿using CqrsRadio.Infrastructure.Persistences;
 
 namespace CqrsRadio.Tools
 {
@@ -12,6 +7,8 @@ namespace CqrsRadio.Tools
         static void Main(string[] args)
         {
             SqlLiteDb.CreateDomain();
+
+            
         }
     }
 }
