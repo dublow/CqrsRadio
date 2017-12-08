@@ -16,17 +16,16 @@ namespace CqrsRadio.Infrastructure.Persistences
             }
 
             var radioSongTable = "create table if not exists " +
-                                 "nd.radiosong (songid int, radioname varchar(20), title varchar(100), artist varchar(100) " +
-                                 "constraint fksongid primary key (songid)";
-
+                                 "radiosong (songid int primary key, radioname varchar(20), title varchar(50), artist varchar(50))";
 
             ExecuteCommand(connectionString, radioSongTable);
         }
 
-        public static void ExecuteCommand(string connectionString, string commandText)
+        private static void ExecuteCommand(string connectionString, string commandText)
         {
             using (var cnx = new SQLiteConnection(connectionString))
             {
+                cnx.Open();
                 new SQLiteCommand(commandText, cnx)
                     .ExecuteNonQuery();
 
