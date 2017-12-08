@@ -49,6 +49,18 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CqrsRadio.Common\CqrsRadio.Common.csproj">
+      <Project>{F04A5A26-8C79-431E-B79D-F64862B75B8C}</Project>
+      <Name>CqrsRadio.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CqrsRadio.Deezer\CqrsRadio.Deezer.csproj">
+      <Project>{21AC7FF1-1582-48CC-AF97-3A6F66BC7906}</Project>
+      <Name>CqrsRadio.Deezer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CqrsRadio.Domain\CqrsRadio.Domain.csproj">
+      <Project>{FEF41B95-8212-4312-BBE5-D3EE409BF6F4}</Project>
+      <Name>CqrsRadio.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CqrsRadio.Infrastructure\CqrsRadio.Infrastructure.csproj">
       <Project>{f99a77b5-79c3-47d0-802d-2bb0d8c5cc63}</Project>
       <Name>CqrsRadio.Infrastructure</Name>

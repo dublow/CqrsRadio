@@ -40,9 +40,8 @@ namespace CqrsRadio.Web.Modules
                 user.ClearPlaylists();
                 user.AddAccessToken(model.AccessToken);
 
-                //var playlists = deezerApi.GetPlaylistIdsByUserId(user.AccessToken, user.Identity.UserId);
-
-                //var songs = deezerApi.GetSongsByPlaylistId(user.AccessToken, playlists.First());
+                var playlistId = deezerApi.CreatePlaylist(user.AccessToken, user.Identity.UserId, model.PlaylistName);
+                user.AddPlaylist(playlistId, model.PlaylistName);
                 
                 return Response.AsJson(user.GetPlaylist(model.PlaylistName));
             };

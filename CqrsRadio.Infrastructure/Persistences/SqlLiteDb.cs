@@ -26,8 +26,11 @@ namespace CqrsRadio.Infrastructure.Persistences
             using (var cnx = new SQLiteConnection(connectionString))
             {
                 cnx.Open();
-                new SQLiteCommand(commandText, cnx)
-                    .ExecuteNonQuery();
+
+                using (var command = new SQLiteCommand(commandText, cnx))
+                {
+                    command.ExecuteNonQuery();
+                }
             }
         }
     }
