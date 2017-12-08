@@ -16,6 +16,7 @@ namespace CqrsRadio.Domain.Aggregates
         private readonly List<Playlist> _playlists = new List<Playlist>();
 
         public Identity Identity { get; private set; }
+        public string AccessToken { get; private set; }
 
         public User(IEventStream stream, IEventPublisher publisher)
         {
@@ -39,6 +40,15 @@ namespace CqrsRadio.Domain.Aggregates
             return user;
         }
 
+        public void AddAccessToken(string accessToken)
+        {
+            if (_decision.IsDeleted) return;
+
+            AccessToken = accessToken;
+
+            _publisher.Publish(new AccessTokenAdded(Identity.UserId));
+        }
+
         public void Delete()
         {
             if(_decision.IsDeleted) return;
@@ -46,33 +56,42 @@ namespace CqrsRadio.Domain.Aggregates
             PublishAndApply(new UserDeleted(Identity.UserId));
         }
 
-        public void AddPlaylist(string name)
+        public void AddPlaylist(PlaylistId playlistId, string name)
         {
             if (_decision.IsDeleted)
                 return;
             if (HasPlaylist(name))
                 return;
 
-            var playlist = new Playlist(Identity.UserId, name);
+            var playlist = new Playlist(Identity.UserId, playlistId, name);
 
             _playlists.Add(playlist);
 
-            _publisher.Publish(new PlaylistAdded(Identity.UserId, name));
+            _publisher.Publish(new PlaylistAdded(Identity.UserId, playlistId, name));
         }
 
-        public void DeletePlaylist(string name)
+        public void DeletePlaylist(PlaylistId playlistId, string name)
         {
             if (_decision.IsDeleted)
                 return;
             if (!HasPlaylist(name))
                 return;
 
-            _playlists.Remove(new Playlist(Identity.UserId, name));
+            _playlists.Remove(new Playlist(Identity.UserId, playlistId, name));
 
-            _publisher.Publish(new PlaylistDeleted(Identity.UserId, name));
+            _publisher.Publish(new PlaylistDeleted(Identity.UserId, playlistId, name));
         }
 
-        public void AddSongToPlaylist(string playlistName, string songId, string genre, string title, string artist)
+        public void ClearPlaylists()
+        {
+            if (_decision.IsDeleted)
+                return;
+
+            _playlists.Clear();
+            _publisher.Publish(new PlaylistsCleared(Identity.UserId));
+        }
+
+        public void AddSongToPlaylist(string playlistName, SongId songId, string title, string artist)
         {
             if (_decision.IsDeleted)
                 return;
@@ -81,13 +100,13 @@ namespace CqrsRadio.Domain.Aggregates
 
             var playlist = GetPlaylist(playlistName);
 
-            var song = new Song(songId, genre, title, artist);
+            var song = new Song(songId, title, artist);
             if (playlist.Songs.Contains(song))
                 return;
 
             playlist.AddSong(song);
 
-            _publisher.Publish(new SongAdded(Identity.UserId, playlistName, songId, genre, title, artist));
+            _publisher.Publish(new SongAdded(Identity.UserId, playlistName, songId, title, artist));
         }
 
         public Playlist GetPlaylist(string playlistName)
@@ -112,17 +131,21 @@ namespace CqrsRadio.Domain.Aggregates
                 }
                 else if (domainEvent is PlaylistAdded playlistAdded)
                 {
-                    _playlists.Add(new Playlist(playlistAdded.UserId, playlistAdded.Name));
-                }
-                else if (domainEvent is PlaylistDeleted playlistDeleted)
-                {
-                    _playlists.Remove(new Playlist(Identity.UserId, playlistDeleted.Name));
+                    _playlists.Add(new Playlist(playlistAdded.UserId, playlistAdded.PlaylistId, playlistAdded.Name));
                 }
                 else if (domainEvent is SongAdded songAdded)
                 {
                     var playlist = GetPlaylist(songAdded.PlaylistName);
 
-                    playlist.AddSong(new Song(songAdded.SongId, songAdded.Genre, songAdded.Title, songAdded.Artist));
+                    playlist.AddSong(new Song(songAdded.SongId, songAdded.Title, songAdded.Artist));
+                }
+                else if (domainEvent is PlaylistDeleted playlistDeleted)
+                {
+                    _playlists.Remove(new Playlist(Identity.UserId, playlistDeleted.PlaylistId, playlistDeleted.Name));
+                }
+                else if (domainEvent is PlaylistsCleared playlistsCleared)
+                {
+                    _playlists.Clear();
                 }
             }
         }

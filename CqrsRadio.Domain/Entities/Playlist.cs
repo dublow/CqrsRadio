@@ -8,12 +8,14 @@ namespace CqrsRadio.Domain.Entities
     public struct Playlist : IEquatable<Playlist>
     {
         public readonly UserId UserId;
+        public readonly PlaylistId PlaylistId;
         public readonly string Name;
         public readonly List<Song> Songs;
 
-        public Playlist(UserId userId, string name)
+        public Playlist(UserId userId, PlaylistId playlistId, string name)
         {
             UserId = userId;
+            PlaylistId = playlistId;
             Name = name;
             Songs = new List<Song>();
         }
@@ -26,7 +28,7 @@ namespace CqrsRadio.Domain.Entities
 
         public bool Equals(Playlist other)
         {
-            return string.Equals(UserId, other.UserId) && string.Equals(Name, other.Name) && Songs.SequenceEqual(other.Songs);
+            return string.Equals(UserId, other.UserId) && string.Equals(PlaylistId, other.PlaylistId) && string.Equals(Name, other.Name) && Songs.SequenceEqual(other.Songs);
         }
 
         public override bool Equals(object obj)
@@ -39,7 +41,8 @@ namespace CqrsRadio.Domain.Entities
         {
             unchecked
             {
-                var hashCode = (UserId != null ? UserId.GetHashCode() : 0);
+                var hashCode = (UserId.Value != null ? UserId.Value.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (PlaylistId.Value != null ? PlaylistId.Value.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (Name != null ? Name.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (Songs != null ? Songs.GetHashCode() : 0);
                 return hashCode;

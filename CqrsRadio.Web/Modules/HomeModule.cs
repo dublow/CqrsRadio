@@ -4,16 +4,16 @@ using CqrsRadio.Domain.Aggregates;
 using CqrsRadio.Domain.Events;
 using CqrsRadio.Domain.EventStores;
 using CqrsRadio.Domain.Handlers;
+using CqrsRadio.Domain.Services;
 using CqrsRadio.Web.Models;
 using Nancy;
 using Nancy.ModelBinding;
-using Nancy.Security;
 
 namespace CqrsRadio.Web.Modules
 {
     public class HomeModule : NancyModule
     {
-        public HomeModule(IEventStream eventStream, IEventPublisher eventPublisher)
+        public HomeModule(IEventStream eventStream, IEventPublisher eventPublisher, IDeezerApi deezerApi)
         {
             Get["/"] = _ => View["index"];
             Get["/channel"] = _ =>
@@ -29,6 +29,7 @@ namespace CqrsRadio.Web.Modules
             Post["/login"] = _ =>
             {
                 var model = this.Bind<LoginViewModel>();
+
                 var userExists = eventStream.GetEvents().OfType<UserCreated>()
                     .Any(x => x.Identity.UserId == model.UserId);
 
@@ -36,7 +37,13 @@ namespace CqrsRadio.Web.Modules
                     ? new User(eventStream, eventPublisher) 
                     : User.Create(eventStream, eventPublisher, model.Email, model.Nickname, model.UserId);
 
-                return Response.AsJson(user.Identity);
+                user.ClearPlaylists();
+                user.AddAccessToken(model.AccessToken);
+
+                var playlistId = deezerApi.CreatePlaylist(user.AccessToken, user.Identity.UserId, model.PlaylistName);
+                user.AddPlaylist(playlistId, model.PlaylistName);
+                
+                return Response.AsJson(user.GetPlaylist(model.PlaylistName));
             };
         }
     }

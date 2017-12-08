@@ -1,4 +1,7 @@
-﻿using CqrsRadio.Domain.Entities;
+﻿using System.CodeDom;
+using System.Linq;
+using CqrsRadio.Domain.Entities;
+using CqrsRadio.Domain.ValueTypes;
 using CqrsRadio.Test.Mocks;
 using NUnit.Framework;
 
@@ -11,13 +14,17 @@ namespace CqrsRadio.Test.DeezerTests
         public void CreatePlaylistDeezer()
         {
             var userId = "12345";
+            var playlistId = "123";
             var playlistName = "name";
 
             var deezerService = DeezerApiBuilder.Create();
 
-            deezerService.Build().CreatePlaylist(userId, playlistName);
+            var actualPlaylistId = deezerService
+                .SetCreatePlaylist(playlistId)
+                .Build()
+                .CreatePlaylist("accesstoken", userId, playlistName);
 
-            Assert.AreEqual(1, deezerService.PlaylistAdded);
+            Assert.AreEqual(actualPlaylistId, actualPlaylistId);
         }
 
         [Test]
@@ -27,7 +34,7 @@ namespace CqrsRadio.Test.DeezerTests
 
             var deezerService = DeezerApiBuilder.Create();
 
-            deezerService.Build().DeletePlaylist(playlistId);
+            deezerService.Build().DeletePlaylist("accesstoken", playlistId);
 
             Assert.AreEqual(1, deezerService.PlaylistDeleted);
         }
@@ -36,13 +43,13 @@ namespace CqrsRadio.Test.DeezerTests
         public void AddSongsToPlaylistDeezer()
         {
             var playlistId = "67890";
-            var songIds = new[]{ "12345, 23456, 34567" };
+            var songIds = new []{ SongId.Parse("12345"), SongId.Parse("23456"), SongId.Parse("34567") };
 
             var deezerService = DeezerApiBuilder.Create();
 
-            deezerService.Build().AddSongsToPlaylist(playlistId, songIds);
+            deezerService.Build().AddSongsToPlaylist("accesstoken", playlistId, songIds);
 
-            Assert.AreEqual(1, deezerService.SongsAdded);
+            Assert.AreEqual(3, deezerService.SongsAdded);
         }
 
         [Test]
@@ -52,13 +59,12 @@ namespace CqrsRadio.Test.DeezerTests
             (string title, string artist) = ("title", "artist");
             var deezerService = DeezerApiBuilder
                 .Create()
-                .SetSong(new DeezerSong("1234567890", "rock", title, artist))
+                .SetSong(new DeezerSong("1234567890", title, artist))
                 .Build();
             // act
-            var actual = deezerService.GetSong(title, artist);
+            var actual = deezerService.GetSong("accessToken", title, artist);
             // assert
-            Assert.AreEqual("1234567890", actual.Id);
-            Assert.AreEqual("rock", actual.Genre);
+            Assert.AreEqual(SongId.Parse("1234567890"), actual.Id);
             Assert.AreEqual("title", actual.Title);
             Assert.AreEqual("artist", actual.Artist);
         }
@@ -73,7 +79,7 @@ namespace CqrsRadio.Test.DeezerTests
                 .SetSong(DeezerSong.Empty)
                 .Build();
             // act
-            var actual = deezerService.GetSong(title, artist);
+            var actual = deezerService.GetSong("accessToken", title, artist);
             // assert
             Assert.AreEqual(DeezerSong.Empty, actual);
         }
@@ -84,15 +90,46 @@ namespace CqrsRadio.Test.DeezerTests
             // arrange
             var deezerService = DeezerApiBuilder
                 .Create()
-                .SetSong(new DeezerSong("1234567890", "rock", "title", "artist"))
+                .SetSong(new DeezerSong("1234567890", "title", "artist"))
                 .Build();
             // act
-            var actual = deezerService.GetSong("1234567890");
+            var actual = deezerService.GetSong("accesstoken", "1234567890");
             // assert
-            Assert.AreEqual("1234567890", actual.Id);
-            Assert.AreEqual("rock", actual.Genre);
+            Assert.AreEqual(SongId.Parse("1234567890"), actual.Id);
             Assert.AreEqual("title", actual.Title);
             Assert.AreEqual("artist", actual.Artist);
+        }
+
+        [Test]
+        public void GetSongsByPlaylistIdWithPlaylistId()
+        {
+            // arrange
+            var deezerService = DeezerApiBuilder
+                .Create()
+                .SetSongsByPlaylistId(new []{new DeezerSong("1234567890", "title", "artist")})
+                .Build();
+            // act
+            var actual = deezerService.GetSongsByPlaylistId("accesstoken", "123");
+            // assert
+            Assert.AreEqual(1, actual.Count());
+            Assert.AreEqual(SongId.Parse("1234567890"), actual.First().Id);
+            Assert.AreEqual("title", actual.First().Title);
+            Assert.AreEqual("artist", actual.First().Artist);
+        }
+
+        [Test]
+        public void GetPlaylistsByUserIdWithUserId()
+        {
+            // arrange
+            var deezerService = DeezerApiBuilder
+                .Create()
+                .SetPlaylistIdsByUserId(new[] { "123" })
+                .Build();
+            // act
+            var actual = deezerService.GetPlaylistIdsByUserId("accesstoken", "12345");
+            // assert
+            Assert.AreEqual(1, actual.Count());
+            Assert.AreEqual("123", actual.First());
         }
     }
 }

@@ -19,13 +19,13 @@ namespace CqrsRadio.Handlers
 
         public void Handle(RadioSongParsed evt)
         {
-            var song = _deezerApi.GetSong(evt.Title, evt.Artist);
+            var song = _deezerApi.GetSong("accessToken", evt.Title, evt.Artist);
             StoreSong(evt.RadioName, song);
         }
 
         public void Handle(RadioSongWithDeezerSongIdParsed evt)
         {
-            var song = _deezerApi.GetSong(evt.SongId);
+            var song = _deezerApi.GetSong("", evt.SongId);
             StoreSong(evt.RadioName, song);
         }
 
@@ -42,7 +42,7 @@ namespace CqrsRadio.Handlers
         private void StoreSong(string radioName, DeezerSong song)
         {
             if (song != DeezerSong.Empty)
-                _radioSongRepository.Add(song.Id, song.Genre, radioName, song.Title, song.Artist);
+                _radioSongRepository.Add(song.Id, radioName, song.Title, song.Artist);
         }
     }
 }

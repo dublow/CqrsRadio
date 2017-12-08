@@ -4,7 +4,7 @@ namespace CqrsRadio.Domain.Repositories
 {
     public interface IPlaylistRepository    
     {
-        void Add(UserId userId, string name);
-        void Delete(UserId userId, string name);
+        void Add(UserId userId, PlaylistId isAny, string name);
+        void Delete(UserId userId, PlaylistId isAny, string name);
     }
 }

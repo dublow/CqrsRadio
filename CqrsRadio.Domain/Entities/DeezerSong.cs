@@ -1,18 +1,17 @@
 ﻿using System;
+using CqrsRadio.Domain.ValueTypes;
 
 namespace CqrsRadio.Domain.Entities
 {
     public struct DeezerSong : IEquatable<DeezerSong>
     {
-        public readonly string Id;
-        public readonly string Genre;
+        public readonly SongId Id;
         public readonly string Title;
         public readonly string Artist;
 
-        public DeezerSong(string id, string genre, string title, string artist)
+        public DeezerSong(SongId id, string title, string artist)
         {
             Id = id;
-            Genre = genre;
             Title = title;
             Artist = artist;
         }
@@ -22,7 +21,7 @@ namespace CqrsRadio.Domain.Entities
 
         public bool Equals(DeezerSong other)
         {
-            return string.Equals(Id, other.Id) && string.Equals(Genre, other.Genre) && string.Equals(Title, other.Title) && string.Equals(Artist, other.Artist);
+            return string.Equals(Id, other.Id) && string.Equals(Title, other.Title) && string.Equals(Artist, other.Artist);
         }
 
         public override bool Equals(object obj)
@@ -35,8 +34,7 @@ namespace CqrsRadio.Domain.Entities
         {
             unchecked
             {
-                var hashCode = (Id != null ? Id.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (Genre != null ? Genre.GetHashCode() : 0);
+                var hashCode = (Id.Value != null ? Id.Value.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (Title != null ? Title.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (Artist != null ? Artist.GetHashCode() : 0);
                 return hashCode;

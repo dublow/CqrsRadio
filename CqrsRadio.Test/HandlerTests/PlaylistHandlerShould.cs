@@ -17,12 +17,13 @@ namespace CqrsRadio.Test.HandlerTests
             var mockedPlaylistRepository = PlaylistRepositoryBuilder.Create();
             var playlistRepository = mockedPlaylistRepository.Build();
             var playlistHandler = new PlaylistHandler(playlistRepository);
-            (UserId userId, string name) = ("12345", "bestof");
+            (UserId userId, PlaylistId playlistId, string name) = ("12345", "123", "bestof");
             // act
-            playlistHandler.Handle(new PlaylistAdded("12345", "bestof"));
+            playlistHandler.Handle(new PlaylistAdded("12345", "123", "bestof"));
             // assert
-            var (actualUserId, actualName) = mockedPlaylistRepository.Playlists.First();
+            var (actualUserId, actualPlaylisId, actualName) = mockedPlaylistRepository.Playlists.First();
             Assert.AreEqual(userId, actualUserId);
+            Assert.AreEqual(playlistId, actualPlaylisId);
             Assert.AreEqual(name, actualName);
         }
 
@@ -31,11 +32,11 @@ namespace CqrsRadio.Test.HandlerTests
         {
             // arrange
             var mockedPlaylistRepository = PlaylistRepositoryBuilder.Create();
-            mockedPlaylistRepository.Playlists.Add(("12345", "bestof"));
+            mockedPlaylistRepository.Playlists.Add(("12345", "123", "bestof"));
             var playlistRepository = mockedPlaylistRepository.Build();
             var playlistHandler = new PlaylistHandler(playlistRepository);
             // act
-            playlistHandler.Handle(new PlaylistDeleted("12345", "bestof"));
+            playlistHandler.Handle(new PlaylistDeleted("12345", "123", "bestof"));
             // assert
             Assert.AreEqual(0, mockedPlaylistRepository.Playlists.Count);
         }

@@ -3,11 +3,15 @@
         getLoginStatus: (model) => {
             DZ.getLoginStatus(function (response) {
                 if (response.authResponse) {
+                    var accessToken = response.authResponse.accessToken;
                     DZ.api('/user/me', function (response) {
                         if (response.error)
                             return;
-                        model.loginText("Hi " + response.name);
                         model.isLogged(true);
+                        model.accessToken(accessToken);
+                        model.userId(response.id);
+                        model.name(response.name);
+                        model.email(response.email);
                     });
                 } else {
                     console.log('User cancelled login or did not fully authorize.');
@@ -20,14 +24,13 @@
             else {
                 DZ.login(function (response) {
                     if (response.authResponse) {
+                        var accessToken = response.authResponse.accessToken;
                         DZ.api('/user/me', function (response) {
-                            model.loginText("Hi " + response.name);
                             model.isLogged(true);
-                            $.post('/Login',
-                                { userId: response.id, nickname: response.name, email: response.email },
-                                function() {
-
-                                });
+                            model.accessToken(accessToken);
+                            model.userId(response.id);
+                            model.name(response.name);
+                            model.email(response.email);
                         });
                     } else {
                         console.log('User cancelled login or did not fully authorize.');
@@ -40,17 +43,42 @@
             DZ.logout();
             model.loginText("Signin");
             model.isLogged(false);
+        },
+        createPlaylist: (model) => {
+            $.post('/Login',
+                {
+                    accessToken: model.accessToken(),
+                    userId: model.userId(),
+                    nickname: model.name(),
+                    email: model.email(),
+                    playlistName: model.playlist()
+                },
+                function () {
+
+                });
         }
     };
     var public = {
         info: () => console.log("Welcome home!"),
         model: {
             isLogged: ko.observable(false),
-            loginText: ko.observable('Signin'),
+            accessToken: ko.observable(''),
+            userId: ko.observable(''),
+            name: ko.observable(''),
+            email: ko.observable(''),
+            playlist: ko.observable(''),
             init: () => deezer.getLoginStatus(public.model),
-            login: deezer.login
+            login: deezer.login,
+            createPlaylist: deezer.createPlaylist
         }
     };
+    public.model.signinCss = ko.pureComputed(function() {
+        return this.isLogged() ? 'd-none' : '';
+    }, public.model);
+
+    public.model.signoutCss = ko.pureComputed(function () {
+        return this.isLogged() ? '' : 'd-none';
+    }, public.model);
 
     ko.applyBindings(public.model);
     return public;

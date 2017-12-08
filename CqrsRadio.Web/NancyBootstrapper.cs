@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CqrsRadio.Common.Net;
+using CqrsRadio.Deezer;
 using CqrsRadio.Domain.EventStores;
 using CqrsRadio.Domain.Handlers;
+using CqrsRadio.Domain.Services;
 using CqrsRadio.Infrastructure.Bus;
 using CqrsRadio.Infrastructure.EventStores;
 using Nancy;
@@ -19,6 +22,8 @@ namespace CqrsRadio.Web
         {
             container.Register<IEventStream, MemoryEventStream>();
             container.Register<IEventPublisher, EventBus>();
+            container.Register<IRequest, RadioRequest>();
+            container.Register<IDeezerApi, DeezerApi>();
         }
     }
 }
