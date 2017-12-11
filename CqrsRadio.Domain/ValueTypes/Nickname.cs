@@ -2,7 +2,7 @@
 
 namespace CqrsRadio.Domain.ValueTypes
 {
-    public struct Nickname : IEquatable<Nickname>
+    public class Nickname : IEquatable<Nickname>
     {
         public readonly string Value;
         private Nickname(string value)
@@ -17,6 +17,12 @@ namespace CqrsRadio.Domain.ValueTypes
 
             return new Nickname(value.ToLower());
         }
+
+        public static Nickname Empty
+            => new Nickname(String.Empty);
+
+        public bool IsEmpty
+            => string.IsNullOrEmpty(Value);
 
         public bool Equals(Nickname other)
         {
@@ -42,11 +48,6 @@ namespace CqrsRadio.Domain.ValueTypes
         public static bool operator !=(Nickname left, Nickname right)
         {
             return !left.Equals(right);
-        }
-
-        public static implicit operator Nickname(string value)
-        {
-            return Parse(value);
         }
     }
 }

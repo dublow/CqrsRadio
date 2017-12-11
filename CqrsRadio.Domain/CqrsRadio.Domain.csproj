@@ -59,7 +59,6 @@
     <Compile Include="Events\IDomainEvent.cs" />
     <Compile Include="Events\PlaylistAdded.cs" />
     <Compile Include="Events\PlaylistDeleted.cs" />
-    <Compile Include="Events\PlaylistsCleared.cs" />
     <Compile Include="Events\RadioCreated.cs" />
     <Compile Include="Events\RadioDeleted.cs" />
     <Compile Include="Events\RadioSongDuplicate.cs" />
@@ -79,7 +78,6 @@
     <Compile Include="Repositories\IUserRepository.cs" />
     <Compile Include="Services\IDeezerApi.cs" />
     <Compile Include="Services\IRadioEngine.cs" />
-    <Compile Include="Services\ISongEngine.cs" />
     <Compile Include="ValueTypes\SongId.cs" />
     <Compile Include="ValueTypes\PlaylistId.cs" />
     <Compile Include="Utilities\StringUtilities.cs" />

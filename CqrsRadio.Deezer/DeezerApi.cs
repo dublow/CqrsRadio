@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using CqrsRadio.Common.Net;
 using CqrsRadio.Deezer.Models;
@@ -43,7 +44,15 @@ namespace CqrsRadio.Deezer
 
         public void AddSongsToPlaylist(string accessToken, PlaylistId playlistId, SongId[] songIds)
         {
-            throw new NotImplementedException();
+            var songsAsBuilder = songIds.Aggregate(new StringBuilder(),
+                (builder, songId) => builder.Append($"{songId.Value},"), builder => builder);
+
+            songsAsBuilder.Length--;
+
+            var post = _request.Post(string.Format(Endpoints.AddSongsToPlaylist, playlistId.Value, songsAsBuilder, accessToken), response =>
+            {
+                return response;
+            });
         }
 
         public DeezerSong GetSong(string accessToken, string title, string artist)
@@ -75,10 +84,10 @@ namespace CqrsRadio.Deezer
                 uri = trackDeezer.Next;
             }
 
-            return trackItemDeezer.Select(x=> new DeezerSong(x.Id, x.Title, x.Artist.Name));
+            return trackItemDeezer.Select(x=> new DeezerSong(SongId.Parse(x.Id), x.Title, x.Artist.Name));
         }
 
-        public IEnumerable<string> GetPlaylistIdsByUserId(string accessToken, UserId userId)
+        public IEnumerable<PlaylistId> GetPlaylistIdsByUserId(string accessToken, UserId userId)
         {
             var uri = string.Format(Endpoints.GetPlaylists, userId.Value, accessToken);
 
@@ -87,11 +96,11 @@ namespace CqrsRadio.Deezer
                 return _request.Get(url, JsonConvert.DeserializeObject<PlaylistDeezer>);
             }
 
-            var playlistIds = new List<string>();
+            var playlistIds = new List<PlaylistId>();
             while (!string.IsNullOrEmpty(uri))
             {
                 var playlistDeezer = GetP(uri);
-                playlistIds.AddRange(playlistDeezer.Playlists.Select(x=>x.Id));
+                playlistIds.AddRange(playlistDeezer.Playlists.Select(x=>PlaylistId.Parse(x.Id)));
                 uri = playlistDeezer.Next;
             }
 

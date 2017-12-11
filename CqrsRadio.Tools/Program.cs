@@ -1,5 +1,6 @@
 ﻿using CqrsRadio.Common.Net;
 using CqrsRadio.Deezer;
+using CqrsRadio.Domain.ValueTypes;
 using CqrsRadio.Infrastructure.Persistences;
 using CqrsRadio.Infrastructure.Repositories;
 
@@ -15,7 +16,7 @@ namespace CqrsRadio.Tools
             var request = new RadioRequest();
             var deezerApi = new DeezerApi(request);
 
-            var playlistIds = deezerApi.GetPlaylistIdsByUserId("frBQLuh4wfjFXawHtrKImjBzyPN5Pcvo0Gr5HoVSAzkVCiMy0kS", "4934039");
+            var playlistIds = deezerApi.GetPlaylistIdsByUserId("frBQLuh4wfjFXawHtrKImjBzyPN5Pcvo0Gr5HoVSAzkVCiMy0kS", UserId.Parse("4934039"));
 
             foreach (var playlistId in playlistIds)
             {
@@ -29,7 +30,6 @@ namespace CqrsRadio.Tools
                     }
                 }
             }
-
         }
     }
 }

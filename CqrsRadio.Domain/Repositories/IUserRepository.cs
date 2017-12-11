@@ -1,8 +1,10 @@
-﻿namespace CqrsRadio.Domain.Repositories
+﻿using CqrsRadio.Domain.ValueTypes;
+
+namespace CqrsRadio.Domain.Repositories
 {
     public interface IUserRepository    
     {
-        void Create(string email, string nickname, string userId);
-        void Delete(string userId);
+        void Create(Email email, Nickname nickname, UserId userId);
+        void Delete(UserId userId);
     }
 }

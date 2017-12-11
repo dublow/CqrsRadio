@@ -10,33 +10,33 @@ namespace CqrsRadio.Test.ValueTypesTest
         [Test]
         public void ValidWhenCreateIdentity()
         {
-            Identity.Create("nicolas.dfr@gmail.com", "nicolas", "12345");
+            Identity.Parse("nicolas.dfr@gmail.com", "nicolas", "12345", "accessToken");
             Assert.Pass();
         }
 
         [Test]
         public void InvalidWhenCreateIdentityWithInvalidEmail()
         {
-            Assert.Throws<ArgumentException>(() => Identity.Create("nicolas", "nicolas", "12345"));
+            Assert.Throws<ArgumentException>(() => Identity.Parse("nicolas", "nicolas", "12345", "accessToken"));
         }
 
         [Test]
         public void InvalidWhenCreateIdentityWithInvalidNickname()
         {
-            Assert.Throws<ArgumentException>(() => Identity.Create("nicolas.dfr@gmail.com", string.Empty, "12345"));
+            Assert.Throws<ArgumentException>(() => Identity.Parse("nicolas.dfr@gmail.com", string.Empty, "12345", "accessToken"));
         }
 
         [Test]
         public void InvalidWhenCreateIdentityWithInvalidUserId()
         {
-            Assert.Throws<ArgumentException>(() => Identity.Create("nicolas.dfr@gmail.com", "nicolas", "abc24"));
+            Assert.Throws<ArgumentException>(() => Identity.Parse("nicolas.dfr@gmail.com", "nicolas", "abc24", "accessToken"));
         }
 
         [Test]
         public void EqualWhenTestSameIdentity()
         {
-            var identity1 = Identity.Create("nicolas.dfr@gmail.com", "nicolas", "12345");
-            var identity2 = Identity.Create("nicolas.dfr@gmail.com", "nicolas", "12345");
+            var identity1 = Identity.Parse("nicolas.dfr@gmail.com", "nicolas", "12345", "accessToken");
+            var identity2 = Identity.Parse("nicolas.dfr@gmail.com", "nicolas", "12345", "accessToken");
 
             Assert.AreEqual(identity1, identity2);
         }
@@ -44,8 +44,8 @@ namespace CqrsRadio.Test.ValueTypesTest
         [Test]
         public void NotEqualWhenTestDifferentEmail()
         {
-            var identity1 = Identity.Create("nicolas.dfr@gmail.com", "nicolas", "12345");
-            var identity2 = Identity.Create("nicolas.dfr2@gmail.com", "nicolas", "12345");
+            var identity1 = Identity.Parse("nicolas.dfr@gmail.com", "nicolas", "12345", "accessToken");
+            var identity2 = Identity.Parse("nicolas.dfr2@gmail.com", "nicolas", "12345", "accessToken");
 
             Assert.AreNotEqual(identity1, identity2);
         }
@@ -53,8 +53,8 @@ namespace CqrsRadio.Test.ValueTypesTest
         [Test]
         public void NotEqualWhenTestDifferentNickname()
         {
-            var identity1 = Identity.Create("nicolas.dfr@gmail.com", "nicolas", "12345");
-            var identity2 = Identity.Create("nicolas.dfr@gmail.com", "nicolas2", "12345");
+            var identity1 = Identity.Parse("nicolas.dfr@gmail.com", "nicolas", "12345", "accessToken");
+            var identity2 = Identity.Parse("nicolas.dfr@gmail.com", "nicolas2", "12345", "accessToken");
 
             Assert.AreNotEqual(identity1, identity2);
         }
@@ -62,8 +62,8 @@ namespace CqrsRadio.Test.ValueTypesTest
         [Test]
         public void NotEqualWhenTestDifferentUserId()
         {
-            var identity1 = Identity.Create("nicolas.dfr@gmail.com", "nicolas", "12345");
-            var identity2 = Identity.Create("nicolas.dfr@gmail.com", "nicolas", "12346");
+            var identity1 = Identity.Parse("nicolas.dfr@gmail.com", "nicolas", "12345", "accessToken");
+            var identity2 = Identity.Parse("nicolas.dfr@gmail.com", "nicolas", "12346", "accessToken");
 
             Assert.AreNotEqual(identity1, identity2);
         }
@@ -71,8 +71,8 @@ namespace CqrsRadio.Test.ValueTypesTest
         [Test]
         public void EqualOperatorWhenTestSameIdentity()
         {
-            var identity1 = Identity.Create("nicolas.dfr@gmail.com", "nicolas", "12345");
-            var identity2 = Identity.Create("nicolas.dfr@gmail.com", "nicolas", "12345");
+            var identity1 = Identity.Parse("nicolas.dfr@gmail.com", "nicolas", "12345", "accessToken");
+            var identity2 = Identity.Parse("nicolas.dfr@gmail.com", "nicolas", "12345", "accessToken");
 
             Assert.IsTrue(identity1 == identity2);
         }
@@ -80,8 +80,8 @@ namespace CqrsRadio.Test.ValueTypesTest
         [Test]
         public void EqualOperatorWhenTestDifferentIdentity()
         {
-            var identity1 = Identity.Create("nicolas.dfr@gmail.com", "nicolas", "12345");
-            var identity2 = Identity.Create("nicolas.dfr2@gmail.com", "nicolas", "12345");
+            var identity1 = Identity.Parse("nicolas.dfr@gmail.com", "nicolas", "12345", "accessToken");
+            var identity2 = Identity.Parse("nicolas.dfr2@gmail.com", "nicolas", "12345", "accessToken");
 
             Assert.IsTrue(identity1 != identity2);
         }

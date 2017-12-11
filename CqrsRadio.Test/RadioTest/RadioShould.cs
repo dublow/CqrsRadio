@@ -89,7 +89,7 @@ namespace CqrsRadio.Test.RadioTest
         {
             var stream = new MemoryEventStream();
             stream.Add(new RadioCreated("djam", new Uri("http://djamradio.fr")));
-            stream.Add(new RadioDeleted());
+            stream.Add(new RadioDeleted("djam"));
             var publisher = new EventBus(stream);
             var radioEngine = RadioEngineBuilder
                 .Create()

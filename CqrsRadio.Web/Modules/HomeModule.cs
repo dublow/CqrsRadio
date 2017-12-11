@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Linq;
 using CqrsRadio.Domain.Aggregates;
-using CqrsRadio.Domain.Events;
-using CqrsRadio.Domain.EventStores;
-using CqrsRadio.Domain.Handlers;
+using CqrsRadio.Domain.Repositories;
 using CqrsRadio.Domain.Services;
+using CqrsRadio.Infrastructure.Bus;
+using CqrsRadio.Infrastructure.EventStores;
 using CqrsRadio.Web.Models;
 using Nancy;
 using Nancy.ModelBinding;
@@ -13,8 +12,11 @@ namespace CqrsRadio.Web.Modules
 {
     public class HomeModule : NancyModule
     {
-        public HomeModule(IEventStream eventStream, IEventPublisher eventPublisher, IDeezerApi deezerApi)
+        public HomeModule(IDeezerApi deezerApi, ISongRepository songRepository)
         {
+            var eventStream = new MemoryEventStream();
+            var eventPublisher = new EventBus(eventStream);
+
             Get["/"] = _ => View["index"];
             Get["/channel"] = _ =>
             {
@@ -30,20 +32,12 @@ namespace CqrsRadio.Web.Modules
             {
                 var model = this.Bind<LoginViewModel>();
 
-                var userExists = eventStream.GetEvents().OfType<UserCreated>()
-                    .Any(x => x.Identity.UserId == model.UserId);
+                var user = User.Create(eventStream, eventPublisher, deezerApi, songRepository,
+                    model.Email, model.Nickname, model.UserId, model.AccessToken);
 
-                var user = userExists 
-                    ? new User(eventStream, eventPublisher) 
-                    : User.Create(eventStream, eventPublisher, model.Email, model.Nickname, model.UserId);
-
-                user.ClearPlaylists();
-                user.AddAccessToken(model.AccessToken);
-
-                var playlistId = deezerApi.CreatePlaylist(user.AccessToken, user.Identity.UserId, model.PlaylistName);
-                user.AddPlaylist(playlistId, model.PlaylistName);
+                user.AddPlaylist(model.PlaylistName);
                 
-                return Response.AsJson(user.GetPlaylist(model.PlaylistName));
+                return Response.AsJson(user.Playlist);
             };
         }
     }

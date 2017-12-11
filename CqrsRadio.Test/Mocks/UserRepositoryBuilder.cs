@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using CqrsRadio.Domain.Repositories;
+using CqrsRadio.Domain.ValueTypes;
 using Moq;
 
 namespace CqrsRadio.Test.Mocks
@@ -13,7 +13,7 @@ namespace CqrsRadio.Test.Mocks
         public UserRepositoryBuilder()
         {
             _mock = new Mock<IUserRepository>();
-            Users = new List<(string email, string nickname, string userId)>();
+            Users = new List<(Email email, Nickname nickname, UserId userId)>();
         }
         public static UserRepositoryBuilder Create()
         {
@@ -22,19 +22,19 @@ namespace CqrsRadio.Test.Mocks
 
         public IUserRepository Build()
         {
-            _mock.Setup(x => x.Create(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
-                .Callback<string, string, string>((email, nickname, userId) => Users.Add((email, nickname, userId)));
+            _mock.Setup(x => x.Create(It.IsAny<Email>(), It.IsAny<Nickname>(), It.IsAny<UserId>()))
+                .Callback<Email, Nickname, UserId>((email, nickname, userId) => Users.Add((email, nickname, userId)));
 
-            _mock.Setup(x => x.Delete(It.IsAny<string>()))
-                .Callback<string>(userId =>
+            _mock.Setup(x => x.Delete(It.IsAny<UserId>()))
+                .Callback<UserId>(userId =>
                 {
-                    var user = Users.First(x => x.userId.Equals(userId, StringComparison.InvariantCultureIgnoreCase));
+                    var user = Users.First(x => x.userId == userId);
                     Users.Remove(user);
                 });
 
             return _mock.Object;
         }
 
-        public List<(string email, string nickname, string userId)> Users { get; set; }
+        public List<(Email email, Nickname nickname, UserId userId)> Users { get; set; }
     }
 }

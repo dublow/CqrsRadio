@@ -68,7 +68,6 @@
     <Compile Include="Mocks\RadioEngineBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RadioTest\RadioShould.cs" />
-    <Compile Include="ScenarioTests\ScenarioShould.cs" />
     <Compile Include="SongEngine\ISongEngine.cs" />
     <Compile Include="Mocks\SongEngineBuilder.cs" />
     <Compile Include="SongEngine\SongEngineShould.cs" />
