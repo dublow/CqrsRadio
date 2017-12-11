@@ -1,7 +1,9 @@
-﻿using CqrsRadio.Domain.Entities;
+﻿using System.Linq;
+using CqrsRadio.Domain.Entities;
 using CqrsRadio.Domain.Events;
 using CqrsRadio.Domain.EventStores;
 using CqrsRadio.Domain.Handlers;
+using CqrsRadio.Domain.Repositories;
 using CqrsRadio.Domain.Services;
 using CqrsRadio.Domain.ValueTypes;
 
@@ -12,15 +14,19 @@ namespace CqrsRadio.Domain.Aggregates
         private readonly IEventPublisher _publisher;
         private readonly Decision _decision;
         private readonly IDeezerApi _deezerApi;
+        private readonly ISongRepository _songRepository;
+        private readonly int _songByPlaylist;
 
         public Playlist Playlist { get; private set; }
         public Identity Identity { get; private set; }
 
-        public User(IEventStream stream, IEventPublisher publisher, IDeezerApi deezerApi)
+        public User(IEventStream stream, IEventPublisher publisher, IDeezerApi deezerApi, ISongRepository songRepository, int songByPlaylist = 1)
         {
             _publisher = publisher;
             _decision = new Decision(stream);
             _deezerApi = deezerApi;
+            _songRepository = songRepository;
+            _songByPlaylist = songByPlaylist;
 
             Playlist = Playlist.Empty;
 
@@ -28,11 +34,11 @@ namespace CqrsRadio.Domain.Aggregates
         }
 
         public static User Create(IEventStream stream, IEventPublisher publisher, 
-            IDeezerApi deezerApi, string email, string nickname, string userId, string accessToken)
+            IDeezerApi deezerApi, ISongRepository songRepository, string email, string nickname, string userId, string accessToken)
         {
             var identity = Identity.Parse(email, nickname, userId, accessToken);
 
-            var user = new User(stream, publisher, deezerApi)
+            var user = new User(stream, publisher, deezerApi, songRepository)
             {
                 Identity = identity
             };
@@ -61,7 +67,16 @@ namespace CqrsRadio.Domain.Aggregates
 
             Playlist = new Playlist(playlistId, name);
 
-            _publisher.Publish(new PlaylistAdded(Identity.UserId, playlistId, name));
+            var songs = _songRepository.GetRandomSongs(_songByPlaylist).ToList();
+
+            if (songs.Any() && songs.Count == _songByPlaylist)
+            {
+                songs.ForEach(Playlist.AddSong);
+
+                _deezerApi.AddSongsToPlaylist(Identity.AccessToken, playlistId, Playlist.Songs.Select(x => x.SongId).ToArray());
+
+                _publisher.Publish(new PlaylistAdded(Identity.UserId, playlistId, name));
+            }
         }
 
         private void PublishAndApply(IDomainEvent evt)

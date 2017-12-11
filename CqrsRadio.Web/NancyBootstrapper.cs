@@ -1,6 +1,9 @@
-﻿using CqrsRadio.Common.Net;
+﻿using System.Runtime.Serialization.Formatters;
+using CqrsRadio.Common.Net;
 using CqrsRadio.Deezer;
+using CqrsRadio.Domain.Repositories;
 using CqrsRadio.Domain.Services;
+using CqrsRadio.Infrastructure.Repositories;
 using Nancy;
 using Nancy.Bootstrapper;
 using Nancy.TinyIoc;
@@ -13,6 +16,7 @@ namespace CqrsRadio.Web
         {
             container.Register<IRequest, RadioRequest>();
             container.Register<IDeezerApi, DeezerApi>();
+            container.Register<ISongRepository, SongRepository>();
         }
     }
 }

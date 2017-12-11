@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using CqrsRadio.Domain.Entities;
 using CqrsRadio.Domain.Repositories;
 using CqrsRadio.Domain.ValueTypes;
 using Moq;
@@ -15,9 +16,17 @@ namespace CqrsRadio.Test.Mocks
             _mock = new Mock<ISongRepository>();
             Songs = new List<(UserId userId, PlaylistId playlistId, SongId songId, string title, string artist)>();
         }
+
         public static SongRepositoryBuilder Create()
         {
             return new SongRepositoryBuilder();
+        }
+
+        public SongRepositoryBuilder SetRandomSongs(int size, IEnumerable<Song> songs)
+        {
+            _mock.Setup(x => x.GetRandomSongs(size)).Returns(songs);
+
+            return this;
         }
 
         public ISongRepository Build()

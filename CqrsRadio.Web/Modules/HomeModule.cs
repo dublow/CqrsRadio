@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Linq;
 using CqrsRadio.Domain.Aggregates;
-using CqrsRadio.Domain.Events;
-using CqrsRadio.Domain.EventStores;
-using CqrsRadio.Domain.Handlers;
+using CqrsRadio.Domain.Repositories;
 using CqrsRadio.Domain.Services;
-using CqrsRadio.Domain.ValueTypes;
 using CqrsRadio.Infrastructure.Bus;
 using CqrsRadio.Infrastructure.EventStores;
 using CqrsRadio.Web.Models;
@@ -16,7 +12,7 @@ namespace CqrsRadio.Web.Modules
 {
     public class HomeModule : NancyModule
     {
-        public HomeModule(IDeezerApi deezerApi)
+        public HomeModule(IDeezerApi deezerApi, ISongRepository songRepository)
         {
             var eventStream = new MemoryEventStream();
             var eventPublisher = new EventBus(eventStream);
@@ -36,7 +32,7 @@ namespace CqrsRadio.Web.Modules
             {
                 var model = this.Bind<LoginViewModel>();
 
-                var user = User.Create(eventStream, eventPublisher, deezerApi, 
+                var user = User.Create(eventStream, eventPublisher, deezerApi, songRepository,
                     model.Email, model.Nickname, model.UserId, model.AccessToken);
 
                 user.AddPlaylist(model.PlaylistName);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using CqrsRadio.Common.Net;
 using CqrsRadio.Deezer.Models;
@@ -43,7 +44,15 @@ namespace CqrsRadio.Deezer
 
         public void AddSongsToPlaylist(string accessToken, PlaylistId playlistId, SongId[] songIds)
         {
-            throw new NotImplementedException();
+            var songsAsBuilder = songIds.Aggregate(new StringBuilder(),
+                (builder, songId) => builder.Append($"{songId.Value},"), builder => builder);
+
+            songsAsBuilder.Length--;
+
+            var post = _request.Post(string.Format(Endpoints.AddSongsToPlaylist, playlistId.Value, songsAsBuilder, accessToken), response =>
+            {
+                return response;
+            });
         }
 
         public DeezerSong GetSong(string accessToken, string title, string artist)
