@@ -2,7 +2,7 @@
 
 namespace CqrsRadio.Domain.Events
 {
-    public struct RadioSongParsed : IDomainEvent, IEquatable<RadioSongParsed>
+    public class RadioSongParsed : IDomainEvent, IEquatable<RadioSongParsed>
     {
         public readonly string RadioName;
         public readonly string Title;

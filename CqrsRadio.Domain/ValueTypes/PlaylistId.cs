@@ -2,11 +2,11 @@
 
 namespace CqrsRadio.Domain.ValueTypes
 {
-    public struct PlaylistId : IEquatable<PlaylistId>
+    public class PlaylistId : IEquatable<PlaylistId>
     {
         public readonly string Value;
 
-        public PlaylistId(string value)
+        private PlaylistId(string value)
         {
             Value = value;
         }
@@ -19,7 +19,11 @@ namespace CqrsRadio.Domain.ValueTypes
             return new PlaylistId(valueAsInt.ToString());
         }
 
-        public static PlaylistId Empty => new PlaylistId();
+        public static PlaylistId Empty 
+            => new PlaylistId(string.Empty);
+
+        public bool IsEmpty =>
+            string.IsNullOrEmpty(Value);
 
         public bool Equals(PlaylistId other)
         {
@@ -45,11 +49,6 @@ namespace CqrsRadio.Domain.ValueTypes
         public static bool operator !=(PlaylistId left, PlaylistId right)
         {
             return !left.Equals(right);
-        }
-
-        public static implicit operator PlaylistId(string value)
-        {
-            return Parse(value);
         }
     }
 }

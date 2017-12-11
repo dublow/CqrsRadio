@@ -14,31 +14,39 @@ namespace CqrsRadio.Test.HandlerTests
         public void UseRepositoryWhenUserIsCreated()
         {
             // arrange
+            var email = "email@email.fr";
+            var nickName = "nickname";
+            var userId = "12345";
+            var accessToken = "accessToken";
+
             var mockedUserRepository = UserRepositoryBuilder.Create();
             var userRepository = mockedUserRepository.Build();
             var userHandler = new UserHandler(userRepository);
-            var (email, nickname, userId) = ("email@email.fr", "nickname", "12345");
             // act
-            userHandler.Handle(new UserCreated(Identity.Create("email@email.fr", "nickname", "12345")));
+            var identity = Identity.Parse(email, nickName, userId, accessToken);
+            userHandler.Handle(new UserCreated(identity));
             // assert
             var (actualEmail, actualNickname, actualUserId) = mockedUserRepository.Users.First();
-            Assert.AreEqual(email, actualEmail);
-            Assert.AreEqual(nickname, actualNickname);
-            Assert.AreEqual(userId, actualUserId);
+            Assert.AreEqual(Email.Parse(email), actualEmail);
+            Assert.AreEqual(Nickname.Parse(nickName), actualNickname);
+            Assert.AreEqual(UserId.Parse(userId), actualUserId);
         }
 
         [Test]
         public void UseRepositoryWhenUserIsDeleted()
         {
             // arrange
+            var email = Email.Parse("email@email.fr");
+            var nickName = Nickname.Parse("nickname");
+            var userId = UserId.Parse("12345");
+
             var mockedUserRepository = UserRepositoryBuilder.Create();
-            mockedUserRepository.Users.Add(("email@email.fr", "nickname", "12345"));
+            mockedUserRepository.Users.Add((email, nickName, userId));
             var userRepository = mockedUserRepository.Build();
             var userHandler = new UserHandler(userRepository);
             // act
-            userHandler.Handle(new UserDeleted("12345"));
+            userHandler.Handle(new UserDeleted(userId));
             // assert
-            
             Assert.AreEqual(0, mockedUserRepository.Users.Count);
         }
     }

@@ -15,13 +15,13 @@ namespace CqrsRadio.Handlers
 
         public void Handle(UserCreated evt)
         {
-            _userRepository.Create(evt.Identity.Email.Value, evt.Identity.Nickname.Value,
-                evt.Identity.UserId.Value.ToString());
+            _userRepository.Create(evt.Identity.Email, evt.Identity.Nickname,
+                evt.Identity.UserId);
         }
 
         public void Handle(UserDeleted evt)
         {
-            _userRepository.Delete(evt.UserId.Value.ToString());
+            _userRepository.Delete(evt.UserId);
         }
     }
 }

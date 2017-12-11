@@ -5,6 +5,7 @@ using CqrsRadio.Domain.Events;
 using CqrsRadio.Domain.EventStores;
 using CqrsRadio.Domain.Handlers;
 using CqrsRadio.Domain.Services;
+using CqrsRadio.Domain.ValueTypes;
 using CqrsRadio.Web.Models;
 using Nancy;
 using Nancy.ModelBinding;
@@ -31,19 +32,17 @@ namespace CqrsRadio.Web.Modules
                 var model = this.Bind<LoginViewModel>();
 
                 var userExists = eventStream.GetEvents().OfType<UserCreated>()
-                    .Any(x => x.Identity.UserId == model.UserId);
+                    .Any(x => x.Identity.UserId == UserId.Parse(model.UserId));
 
                 var user = userExists 
                     ? new User(eventStream, eventPublisher) 
-                    : User.Create(eventStream, eventPublisher, model.Email, model.Nickname, model.UserId);
+                    : User.Create(eventStream, eventPublisher, model.Email, model.Nickname, model.UserId, model.AccessToken);
 
-                user.ClearPlaylists();
-                user.AddAccessToken(model.AccessToken);
 
-                var playlistId = deezerApi.CreatePlaylist(user.AccessToken, user.Identity.UserId, model.PlaylistName);
+                var playlistId = deezerApi.CreatePlaylist(user.Identity.AccessToken, user.Identity.UserId, model.PlaylistName);
                 user.AddPlaylist(playlistId, model.PlaylistName);
                 
-                return Response.AsJson(user.GetPlaylist(model.PlaylistName));
+                return Response.AsJson(user.Playlist);
             };
         }
     }

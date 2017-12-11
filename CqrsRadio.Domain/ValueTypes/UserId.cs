@@ -2,14 +2,17 @@
 
 namespace CqrsRadio.Domain.ValueTypes
 {
-    public struct UserId : IEquatable<UserId>
+    public class UserId : IEquatable<UserId>
     {
         public readonly string Value;
 
-        public UserId(string value)
+        private UserId(string value)
         {
             Value = value;
         }
+
+        public static UserId Empty
+            => new UserId(string.Empty);
 
         public static UserId Parse(string value)
         {
@@ -18,6 +21,9 @@ namespace CqrsRadio.Domain.ValueTypes
 
             return new UserId(valueAsInt.ToString());
         }
+
+        public bool IsEmpty =>
+            string.IsNullOrEmpty(Value);
 
         public bool Equals(UserId other)
         {
@@ -45,9 +51,6 @@ namespace CqrsRadio.Domain.ValueTypes
             return !left.Equals(right);
         }
 
-        public static implicit operator UserId(string value)
-        {
-            return Parse(value);
-        }
+       
     }
 }

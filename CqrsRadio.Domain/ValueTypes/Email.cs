@@ -3,7 +3,7 @@ using CqrsRadio.Domain.Utilities;
 
 namespace CqrsRadio.Domain.ValueTypes
 {
-    public struct Email : IEquatable<Email>
+    public class Email : IEquatable<Email>
     {
         public readonly string Value;
 
@@ -19,6 +19,12 @@ namespace CqrsRadio.Domain.ValueTypes
 
             return new Email(value);
         }
+
+        public static Email Empty
+            => new Email(string.Empty);
+
+        public bool IsEmpty
+            => string.IsNullOrEmpty(Value);
 
         public bool Equals(Email other)
         {
@@ -46,9 +52,5 @@ namespace CqrsRadio.Domain.ValueTypes
             return !left.Equals(right);
         }
 
-        public static implicit operator Email(string value)
-        {
-            return Parse(value);
-        }
     }
 }

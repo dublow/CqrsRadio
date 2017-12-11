@@ -14,16 +14,21 @@ namespace CqrsRadio.Test.HandlerTests
         public void UseRepositoryWhenSongIsAdded()
         {
             // arrange
+            var userId = UserId.Parse("12345");
+            var playlistId = PlaylistId.Parse("100");
+            var songId = SongId.Parse("001");
+            var title = "title";
+            var artist = "artist";
+
             var mockedSongRepository = SongRepositoryBuilder.Create();
             var songRepository = mockedSongRepository.Build();
             var songHandler = new SongHandler(songRepository);
-            var (userId, playlistName, songId, title, artist) = ("12345", "bestof", SongId.Parse("123"), "title", "artist");
             // act
-            songHandler.Handle(new SongAdded("12345", "bestof", "123", "title", "artist"));
+            songHandler.Handle(new SongAdded(userId, playlistId, songId, title, artist));
             // assert
-            var (actualUserId, actualPlaylistName, actualSongId, actualTitle, actualArtist) = mockedSongRepository.Songs.First();
-            Assert.AreEqual(userId, actualUserId.Value);
-            Assert.AreEqual(playlistName, actualPlaylistName);
+            var (actualUserId, actualPlaylistId, actualSongId, actualTitle, actualArtist) = mockedSongRepository.Songs.First();
+            Assert.AreEqual(userId, actualUserId);
+            Assert.AreEqual(playlistId, actualPlaylistId);
             Assert.AreEqual(songId, actualSongId);
             Assert.AreEqual(title, actualTitle);
             Assert.AreEqual(artist, actualArtist);

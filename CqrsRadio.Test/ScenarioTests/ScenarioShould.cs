@@ -21,15 +21,24 @@ namespace CqrsRadio.Test.ScenarioTests
             var stream = new MemoryEventStream();
             var publisher = new EventBus(stream);
 
-            var user = User.Create(stream, publisher, "nicolas.dfr@gmail.com", "nicolas", "12345");
-            user.AddPlaylist("123", "bestof");
-            user.AddSongToPlaylist("bestof", "123", "titleOne", "artistOne");
-            user.AddSongToPlaylist("bestof", "456", "titleTwo", "artistOne");
+            var email = "nicolas.dfr@gmail.com";
+            var nickName = "nicolas";
+            var userId = "12345";
+            var accessToken = "accessToken";
+            var playlistId = PlaylistId.Parse("100");
+            var playlistname = "playlistName";
 
-            Assert.IsTrue(stream.GetEvents().Contains(new UserCreated(Identity.Create("nicolas.dfr@gmail.com", "nicolas", "12345"))));
-            Assert.IsTrue(stream.GetEvents().Contains(new PlaylistAdded("12345", "123", "bestof")));
-            Assert.IsTrue(stream.GetEvents().Contains(new SongAdded("12345", "bestof", "123", "titleOne", "artistOne")));
-            Assert.IsTrue(stream.GetEvents().Contains(new SongAdded("12345", "bestof", "456", "titleTwo", "artistOne")));
+            var user = User.Create(stream, publisher, email, nickName, userId, accessToken);
+            user.AddPlaylist(playlistId, playlistname);
+            user.AddSongToPlaylist(SongId.Parse("101"), "titleOne", "artistOne");
+            user.AddSongToPlaylist(SongId.Parse("102"), "titleTwo", "artistOne");
+
+            var identity = Identity.Parse(email, nickName, userId, accessToken);
+
+            Assert.IsTrue(stream.GetEvents().Contains(new UserCreated(identity)));
+            Assert.IsTrue(stream.GetEvents().Contains(new PlaylistAdded(UserId.Parse(userId), playlistId, playlistname)));
+            Assert.IsTrue(stream.GetEvents().Contains(new SongAdded(UserId.Parse(userId), playlistId, SongId.Parse("101"), "titleOne", "artistOne")));
+            Assert.IsTrue(stream.GetEvents().Contains(new SongAdded(UserId.Parse(userId), playlistId, SongId.Parse("102"), "titleTwo", "artistOne")));
         }
 
         [Test]
@@ -54,11 +63,17 @@ namespace CqrsRadio.Test.ScenarioTests
         public void CreateUserWithOnePlaylistAndAddSongsWithRandomizedSongs()
         {
             // arrange
-            var deezerSong = new List<DeezerSong>()
+            var email = "nicolas.dfr@gmail.com";
+            var nickName = "nicolas";
+            var userId = "12345";
+            var accessToken = "accessToken";
+            var playlistId = PlaylistId.Parse("100");
+
+            var deezerSong = new List<DeezerSong>
             {
-                new DeezerSong("123", "title1", "artist1"),
-                new DeezerSong("456", "title2", "artist2"),
-                new DeezerSong("789", "title3", "artist3")
+                new DeezerSong(SongId.Parse("101"), "title1", "artist1"),
+                new DeezerSong(SongId.Parse("102"), "title2", "artist2"),
+                new DeezerSong(SongId.Parse("103"), "title3", "artist3")
             };
             var stream = new MemoryEventStream();
             var publisher = new EventBus(stream);
@@ -69,26 +84,27 @@ namespace CqrsRadio.Test.ScenarioTests
             var deezerApi = DeezerApiBuilder
                 .Create();
             // act
-            var user = User.Create(stream, publisher, "nicolas.dfr@gmail.com", "nicolas", "12345");
-            user.AddPlaylist("123", "bestof");
+            var user = User.Create(stream, publisher, email, nickName, userId, accessToken);
+            user.AddPlaylist(playlistId, "bestof");
 
             var songs = songEngine.GetRandomisedSongs(3);
             foreach (var song in songs)
             {
-                user.AddSongToPlaylist("bestof", song.Id, song.Title, song.Artist);
+                user.AddSongToPlaylist(song.Id, song.Title, song.Artist);
             }
 
-            var playlist = user.GetPlaylist("bestof");
-            var playlistId = deezerApi.SetCreatePlaylist("123").Build().CreatePlaylist("accessToken", playlist.UserId, playlist.Name);
-            deezerApi.Build().AddSongsToPlaylist("accessToken", playlist.PlaylistId, playlist.Songs.Select(x=>x.SongId).ToArray());
+            var actualPlaylistId = deezerApi.SetCreatePlaylist(playlistId).Build().CreatePlaylist(user.Identity.AccessToken, user.Identity.UserId, user.Playlist.Name);
+            deezerApi.Build().AddSongsToPlaylist("accessToken", user.Playlist.PlaylistId, user.Playlist.Songs.Select(x=>x.SongId).ToArray());
 
             // assert
-            Assert.IsTrue(stream.GetEvents().Contains(new UserCreated(Identity.Create("nicolas.dfr@gmail.com", "nicolas", "12345"))));
-            Assert.IsTrue(stream.GetEvents().Contains(new PlaylistAdded("12345", "123", "bestof")));
-            Assert.IsTrue(stream.GetEvents().Contains(new SongAdded("12345", "bestof", "123", "title1", "artist1")));
-            Assert.IsTrue(stream.GetEvents().Contains(new SongAdded("12345", "bestof", "456", "title2", "artist2")));
-            Assert.IsTrue(stream.GetEvents().Contains(new SongAdded("12345", "bestof", "789", "title3", "artist3")));
-            Assert.AreEqual(PlaylistId.Parse("123"), playlistId);
+
+            var identity = Identity.Parse("nicolas.dfr@gmail.com", "nicolas", "12345", "accessToken");
+            Assert.IsTrue(stream.GetEvents().Contains(new UserCreated(identity)));
+            Assert.IsTrue(stream.GetEvents().Contains(new PlaylistAdded(UserId.Parse(userId), playlistId, "bestof")));
+            Assert.IsTrue(stream.GetEvents().Contains(new SongAdded(UserId.Parse(userId), playlistId, SongId.Parse("101"), "title1", "artist1")));
+            Assert.IsTrue(stream.GetEvents().Contains(new SongAdded(UserId.Parse(userId), playlistId, SongId.Parse("102"), "title2", "artist2")));
+            Assert.IsTrue(stream.GetEvents().Contains(new SongAdded(UserId.Parse(userId), playlistId, SongId.Parse("103"), "title3", "artist3")));
+            Assert.AreEqual(playlistId, actualPlaylistId);
             Assert.AreEqual(0, deezerApi.PlaylistDeleted);
             Assert.AreEqual(3, deezerApi.SongsAdded);
         }
