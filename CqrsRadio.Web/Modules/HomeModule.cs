@@ -36,10 +36,10 @@ namespace CqrsRadio.Web.Modules
             {
                 var model = this.Bind<LoginViewModel>();
 
-                var user = User.Create(eventStream, eventPublisher, model.Email, model.Nickname, model.UserId, model.AccessToken);
+                var user = User.Create(eventStream, eventPublisher, deezerApi, 
+                    model.Email, model.Nickname, model.UserId, model.AccessToken);
 
-                var playlistId = deezerApi.CreatePlaylist(user.Identity.AccessToken, user.Identity.UserId, model.PlaylistName);
-                user.AddPlaylist(playlistId, model.PlaylistName);
+                user.AddPlaylist(model.PlaylistName);
                 
                 return Response.AsJson(user.Playlist);
             };

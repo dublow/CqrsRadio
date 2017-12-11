@@ -4,6 +4,7 @@ using CqrsRadio.Domain.Events;
 using CqrsRadio.Domain.ValueTypes;
 using CqrsRadio.Infrastructure.Bus;
 using CqrsRadio.Infrastructure.EventStores;
+using CqrsRadio.Test.Mocks;
 using NUnit.Framework;
 
 namespace CqrsRadio.Test.UserTests
@@ -16,8 +17,9 @@ namespace CqrsRadio.Test.UserTests
         {
             var stream = new MemoryEventStream();
             var publisher = new EventBus(stream);
+            var deezerApi = DeezerApiBuilder.Create().Build();
 
-            User.Create(stream, publisher, "nicolas.dfr@gmail.com", "dublow", "12345", "accessToken");
+            User.Create(stream, publisher, deezerApi, "nicolas.dfr@gmail.com", "dublow", "12345", "accessToken");
 
             var identity = Identity.Parse("nicolas.dfr@gmail.com", "dublow", "12345", "accessToken");
             Assert.IsTrue(stream.GetEvents().Contains(new UserCreated(identity)));
@@ -27,11 +29,12 @@ namespace CqrsRadio.Test.UserTests
         public void RaiseMessageWhenDeleteUser()
         {
             var stream = new MemoryEventStream();
+            var deezerApi = DeezerApiBuilder.Create().Build();
             stream.Add(new UserCreated(Identity.Parse("nicolas.dfr@gmail.com", "dublow", "12345", "accessToken")));
-
+            
             var publisher = new EventBus(stream);
 
-            var user = new User(stream, publisher);
+            var user = new User(stream, publisher, deezerApi);
 
             user.Delete();
             
@@ -42,12 +45,13 @@ namespace CqrsRadio.Test.UserTests
         public void NoRaiseMessageWhenDeleteDeletedUser()
         {
             var stream = new MemoryEventStream();
+            var deezerApi = DeezerApiBuilder.Create().Build();
             stream.Add(new UserCreated(Identity.Parse("nicolas.dfr@gmail.com", "dublow", "12345", "accessToken")));
             stream.Add(new UserDeleted(UserId.Parse("12345")));
 
             var publisher = new EventBus(stream);
 
-            var user = new User(stream, publisher);
+            var user = new User(stream, publisher, deezerApi);
 
             user.Delete();
 
@@ -58,11 +62,12 @@ namespace CqrsRadio.Test.UserTests
         public void NoRaiseMessageWhenTwiceDeleteUser()
         {
             var stream = new MemoryEventStream();
+            var deezerApi = DeezerApiBuilder.Create().Build();
             stream.Add(new UserCreated(Identity.Parse("nicolas.dfr@gmail.com", "dublow", "12345", "accessToken")));
             
             var publisher = new EventBus(stream);
 
-            var user = new User(stream, publisher);
+            var user = new User(stream, publisher, deezerApi);
 
             user.Delete();
             user.Delete();
@@ -74,13 +79,14 @@ namespace CqrsRadio.Test.UserTests
         public void RaiseMessageWhenAddPlaylistToUser()
         {
             var stream = new MemoryEventStream();
+            var deezerApi = DeezerApiBuilder.Create().SetCreatePlaylist(PlaylistId.Parse("100")).Build();
             stream.Add(new UserCreated(Identity.Parse("nicolas.dfr@gmail.com", "dublow", "12345", "accessToken")));
 
             var publisher = new EventBus(stream);
 
-            var user = new User(stream, publisher);
+            var user = new User(stream, publisher, deezerApi);
 
-            user.AddPlaylist(PlaylistId.Parse("100"), "playlistName");
+            user.AddPlaylist("playlistName");
 
             Assert.IsTrue(stream.GetEvents().Contains(new PlaylistAdded(UserId.Parse("12345"), PlaylistId.Parse("100"), "playlistName")));
         }
@@ -89,16 +95,17 @@ namespace CqrsRadio.Test.UserTests
         public void NoRaiseMessageWhenAddExistingPlaylistToUser()
         {
             var stream = new MemoryEventStream();
+            var deezerApi = DeezerApiBuilder.Create().Build();
             stream.Add(new UserCreated(Identity.Parse("nicolas.dfr@gmail.com", "dublow", "12345", "accessToken")));
-            stream.Add(new PlaylistAdded(UserId.Parse("12345"), PlaylistId.Parse("100"), "name"));
+            stream.Add(new PlaylistAdded(UserId.Parse("12345"), PlaylistId.Parse("100"), "playlistName"));
 
             var publisher = new EventBus(stream);
 
-            var user = new User(stream, publisher);
+            var user = new User(stream, publisher, deezerApi);
 
-            user.AddPlaylist(PlaylistId.Parse("100"), "playlistName");
+            user.AddPlaylist("playlistName");
 
-            Assert.IsTrue(stream.GetEvents().Contains(new PlaylistAdded(UserId.Parse("12345"), PlaylistId.Parse("100"), "name")));
+            Assert.IsTrue(stream.GetEvents().Contains(new PlaylistAdded(UserId.Parse("12345"), PlaylistId.Parse("100"), "playlistName")));
             Assert.AreEqual(1, stream.GetEvents().OfType<PlaylistAdded>().Count());
         }
 
@@ -106,120 +113,17 @@ namespace CqrsRadio.Test.UserTests
         public void NoRaiseMessageWhenAddPlaylistWithDeletedUser()
         {
             var stream = new MemoryEventStream();
+            var deezerApi = DeezerApiBuilder.Create().Build();
             stream.Add(new UserCreated(Identity.Parse("nicolas.dfr@gmail.com", "dublow", "12345", "accessToken")));
             stream.Add(new UserDeleted(UserId.Parse("12345")));
 
             var publisher = new EventBus(stream);
 
-            var user = new User(stream, publisher);
+            var user = new User(stream, publisher, deezerApi);
 
-            user.AddPlaylist(PlaylistId.Parse("100"), "playlistName");
+            user.AddPlaylist("playlistName");
 
             Assert.AreEqual(0, stream.GetEvents().OfType<PlaylistAdded>().Count());
-        }
-
-        [Test]
-        public void RaiseMessageWhenDeletePlaylist()
-        {
-            var stream = new MemoryEventStream();
-            stream.Add(new UserCreated(Identity.Parse("nicolas.dfr@gmail.com", "dublow", "12345", "accessToken")));
-            stream.Add(new PlaylistAdded(UserId.Parse("12345"), PlaylistId.Parse("100"), "playlistName"));
-
-            var publisher = new EventBus(stream);
-
-            var user = new User(stream, publisher);
-
-            user.DeletePlaylist(PlaylistId.Parse("100"), "playlistName");
-
-            Assert.IsTrue(stream.GetEvents().Contains(new PlaylistDeleted(UserId.Parse("12345"), PlaylistId.Parse("100"), "playlistName")));
-            Assert.AreEqual(1, stream.GetEvents().OfType<PlaylistDeleted>().Count());
-        }
-
-        [Test]
-        public void NoRaiseMessageWhenDeleteDeletedPlaylist()
-        {
-            var stream = new MemoryEventStream();
-            stream.Add(new UserCreated(Identity.Parse("nicolas.dfr@gmail.com", "dublow", "12345", "accessToken")));
-            stream.Add(new PlaylistAdded(UserId.Parse("12345"), PlaylistId.Parse("100"), "playlistName"));
-            stream.Add(new PlaylistDeleted(UserId.Parse("12345"), PlaylistId.Parse("100"), "playlistName"));
-
-            var publisher = new EventBus(stream);
-
-            var user = new User(stream, publisher);
-
-            user.DeletePlaylist(PlaylistId.Parse("100"), "playlistName");
-
-            Assert.IsTrue(stream.GetEvents().Contains(new PlaylistDeleted(UserId.Parse("12345"), PlaylistId.Parse("100"), "playlistName")));
-            Assert.AreEqual(1, stream.GetEvents().OfType<PlaylistDeleted>().Count());
-        }
-
-        [Test]
-        public void NoRaiseMessageWhenDeletePlaylistWithDeletedUser()
-        {
-            var stream = new MemoryEventStream();
-            stream.Add(new UserCreated(Identity.Parse("nicolas.dfr@gmail.com", "dublow", "12345", "accessToken")));
-            stream.Add(new PlaylistAdded(UserId.Parse("12345"), PlaylistId.Parse("100"), "playlistName"));
-            stream.Add(new UserDeleted(UserId.Parse("12345")));
-
-            var publisher = new EventBus(stream);
-
-            var user = new User(stream, publisher);
-
-            user.DeletePlaylist(PlaylistId.Parse("100"), "playlistName");
-
-            Assert.AreEqual(0, stream.GetEvents().OfType<PlaylistDeleted>().Count());
-        }
-
-        [Test]
-        public void RaiseMessageWhenAddSongToPlaylist()
-        {
-            var stream = new MemoryEventStream();
-            stream.Add(new UserCreated(Identity.Parse("nicolas.dfr@gmail.com", "dublow", "12345", "accessToken")));
-            stream.Add(new PlaylistAdded(UserId.Parse("12345"), PlaylistId.Parse("100"), "playlistName"));
-
-            var publisher = new EventBus(stream);
-
-            var user = new User(stream, publisher);
-
-            user.AddSongToPlaylist(SongId.Parse("101"), "title", "artist");
-
-            Assert.IsTrue(stream.GetEvents().Contains(new SongAdded(UserId.Parse("12345"), PlaylistId.Parse("100"), SongId.Parse("101"), "title", "artist")));
-            Assert.AreEqual(1, stream.GetEvents().OfType<SongAdded>().Count());
-        }
-
-        [Test]
-        public void NoRaiseMessageWhenAddSongAlreadyAddedToPlaylist()
-        {
-            var stream = new MemoryEventStream();
-            stream.Add(new UserCreated(Identity.Parse("nicolas.dfr@gmail.com", "dublow", "12345", "accessToken")));
-            stream.Add(new PlaylistAdded(UserId.Parse("12345"), PlaylistId.Parse("100"), "playlistName"));
-            stream.Add(new SongAdded(UserId.Parse("12345"), PlaylistId.Parse("100"), SongId.Parse("101"), "title", "artist"));
-
-            var publisher = new EventBus(stream);
-
-            var user = new User(stream, publisher);
-
-            user.AddSongToPlaylist(SongId.Parse("101"), "title", "artist");
-
-            Assert.IsTrue(stream.GetEvents().Contains(new SongAdded(UserId.Parse("12345"), PlaylistId.Parse("100"), SongId.Parse("101"), "title", "artist")));
-            Assert.AreEqual(1, stream.GetEvents().OfType<SongAdded>().Count());
-        }
-
-        [Test]
-        public void NoRaiseMessageWhenAddSongWithDeletedUser()
-        {
-            var stream = new MemoryEventStream();
-            stream.Add(new UserCreated(Identity.Parse("nicolas.dfr@gmail.com", "dublow", "12345", "accessToken")));
-            stream.Add(new PlaylistAdded(UserId.Parse("12345"), PlaylistId.Parse("100"), "playlistName"));
-            stream.Add(new UserDeleted(UserId.Parse("12345")));
-
-            var publisher = new EventBus(stream);
-
-            var user = new User(stream, publisher);
-
-            user.AddSongToPlaylist(SongId.Parse("101"), "title", "artist");
-
-            Assert.AreEqual(0, stream.GetEvents().OfType<SongAdded>().Count());
         }
     }
 }

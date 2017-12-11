@@ -2,6 +2,7 @@
 using CqrsRadio.Domain.Events;
 using CqrsRadio.Domain.EventStores;
 using CqrsRadio.Domain.Handlers;
+using CqrsRadio.Domain.Services;
 using CqrsRadio.Domain.ValueTypes;
 
 namespace CqrsRadio.Domain.Aggregates
@@ -10,14 +11,16 @@ namespace CqrsRadio.Domain.Aggregates
     {
         private readonly IEventPublisher _publisher;
         private readonly Decision _decision;
+        private readonly IDeezerApi _deezerApi;
 
         public Playlist Playlist { get; private set; }
         public Identity Identity { get; private set; }
 
-        public User(IEventStream stream, IEventPublisher publisher)
+        public User(IEventStream stream, IEventPublisher publisher, IDeezerApi deezerApi)
         {
             _publisher = publisher;
             _decision = new Decision(stream);
+            _deezerApi = deezerApi;
 
             Playlist = Playlist.Empty;
 
@@ -25,11 +28,11 @@ namespace CqrsRadio.Domain.Aggregates
         }
 
         public static User Create(IEventStream stream, IEventPublisher publisher, 
-            string email, string nickname, string userId, string accessToken)
+            IDeezerApi deezerApi, string email, string nickname, string userId, string accessToken)
         {
             var identity = Identity.Parse(email, nickname, userId, accessToken);
 
-            var user = new User(stream, publisher)
+            var user = new User(stream, publisher, deezerApi)
             {
                 Identity = identity
             };
@@ -46,48 +49,21 @@ namespace CqrsRadio.Domain.Aggregates
             PublishAndApply(new UserDeleted(Identity.UserId));
         }
 
-        public void AddPlaylist(PlaylistId playlistId, string name)
+        public void AddPlaylist(string name)
         {
             if (_decision.IsDeleted)
                 return;
             if (!Playlist.IsEmpty)
                 return;
 
+            var playlistId = _deezerApi
+                .CreatePlaylist(Identity.AccessToken, Identity.UserId, name);
+
             Playlist = new Playlist(playlistId, name);
 
             _publisher.Publish(new PlaylistAdded(Identity.UserId, playlistId, name));
         }
 
-        public void DeletePlaylist(PlaylistId playlistId, string name)
-        {
-            if (_decision.IsDeleted)
-                return;
-            if (Playlist.IsEmpty)
-                return;
-
-            Playlist = Playlist.Empty;
-
-            _publisher.Publish(new PlaylistDeleted(Identity.UserId, playlistId, name));
-        }
-
-        public void AddSongToPlaylist(SongId songId, string title, string artist)
-        {
-            if (_decision.IsDeleted)
-                return;
-            if (Playlist.IsEmpty)
-                return;
-
-            var song = new Song(songId, title, artist);
-
-            if (Playlist.Songs.Contains(song))
-                return;
-
-            Playlist.AddSong(song);
-
-            _publisher.Publish(new SongAdded(Identity.UserId, Playlist.PlaylistId, songId, title, artist));
-        }
-
-        
         private void PublishAndApply(IDomainEvent evt)
         {
             _publisher.Publish(evt);
