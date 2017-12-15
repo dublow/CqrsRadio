@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Configuration;
+using Nancy;
 using Nancy.Hosting.Self;
 
 namespace CqrsRadio.Web
@@ -11,10 +9,12 @@ namespace CqrsRadio.Web
     {
         static void Main(string[] args)
         {
-            using (var host = new NancyHost(new Uri("http://localhost:1234")))
+            var local = Type.GetType("Mono.Runtime") != null ? "" : "local";
+            var url = ConfigurationManager.AppSettings[$"url{local}"];
+            using (var host = new NancyHost(new Uri(url)))
             {
                 host.Start();
-                Console.WriteLine("Running on http://localhost:1234");
+                Console.WriteLine($"Running on {url}");
                 Console.ReadLine();
             }
         }

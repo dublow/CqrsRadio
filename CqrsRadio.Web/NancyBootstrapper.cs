@@ -1,4 +1,4 @@
-﻿using System.Runtime.Serialization.Formatters;
+﻿using System;
 using CqrsRadio.Common.Net;
 using CqrsRadio.Deezer;
 using CqrsRadio.Domain.Repositories;
@@ -16,7 +16,24 @@ namespace CqrsRadio.Web
         {
             container.Register<IRequest, RadioRequest>();
             container.Register<IDeezerApi, DeezerApi>();
+            if (Type.GetType("Mono.Runtime") != null)
+                RegisterMono(container);
+            else
+                Register(container);
+
+
+        }
+
+        private void RegisterMono(TinyIoCContainer container)
+        {
+            container.Register<ISongRepository, MonoSongRepository>();
+            container.Register<IPlaylistRepository, MonoPlaylistRepository>();
+        }
+
+        private void Register(TinyIoCContainer container)
+        {
             container.Register<ISongRepository, SongRepository>();
+            container.Register<IPlaylistRepository, PlaylistRepository>();
         }
     }
 }
