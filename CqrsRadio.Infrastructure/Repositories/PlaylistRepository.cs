@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using CqrsRadio.Domain.Entities;
 using CqrsRadio.Domain.Repositories;
 using CqrsRadio.Domain.ValueTypes;
@@ -48,7 +49,7 @@ namespace CqrsRadio.Infrastructure.Repositories
         {
             using (var cnx = _provider.Create())
             {
-                var commandText = $"insert into playlist (userid, createdAt) values({userId.Value}, {DateTime.UtcNow})";
+                var commandText = $"insert into playlist (userid, createdAt) values({userId.Value}, '{DateTime.UtcNow}')";
                 cnx.Open();
                 using (var command = cnx.CreateCommand())
                 {
@@ -62,7 +63,7 @@ namespace CqrsRadio.Infrastructure.Repositories
         {
             using (var cnx = _provider.Create())
             {
-                var commandText = $"update playlist set createdAt={DateTime.UtcNow} where userid = {userId.Value}";
+                var commandText = $"update playlist set createdAt='{DateTime.UtcNow}' where userid = {userId.Value}";
                 cnx.Open();
                 using (var command = cnx.CreateCommand())
                 {
@@ -107,7 +108,8 @@ namespace CqrsRadio.Infrastructure.Repositories
                 // interval : 2017/12/23 14:10
                 // createdAt < interval
                 // true
-                var commandText = $"select createdAt from playlist where userid = {userId.Value}";
+                var commandText = $"select cast(createdAt as varchar) as createdAt from playlist where userid = {userId.Value}";
+                Console.WriteLine(commandText);
                 cnx.Open();
                 using (var command = cnx.CreateCommand())
                 {
@@ -116,7 +118,9 @@ namespace CqrsRadio.Infrastructure.Repositories
                     {
                         while (reader.Read())
                         {
-                            var createdAt = DateTime.Parse(reader[0].ToString());
+                            var dateAsString = reader[0].ToString();
+                            Console.WriteLine(dateAsString);
+                            var createdAt = DateTime.Parse(dateAsString, CultureInfo.GetCultureInfo("FR-fr"));
                             return createdAt < interval;
 
                         }

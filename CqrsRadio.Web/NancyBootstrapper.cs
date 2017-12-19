@@ -25,6 +25,19 @@ namespace CqrsRadio.Web
 
             container.Register<ISongRepository, SongRepository>();
             container.Register<IPlaylistRepository, PlaylistRepository>();
+
+
+            pipelines.BeforeRequest += (ctx) =>
+            {
+                Console.WriteLine(ctx.Request.Url.ToString());
+                return null;
+            };
+
+            pipelines.OnError += (ctx, ex) =>
+            {
+                Console.WriteLine(ex.InnerException);
+                return null;
+            };
         }
     }
 }

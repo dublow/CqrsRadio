@@ -25,13 +25,13 @@ namespace CqrsRadio.Web.Modules
 
             Get["/"] = _ =>
             {
-                var local = Request.IsLocal() ? "local" : "";
+                var local = Type.GetType("Mono.Runtime") != null ? "" : "local";
                 var model = new
                 {
                     appid = ConfigurationManager.AppSettings[$"appid{local}"],
                     channel = ConfigurationManager.AppSettings[$"channel{local}"]
                 };
-                return View["index", model];
+                return View["index", model].WithHeader("mono", (Type.GetType("Mono.Runtime") != null).ToString());
             };
             Get["/channel"] = _ =>
             {
@@ -47,7 +47,6 @@ namespace CqrsRadio.Web.Modules
             {
                 var model = this.Bind<LoginViewModel>();
                 
-
                 var user = User.Create(eventStream, eventPublisher, deezerApi, songRepository,
                     playlistRepository, model.Email, model.Nickname, model.UserId, model.AccessToken, songSize);
 
