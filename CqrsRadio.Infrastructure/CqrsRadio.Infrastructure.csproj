@@ -78,10 +78,10 @@
     <Compile Include="EventStores\MemoryEventsStream.cs" />
     <Compile Include="Persistences\SqlLiteDb.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Providers\IProvider.cs" />
+    <Compile Include="Providers\SqliteProvider.cs" />
     <Compile Include="Repositories\PlaylistRepository.cs" />
-    <Compile Include="Repositories\MonoPlaylistRepository.cs" />
     <Compile Include="Repositories\RadioSongRepository.cs" />
-    <Compile Include="Repositories\MonoSongRepository.cs" />
     <Compile Include="Repositories\SongRepository.cs" />
   </ItemGroup>
   <ItemGroup>

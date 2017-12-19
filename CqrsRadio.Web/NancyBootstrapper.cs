@@ -3,6 +3,7 @@ using CqrsRadio.Common.Net;
 using CqrsRadio.Deezer;
 using CqrsRadio.Domain.Repositories;
 using CqrsRadio.Domain.Services;
+using CqrsRadio.Infrastructure.Providers;
 using CqrsRadio.Infrastructure.Repositories;
 using Nancy;
 using Nancy.Bootstrapper;
@@ -14,24 +15,14 @@ namespace CqrsRadio.Web
     {
         protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
         {
+            var isMono = Type.GetType("Mono.Runtime") != null;
+
             container.Register<IRequest, RadioRequest>();
             container.Register<IDeezerApi, DeezerApi>();
-            if (Type.GetType("Mono.Runtime") != null)
-                RegisterMono(container);
-            else
-                Register(container);
 
+            container.Register((cContainer, overloads) =>
+                isMono ? (IProvider) new MonoSqliteProvider() : new SqliteProvider());
 
-        }
-
-        private void RegisterMono(TinyIoCContainer container)
-        {
-            container.Register<ISongRepository, MonoSongRepository>();
-            container.Register<IPlaylistRepository, MonoPlaylistRepository>();
-        }
-
-        private void Register(TinyIoCContainer container)
-        {
             container.Register<ISongRepository, SongRepository>();
             container.Register<IPlaylistRepository, PlaylistRepository>();
         }

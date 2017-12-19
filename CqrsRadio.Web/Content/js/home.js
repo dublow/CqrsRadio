@@ -41,27 +41,31 @@
         },
         logout: (model) => {
             DZ.logout();
-            model.loginText("Signin");
             model.isLogged(false);
         },
         createPlaylist: (model) => {
-            $.post('/Login',
-                {
-                    accessToken: model.accessToken(),
-                    userId: model.userId(),
-                    nickname: model.name(),
-                    email: model.email(),
-                    playlistName: model.playlist()
-                },
-                function () {
-
-                });
+            if (!model.playlist() || model.playlist().trim() === '')
+                model.isValid(false);
+            else {
+                $.post('/Login',
+                    {
+                        accessToken: model.accessToken(),
+                        userId: model.userId(),
+                        nickname: model.name(),
+                        email: model.email(),
+                        playlistName: model.playlist()
+                    },
+                    function() {
+                        model.isValid(true);
+                    });
+            }
         }
     };
     var public = {
         info: () => console.log("Welcome home!"),
         model: {
             isLogged: ko.observable(false),
+            isValid: ko.observable(true),
             accessToken: ko.observable(''),
             userId: ko.observable(''),
             name: ko.observable(''),
@@ -69,15 +73,20 @@
             playlist: ko.observable(''),
             init: () => deezer.getLoginStatus(public.model),
             login: deezer.login,
+            logout: deezer.logout,
             createPlaylist: deezer.createPlaylist
         }
     };
-    public.model.signinCss = ko.pureComputed(function() {
+    public.model.loginCss = ko.pureComputed(function() {
         return this.isLogged() ? 'd-none' : '';
     }, public.model);
 
-    public.model.signoutCss = ko.pureComputed(function () {
+    public.model.logoutCss = ko.pureComputed(function () {
         return this.isLogged() ? '' : 'd-none';
+    }, public.model);
+
+    public.model.invalidModel = ko.pureComputed(function () {
+        return this.isValid() ? '' : 'is-invalid';
     }, public.model);
 
     ko.applyBindings(public.model);

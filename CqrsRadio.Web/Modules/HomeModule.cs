@@ -46,6 +46,7 @@ namespace CqrsRadio.Web.Modules
             Post["/login"] = _ =>
             {
                 var model = this.Bind<LoginViewModel>();
+                
 
                 var user = User.Create(eventStream, eventPublisher, deezerApi, songRepository,
                     playlistRepository, model.Email, model.Nickname, model.UserId, model.AccessToken, songSize);
