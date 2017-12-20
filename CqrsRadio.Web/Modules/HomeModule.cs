@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using CqrsRadio.Domain.Aggregates;
 using CqrsRadio.Domain.Repositories;
 using CqrsRadio.Domain.Services;
@@ -20,7 +19,6 @@ namespace CqrsRadio.Web.Modules
         private readonly ISongRepository _songRepository;
         private readonly IPlaylistRepository _playlistRepository;
         private readonly Environment _environment;
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         public HomeModule(IDeezerApi deezerApi, ISongRepository songRepository, 
             IPlaylistRepository playlistRepository, Environment environment)
