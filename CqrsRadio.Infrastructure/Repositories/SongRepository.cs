@@ -1,14 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SQLite;
 using CqrsRadio.Domain.Entities;
 using CqrsRadio.Domain.Repositories;
 using CqrsRadio.Domain.ValueTypes;
+using CqrsRadio.Infrastructure.Providers;
 
 namespace CqrsRadio.Infrastructure.Repositories
 {
     public class SongRepository : ISongRepository
     {
+        private readonly IProvider _provider;
+        public SongRepository(IProvider provider)
+        {
+            _provider = provider;
+        }
         public void Add(UserId userId, PlaylistId playlistId, SongId songId, string title, string artist)
         {
             Console.WriteLine(
@@ -17,12 +22,13 @@ namespace CqrsRadio.Infrastructure.Repositories
 
         public IEnumerable<Song> GetRandomSongs(int size)
         {
-            using (var cnx = new SQLiteConnection("Data Source=cqrsradio.sqlite;Version=3;"))
+            using (var cnx = _provider.Create())
             {
                 var commandText = $"select songid, title, artist from radiosong order by random() limit {size}";
                 cnx.Open();
-                using (var command = new SQLiteCommand(commandText, cnx))
+                using (var command = cnx.CreateCommand())
                 {
+                    command.CommandText = commandText;
                     using (var reader = command.ExecuteReader())
                     {
                         while (reader.Read())

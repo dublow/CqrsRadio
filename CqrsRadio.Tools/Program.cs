@@ -2,6 +2,7 @@
 using CqrsRadio.Deezer;
 using CqrsRadio.Domain.ValueTypes;
 using CqrsRadio.Infrastructure.Persistences;
+using CqrsRadio.Infrastructure.Providers;
 using CqrsRadio.Infrastructure.Repositories;
 
 namespace CqrsRadio.Tools
@@ -12,7 +13,9 @@ namespace CqrsRadio.Tools
         {
             SqlLiteDb.CreateDomain();
 
-            var radioSongRepository = new RadioSongRepository();
+            var provider = new SqliteProvider();
+
+            var radioSongRepository = new RadioSongRepository(provider);
             var request = new RadioRequest();
             var deezerApi = new DeezerApi(request);
 

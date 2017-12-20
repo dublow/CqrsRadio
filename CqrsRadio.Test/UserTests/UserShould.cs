@@ -20,8 +20,9 @@ namespace CqrsRadio.Test.UserTests
             var publisher = new EventBus(stream);
             var deezerApi = DeezerApiBuilder.Create().Build();
             var songRepository = SongRepositoryBuilder.Create().Build();
+            var playlistRepository = PlaylistRepositoryBuilder.Create().Build();
 
-            User.Create(stream, publisher, deezerApi, songRepository, "nicolas.dfr@gmail.com", "dublow", "12345", "accessToken");
+            User.Create(stream, publisher, deezerApi, songRepository, playlistRepository, "nicolas.dfr@gmail.com", "dublow", "12345", "accessToken");
 
             var identity = Identity.Parse("nicolas.dfr@gmail.com", "dublow", "12345", "accessToken");
             Assert.IsTrue(stream.GetEvents().Contains(new UserCreated(identity)));
@@ -33,11 +34,12 @@ namespace CqrsRadio.Test.UserTests
             var stream = new MemoryEventStream();
             var deezerApi = DeezerApiBuilder.Create().Build();
             var songRepository = SongRepositoryBuilder.Create().Build();
+            var playlistRepository = PlaylistRepositoryBuilder.Create().Build();
             stream.Add(new UserCreated(Identity.Parse("nicolas.dfr@gmail.com", "dublow", "12345", "accessToken")));
             
             var publisher = new EventBus(stream);
 
-            var user = new User(stream, publisher, deezerApi, songRepository);
+            var user = new User(stream, publisher, deezerApi, songRepository, playlistRepository, 1);
 
             user.Delete();
             
@@ -50,12 +52,13 @@ namespace CqrsRadio.Test.UserTests
             var stream = new MemoryEventStream();
             var deezerApi = DeezerApiBuilder.Create().Build();
             var songRepository = SongRepositoryBuilder.Create().Build();
+            var playlistRepository = PlaylistRepositoryBuilder.Create().Build();
             stream.Add(new UserCreated(Identity.Parse("nicolas.dfr@gmail.com", "dublow", "12345", "accessToken")));
             stream.Add(new UserDeleted(UserId.Parse("12345")));
 
             var publisher = new EventBus(stream);
 
-            var user = new User(stream, publisher, deezerApi, songRepository);
+            var user = new User(stream, publisher, deezerApi, songRepository, playlistRepository, 1);
 
             user.Delete();
 
@@ -68,11 +71,12 @@ namespace CqrsRadio.Test.UserTests
             var stream = new MemoryEventStream();
             var deezerApi = DeezerApiBuilder.Create().Build();
             var songRepository = SongRepositoryBuilder.Create().Build();
+            var playlistRepository = PlaylistRepositoryBuilder.Create().Build();
             stream.Add(new UserCreated(Identity.Parse("nicolas.dfr@gmail.com", "dublow", "12345", "accessToken")));
             
             var publisher = new EventBus(stream);
 
-            var user = new User(stream, publisher, deezerApi, songRepository);
+            var user = new User(stream, publisher, deezerApi, songRepository, playlistRepository, 1);
 
             user.Delete();
             user.Delete();
@@ -87,11 +91,12 @@ namespace CqrsRadio.Test.UserTests
             var deezerApi = DeezerApiBuilder.Create().SetCreatePlaylist(PlaylistId.Parse("100")).Build();
             var songRepository = SongRepositoryBuilder.Create()
                 .SetRandomSongs(1, new[] {new Song(SongId.Parse("100"), "title", "artist")}).Build();
+            var playlistRepository = PlaylistRepositoryBuilder.Create().Build();
             stream.Add(new UserCreated(Identity.Parse("nicolas.dfr@gmail.com", "dublow", "12345", "accessToken")));
 
             var publisher = new EventBus(stream);
 
-            var user = new User(stream, publisher, deezerApi, songRepository);
+            var user = new User(stream, publisher, deezerApi, songRepository, playlistRepository, 1);
 
             user.AddPlaylist("playlistName");
 
@@ -104,12 +109,13 @@ namespace CqrsRadio.Test.UserTests
             var stream = new MemoryEventStream();
             var deezerApi = DeezerApiBuilder.Create().Build();
             var songRepository = SongRepositoryBuilder.Create().Build();
+            var playlistRepository = PlaylistRepositoryBuilder.Create().Build();
             stream.Add(new UserCreated(Identity.Parse("nicolas.dfr@gmail.com", "dublow", "12345", "accessToken")));
             stream.Add(new PlaylistAdded(UserId.Parse("12345"), PlaylistId.Parse("100"), "playlistName"));
 
             var publisher = new EventBus(stream);
 
-            var user = new User(stream, publisher, deezerApi, songRepository);
+            var user = new User(stream, publisher, deezerApi, songRepository, playlistRepository, 1);
 
             user.AddPlaylist("playlistName");
 
@@ -123,12 +129,13 @@ namespace CqrsRadio.Test.UserTests
             var stream = new MemoryEventStream();
             var deezerApi = DeezerApiBuilder.Create().Build();
             var songRepository = SongRepositoryBuilder.Create().Build();
+            var playlistRepository = PlaylistRepositoryBuilder.Create().Build();
             stream.Add(new UserCreated(Identity.Parse("nicolas.dfr@gmail.com", "dublow", "12345", "accessToken")));
             stream.Add(new UserDeleted(UserId.Parse("12345")));
 
             var publisher = new EventBus(stream);
 
-            var user = new User(stream, publisher, deezerApi, songRepository);
+            var user = new User(stream, publisher, deezerApi, songRepository, playlistRepository, 1);
 
             user.AddPlaylist("playlistName");
 

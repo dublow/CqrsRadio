@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using CqrsRadio.Domain.Entities;
 using CqrsRadio.Domain.Events;
 using CqrsRadio.Domain.EventStores;
@@ -15,17 +16,20 @@ namespace CqrsRadio.Domain.Aggregates
         private readonly Decision _decision;
         private readonly IDeezerApi _deezerApi;
         private readonly ISongRepository _songRepository;
+        private readonly IPlaylistRepository _playlistRepository;
         private readonly int _songByPlaylist;
 
         public Playlist Playlist { get; private set; }
         public Identity Identity { get; private set; }
-
-        public User(IEventStream stream, IEventPublisher publisher, IDeezerApi deezerApi, ISongRepository songRepository, int songByPlaylist = 1)
+        
+        public User(IEventStream stream, IEventPublisher publisher, IDeezerApi deezerApi, 
+            ISongRepository songRepository, IPlaylistRepository playlistRepository, int songByPlaylist)
         {
             _publisher = publisher;
             _decision = new Decision(stream);
             _deezerApi = deezerApi;
             _songRepository = songRepository;
+            _playlistRepository = playlistRepository;
             _songByPlaylist = songByPlaylist;
 
             Playlist = Playlist.Empty;
@@ -34,11 +38,13 @@ namespace CqrsRadio.Domain.Aggregates
         }
 
         public static User Create(IEventStream stream, IEventPublisher publisher, 
-            IDeezerApi deezerApi, ISongRepository songRepository, string email, string nickname, string userId, string accessToken)
+            IDeezerApi deezerApi, ISongRepository songRepository, IPlaylistRepository playlistRepository,
+            string email, string nickname, string userId, string accessToken,
+            int songSize = 1)
         {
             var identity = Identity.Parse(email, nickname, userId, accessToken);
 
-            var user = new User(stream, publisher, deezerApi, songRepository)
+            var user = new User(stream, publisher, deezerApi, songRepository, playlistRepository, songSize)
             {
                 Identity = identity
             };
@@ -60,6 +66,8 @@ namespace CqrsRadio.Domain.Aggregates
             if (_decision.IsDeleted)
                 return;
             if (!Playlist.IsEmpty)
+                return;
+            if (!_playlistRepository.CanCreatePlaylist(Identity.UserId, DateTime.UtcNow.AddDays(-1)))
                 return;
 
             var playlistId = _deezerApi
