@@ -1,21 +1,34 @@
 ﻿var home = (function () {
+    var loadMe = (response, model) => {
+        if (response.authResponse) {
+            var accessToken = response.authResponse.accessToken;
+            DZ.api('/user/me', function (response) {
+                if (response.error)
+                    return;
+                $.get('/CanCreatePlaylist/' + response.id,
+                        function (response) {
+                            model.canCreatePlaylist(response.data.canCreatePlaylist);
+                            model.isLogged(true);
+                            model.accessToken(accessToken);
+                            model.userId(response.id);
+                            model.name(response.name);
+                            model.email(response.email);
+                        })
+                    .fail(function (response) {
+                        model.isValid(false);
+                        model.errorMessage(response.statusText);
+                    });
+
+                
+            });
+        } else {
+            console.log('User cancelled login or did not fully authorize.');
+        }
+    };
     var deezer = {
         getLoginStatus: (model) => {
             DZ.getLoginStatus(function (response) {
-                if (response.authResponse) {
-                    var accessToken = response.authResponse.accessToken;
-                    DZ.api('/user/me', function (response) {
-                        if (response.error)
-                            return;
-                        model.isLogged(true);
-                        model.accessToken(accessToken);
-                        model.userId(response.id);
-                        model.name(response.name);
-                        model.email(response.email);
-                    });
-                } else {
-                    console.log('User cancelled login or did not fully authorize.');
-                }
+                loadMe(response, model);
             });
         },
         login: (model) => {
@@ -23,18 +36,7 @@
                 deezer.logout(model);
             else {
                 DZ.login(function (response) {
-                    if (response.authResponse) {
-                        var accessToken = response.authResponse.accessToken;
-                        DZ.api('/user/me', function (response) {
-                            model.isLogged(true);
-                            model.accessToken(accessToken);
-                            model.userId(response.id);
-                            model.name(response.name);
-                            model.email(response.email);
-                        });
-                    } else {
-                        console.log('User cancelled login or did not fully authorize.');
-                    }
+                    loadMe(response, model);
                 }, { perms: 'basic_access,email' });
             }
            
@@ -42,6 +44,7 @@
         logout: (model) => {
             DZ.logout();
             model.isLogged(false);
+            model.canCreatePlaylist(true);
         },
         createPlaylist: (model) => {
             if (!model.playlist() || model.playlist().trim() === '')
@@ -55,9 +58,14 @@
                         email: model.email(),
                         playlistName: model.playlist()
                     },
-                    function() {
-                        model.isValid(true);
-                    }, 'application/json');
+                    function(response) {
+                        model.isValid(response.isSuccess);
+                        model.errorMessage('');
+                    }, 'application/json')
+                    .fail(function (response) {
+                        model.isValid(false);
+                        model.errorMessage(response.statusText);
+                });
             }
         }
     };
@@ -71,6 +79,8 @@
             name: ko.observable(''),
             email: ko.observable(''),
             playlist: ko.observable(''),
+            errorMessage: ko.observable(''),
+            canCreatePlaylist: ko.observable(true), 
             init: () => deezer.getLoginStatus(public.model),
             login: deezer.login,
             logout: deezer.logout,
@@ -85,8 +95,16 @@
         return this.isLogged() ? '' : 'd-none';
     }, public.model);
 
+    public.model.logoutAndPlaylistCss = ko.pureComputed(function () {
+        return this.isLogged() && this.canCreatePlaylist() ? '' : 'd-none';
+    }, public.model);
+
     public.model.invalidModel = ko.pureComputed(function () {
         return this.isValid() ? '' : 'is-invalid';
+    }, public.model);
+
+    public.model.playlistCss = ko.pureComputed(function () {
+        return this.canCreatePlaylist() ? 'd-none' : '';
     }, public.model);
 
     ko.applyBindings(public.model);

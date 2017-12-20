@@ -49,7 +49,7 @@ namespace CqrsRadio.Web
                 {
                     var result = new JObject
                     {
-                        {"status", "Fail"},
+                        {"isSuccess", false},
                         { "data",  "Internal error"}
                     };
 
@@ -83,7 +83,7 @@ namespace CqrsRadio.Web
 
                         var result = new JObject
                         {
-                            {"status", ctx.Response.StatusCode.ToString()},
+                            {"isSuccess", true},
                             { "data",  rr}
                         };
 

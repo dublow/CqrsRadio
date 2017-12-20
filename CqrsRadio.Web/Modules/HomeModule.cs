@@ -2,6 +2,7 @@
 using CqrsRadio.Domain.Aggregates;
 using CqrsRadio.Domain.Repositories;
 using CqrsRadio.Domain.Services;
+using CqrsRadio.Domain.ValueTypes;
 using CqrsRadio.Handlers;
 using CqrsRadio.Infrastructure.Bus;
 using CqrsRadio.Infrastructure.EventStores;
@@ -39,6 +40,7 @@ namespace CqrsRadio.Web.Modules
                     appid = _environment.AppId,
                     channel = _environment.Channel
                 };
+                
                 return View["index", model];
             };
             Get["/channel"] = _ =>
@@ -60,7 +62,16 @@ namespace CqrsRadio.Web.Modules
 
                 user.AddPlaylist(model.PlaylistName);
                 
-                return Response.AsJson(user.Playlist);
+                return Response.AsJson(user.Playlist.IsEmpty);
+            };
+
+            Get["/CanCreatePlaylist/{userId}"] = parameters =>
+            {
+                var userId = UserId.Parse((string)parameters.userId);
+                var canCreatePlaylist = _playlistRepository
+                    .CanCreatePlaylist(userId, DateTime.UtcNow.AddDays(-1));
+
+                return Response.AsJson(new{canCreatePlaylist});
             };
         }
     }

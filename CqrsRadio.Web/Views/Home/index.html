@@ -42,13 +42,12 @@
             <h3 class="mb-5">
                 <em>A Free Deezer playlist generator</em>
             </h3>
-            <div class="d-none" data-bind="css:logoutCss">
-                <div class="row">
+            <div class="d-none" data-bind="css:logoutAndPlaylistCss">
+                <div class="row d-none">
                     <div class="col-md-4"></div>
                     <div class="col-md-4">
                         <input type="text" class="form-control" id="playlistname" placeholder="Playlist name" data-bind="value: playlist, css:invalidModel">
-                        
-                        <p></p>
+                        <p class="text-danger" data-bind="text: errorMessage"></p>
                     </div>
                     <div class="col-md-4"></div>
                 </div>
@@ -56,6 +55,7 @@
                     <a class="btn btn-primary btn-xl" href="#" data-bind="click:createPlaylist">Generate</a>
                 </div>
             </div>
+            <h3 class="text-danger" data-bind="css:playlistCss">Ooops ! You have already created a playlist today</h3>
             <div>
                 <div class="row" data-bind="css:loginCss">
                     <div class="col-md-4"></div>
