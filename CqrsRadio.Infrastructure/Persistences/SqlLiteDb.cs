@@ -19,7 +19,7 @@ namespace CqrsRadio.Infrastructure.Persistences
                                  "radiosong (songid int primary key, radioname varchar(20), title varchar(50), artist varchar(50))";
 
             var playlistSongTable = "create table if not exists " +
-                                    "playlist (userid int primary key, createdAt datetime)";
+                                    "playlist (userid int primary key, createdAt varchar(20))";
 
             ExecuteCommand(connectionString, radioSongTable);
             ExecuteCommand(connectionString, playlistSongTable);
