@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 using CqrsRadio.Domain.Configuration;
+using CqrsRadio.Web.Configuration;
 using Nancy.Hosting.Self;
 
 namespace CqrsRadio.Web
@@ -10,11 +10,10 @@ namespace CqrsRadio.Web
     {
         static void Main(string[] args)
         {
-            var currentEnvironment = GetCurrentEnvironment();
+            var currentEnvironment = GetHardCodedEnvironment();
             using (var host = new NancyHost(new Uri(currentEnvironment.Url), new NancyBootstrapper(currentEnvironment)))
             {
                 host.Start();
-                Console.WriteLine($"Running on {currentEnvironment.Url}");
                 Console.ReadLine();
             }
         }
@@ -27,6 +26,17 @@ namespace CqrsRadio.Web
 
             return MagicPlaylistConfiguration
                 .Current
+                .Environments
+                .Single(x => x.Name == environmentType);
+        }
+
+        static Domain.Configuration.Environment GetHardCodedEnvironment()
+        {
+            var environmentType = Type.GetType("Mono.Runtime") != null
+                ? EnvironmentType.Production
+                : EnvironmentType.Local;
+
+            return new HardCodedMagicPlaylistConfiguration()
                 .Environments
                 .Single(x => x.Name == environmentType);
         }
