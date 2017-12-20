@@ -20,7 +20,7 @@ namespace CqrsRadio.Web.Modules
         private readonly ISongRepository _songRepository;
         private readonly IPlaylistRepository _playlistRepository;
         private readonly Environment _environment;
-
+        
         public HomeModule(IDeezerApi deezerApi, ISongRepository songRepository, 
             IPlaylistRepository playlistRepository, Environment environment)
         {
@@ -61,8 +61,8 @@ namespace CqrsRadio.Web.Modules
                     _playlistRepository, model.Email, model.Nickname, model.UserId, model.AccessToken, _environment.Size);
 
                 user.AddPlaylist(model.PlaylistName);
-                
-                return Response.AsJson(user.Playlist.IsEmpty);
+                Console.WriteLine(user.Playlist.PlaylistId.Value);
+                return Response.AsJson(new{ playlistCreated = !user.Playlist.PlaylistId.IsEmpty });
             };
 
             Get["/CanCreatePlaylist/{userId}"] = parameters =>

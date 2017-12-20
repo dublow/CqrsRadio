@@ -6,8 +6,8 @@
                 if (response.error)
                     return;
                 $.get('/CanCreatePlaylist/' + response.id,
-                        function (response) {
-                            model.canCreatePlaylist(response.data.canCreatePlaylist);
+                        function (responsePlaylist) {
+                            model.canCreatePlaylist(responsePlaylist.data.canCreatePlaylist);
                             model.isLogged(true);
                             model.accessToken(accessToken);
                             model.userId(response.id);
@@ -37,7 +37,7 @@
             else {
                 DZ.login(function (response) {
                     loadMe(response, model);
-                }, { perms: 'basic_access,email' });
+                }, { perms: 'basic_access,email,manage_library' });
             }
            
         },
@@ -61,7 +61,10 @@
                     function(response) {
                         model.isValid(response.isSuccess);
                         model.errorMessage('');
-                    }, 'application/json')
+                        model.playlist('');
+                        if (response.data.playlistCreated) 
+                            model.canCreatePlaylist(false);
+                    })
                     .fail(function (response) {
                         model.isValid(false);
                         model.errorMessage(response.statusText);
