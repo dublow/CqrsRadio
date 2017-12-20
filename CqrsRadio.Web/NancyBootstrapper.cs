@@ -1,6 +1,6 @@
-﻿using System;
-using CqrsRadio.Common.Net;
+﻿using CqrsRadio.Common.Net;
 using CqrsRadio.Deezer;
+using CqrsRadio.Domain.Configuration;
 using CqrsRadio.Domain.Repositories;
 using CqrsRadio.Domain.Services;
 using CqrsRadio.Infrastructure.Providers;
@@ -13,31 +13,25 @@ namespace CqrsRadio.Web
 {
     public class NancyBootstrapper : DefaultNancyBootstrapper
     {
+        private readonly Environment _environment;
+
+        public NancyBootstrapper(Environment environment)
+        {
+            _environment = environment;
+        }
+
         protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
         {
-            var isMono = Type.GetType("Mono.Runtime") != null;
-
             container.Register<IRequest, RadioRequest>();
             container.Register<IDeezerApi, DeezerApi>();
 
             container.Register((cContainer, overloads) =>
-                isMono ? (IProvider) new MonoSqliteProvider() : new SqliteProvider());
+                _environment.Name == EnvironmentType.Production 
+                    ? (IProvider) new MonoSqliteProvider() 
+                    : new SqliteProvider());
 
             container.Register<ISongRepository, SongRepository>();
             container.Register<IPlaylistRepository, PlaylistRepository>();
-
-
-            pipelines.BeforeRequest += (ctx) =>
-            {
-                Console.WriteLine(ctx.Request.Url.ToString());
-                return null;
-            };
-
-            pipelines.OnError += (ctx, ex) =>
-            {
-                Console.WriteLine(ex.InnerException);
-                return null;
-            };
         }
     }
 }

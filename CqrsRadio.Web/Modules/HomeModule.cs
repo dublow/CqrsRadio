@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Configuration;
 using CqrsRadio.Domain.Aggregates;
 using CqrsRadio.Domain.Repositories;
 using CqrsRadio.Domain.Services;
@@ -8,16 +7,25 @@ using CqrsRadio.Infrastructure.Bus;
 using CqrsRadio.Infrastructure.EventStores;
 using CqrsRadio.Web.Models;
 using Nancy;
-using Nancy.Extensions;
 using Nancy.ModelBinding;
+using Environment = CqrsRadio.Domain.Configuration.Environment;
 
 namespace CqrsRadio.Web.Modules
 {
     public class HomeModule : NancyModule
     {
-        public HomeModule(IDeezerApi deezerApi, ISongRepository songRepository, IPlaylistRepository playlistRepository)
+        private readonly IDeezerApi _deezerApi;
+        private readonly ISongRepository _songRepository;
+        private readonly IPlaylistRepository _playlistRepository;
+        private readonly Environment _environment;
+
+        public HomeModule(IDeezerApi deezerApi, ISongRepository songRepository, 
+            IPlaylistRepository playlistRepository, Environment environment)
         {
-            var songSize = int.Parse(ConfigurationManager.AppSettings["songSize"]);
+            _deezerApi = deezerApi;
+            _songRepository = songRepository;
+            _playlistRepository = playlistRepository;
+            _environment = environment;
             var eventStream = new MemoryEventStream();
             var eventPublisher = new EventBus(eventStream);
 
@@ -25,13 +33,12 @@ namespace CqrsRadio.Web.Modules
 
             Get["/"] = _ =>
             {
-                var local = Type.GetType("Mono.Runtime") != null ? "" : "local";
                 var model = new
                 {
-                    appid = ConfigurationManager.AppSettings[$"appid{local}"],
-                    channel = ConfigurationManager.AppSettings[$"channel{local}"]
+                    appid = _environment.AppId,
+                    channel = _environment.Channel
                 };
-                return View["index", model].WithHeader("mono", (Type.GetType("Mono.Runtime") != null).ToString());
+                return View["index", model];
             };
             Get["/channel"] = _ =>
             {
@@ -47,8 +54,8 @@ namespace CqrsRadio.Web.Modules
             {
                 var model = this.Bind<LoginViewModel>();
                 
-                var user = User.Create(eventStream, eventPublisher, deezerApi, songRepository,
-                    playlistRepository, model.Email, model.Nickname, model.UserId, model.AccessToken, songSize);
+                var user = User.Create(eventStream, eventPublisher, _deezerApi, _songRepository,
+                    _playlistRepository, model.Email, model.Nickname, model.UserId, model.AccessToken, _environment.Size);
 
                 user.AddPlaylist(model.PlaylistName);
                 
