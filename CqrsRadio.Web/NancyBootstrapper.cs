@@ -1,6 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text;
 using CqrsRadio.Common.Net;
+using CqrsRadio.Common.StatsD;
 using CqrsRadio.Deezer;
 using CqrsRadio.Domain.Configuration;
 using CqrsRadio.Domain.Repositories;
@@ -13,6 +15,7 @@ using Nancy.Extensions;
 using Nancy.TinyIoc;
 using Newtonsoft.Json.Linq;
 using NLog;
+using Environment = CqrsRadio.Domain.Configuration.Environment;
 
 namespace CqrsRadio.Web
 {
@@ -28,20 +31,21 @@ namespace CqrsRadio.Web
 
         protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
         {
+            var udpRequest = new StatsDRequest("127.0.0.1", 8125);
+
             container.Register(_environment);
+            container.Register<IStatsDRequest>(udpRequest);
+            container.Register<IMetric, Metric>();
             container.Register<IRequest, RadioRequest>();
             container.Register<IDeezerApi, DeezerApi>();
-
-            container.Register((cContainer, overloads) =>
-                _environment.Name == EnvironmentType.Production 
-                    ? (IProvider) new MonoSqliteProvider() 
-                    : new SqliteProvider());
-
             container.Register<ISongRepository, SongRepository>();
             container.Register<IPlaylistRepository, PlaylistRepository>();
+            container.Register((cContainer, overloads) => _environment.Name == EnvironmentType.Production
+                    ? (IProvider)new MonoSqliteProvider() : new SqliteProvider());
 
             pipelines.OnError += (ctx, ex) =>
             {
+                container.Resolve<IMetric>().Count("error");
                 Logger.Error(ex);
                 var isAjaxRequest = ctx.Request.IsAjaxRequest();
 

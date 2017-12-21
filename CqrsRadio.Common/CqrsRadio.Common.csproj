@@ -43,6 +43,11 @@
     <Compile Include="Net\IRequest.cs" />
     <Compile Include="Net\RadioRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StatsD\Metric.cs" />
+    <Compile Include="StatsD\StatsDRequest.cs" />
+    <Compile Include="StatsD\Timer.cs" />
+    <Compile Include="StatsD\IMetric.cs" />
+    <Compile Include="StatsD\IStatsDRequest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
