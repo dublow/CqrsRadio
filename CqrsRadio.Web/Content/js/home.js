@@ -1,10 +1,14 @@
 ﻿var home = (function () {
     var loadMe = (response, model) => {
+        NProgress.start();
         if (response.authResponse) {
             var accessToken = response.authResponse.accessToken;
             DZ.api('/user/me', function (response) {
-                if (response.error)
+                if (response.error) {
+                    NProgress.done();
+                    NProgress.remove();
                     return;
+                }
                 $.get('/CanCreatePlaylist/' + response.id,
                         function (responsePlaylist) {
                             model.canCreatePlaylist(responsePlaylist.data.canCreatePlaylist);
@@ -13,16 +17,20 @@
                             model.userId(response.id);
                             model.name(response.name);
                             model.email(response.email);
+                            NProgress.done();
+                            NProgress.remove();
                         })
                     .fail(function (response) {
                         model.isValid(false);
                         model.errorMessage(response.statusText);
+                        NProgress.done();
+                        NProgress.remove();
                     });
-
-                
             });
         } else {
             console.log('User cancelled login or did not fully authorize.');
+            NProgress.done();
+            NProgress.remove();
         }
     };
     var deezer = {
@@ -50,6 +58,7 @@
             if (!model.playlist() || model.playlist().trim() === '')
                 model.isValid(false);
             else {
+                NProgress.start();
                 $.post('/Login',
                     {
                         accessToken: model.accessToken(),
@@ -64,10 +73,14 @@
                         model.playlist('');
                         if (response.data.playlistCreated) 
                             model.canCreatePlaylist(false);
+                        NProgress.done();
+                        NProgress.remove();
                     })
                     .fail(function (response) {
                         model.isValid(false);
                         model.errorMessage(response.statusText);
+                        NProgress.done();
+                        NProgress.remove();
                 });
             }
         }
