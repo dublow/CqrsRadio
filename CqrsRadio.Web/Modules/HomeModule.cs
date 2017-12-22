@@ -10,7 +10,6 @@ using CqrsRadio.Infrastructure.EventStores;
 using CqrsRadio.Web.Models;
 using Nancy;
 using Nancy.ModelBinding;
-using NLog;
 using Environment = CqrsRadio.Domain.Configuration.Environment;
 
 namespace CqrsRadio.Web.Modules
