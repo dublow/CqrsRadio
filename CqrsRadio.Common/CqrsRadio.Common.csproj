@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyScanner\TypeScanner.cs" />
     <Compile Include="Net\IRequest.cs" />
     <Compile Include="Net\RadioRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
