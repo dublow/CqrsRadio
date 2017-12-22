@@ -1,107 +1,61 @@
-﻿<!DOCTYPE html>
-
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>MagicPlaylist</title>
-
-    <!-- Bootstrap Core CSS -->
-    <link href="/Content/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom Fonts -->
-    <link href="/Content/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
-    <link href="/Content/simple-line-icons/css/simple-line-icons.css" rel="stylesheet">
-
-    <!-- Custom CSS -->
-    <link href="/Content/css/stylish-portfolio.min.css" rel="stylesheet">
-</head>
-<body id="page-top">
-    <div id="dz-root"></div>
-    <a class="menu-toggle rounded d-none" href="#" data-bind="css:logoutCss">
-        <i class="fa fa-bars"></i>
-    </a>
-    <nav class="d-none" id="sidebar-wrapper" data-bind="css:logoutCss">
-        <ul class="sidebar-nav">
-            <li class="sidebar-brand">
-                <a class="js-scroll-trigger" href="#page-top">MagicPlaylist</a>
-            </li>
-            <li class="sidebar-nav-item">
-                <a class="js-scroll-trigger" href="#page-top" data-bind="click:logout">Logout</a>
-            </li>
-        </ul>
-    </nav>
+﻿@Master['master.html']
+@Section['Content']
+<div id="dz-root"></div>
+<a class="menu-toggle rounded d-none" href="#" data-bind="css:logoutCss">
+    <i class="fa fa-bars"></i>
+</a>
+<nav class="d-none" id="sidebar-wrapper" data-bind="css:logoutCss">
+    <ul class="sidebar-nav">
+        <li class="sidebar-brand">
+            <a class="js-scroll-trigger" href="#page-top">MagicPlaylist</a>
+        </li>
+        <li class="sidebar-nav-item">
+            <a class="js-scroll-trigger" href="#page-top" data-bind="click:logout">Logout</a>
+        </li>
+    </ul>
+</nav>
 <!-- Header -->
-    <header class="masthead d-flex">
-        <div class="container text-center my-auto">
-            <h1 class="mb-1">MagicPlaylist</h1>
-            <h3 class="mb-5">
-                <em>A Free Deezer playlist generator</em>
-            </h3>
-            <div class="d-none" data-bind="css:logoutAndPlaylistCss">
-                <div class="row">
-                    <div class="col-md-4"></div>
-                    <div class="col-md-4">
-                        <input type="text" class="form-control" id="playlistname" placeholder="Playlist name" data-bind="value: playlist, css:invalidModel">
-                        <p class="text-danger" data-bind="text: errorMessage"></p>
-                    </div>
-                    <div class="col-md-4"></div>
+<header class="masthead d-flex">
+    <div class="container text-center my-auto">
+        <h1 class="mb-1">MagicPlaylist</h1>
+        <h3 class="mb-5">
+            <em>A Free Deezer playlist generator</em>
+        </h3>
+        <div class="d-none" data-bind="css:logoutAndPlaylistCss">
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <input type="text" class="form-control" id="playlistname" placeholder="Playlist name" data-bind="value: playlist, css:invalidModel">
+                    <p class="text-danger" data-bind="text: errorMessage"></p>
                 </div>
-                <div class="container text-center my-auto">
-                    <a class="btn btn-primary btn-xl" href="#" data-bind="click:createPlaylist">Generate</a>
-                </div>
+                <div class="col-md-4"></div>
             </div>
-            <h3 class="text-danger" data-bind="css:playlistCss">Ooops ! You have already created a playlist today</h3>
-            <div>
-                <div class="row" data-bind="css:loginCss">
-                    <div class="col-md-4"></div>
-                    <div class="col-md-4">
-                        <a class="btn btn-primary btn-xl" href="#" data-bind="click:login">Login</a>
-                    </div>
-                    <div class="col-md-4"></div>
-                </div>
+            <div class="container text-center my-auto">
+                <a class="btn btn-primary btn-xl" href="#" data-bind="click:createPlaylist">Generate</a>
             </div>
         </div>
-    </header>
-    <!-- Footer -->
-    <footer class="footer text-center">
-        <div class="container">
-            <p class="text-muted small mb-0">Copyright &copy; magicPlaylist 2017</p>
+        <h3 class="text-danger" data-bind="css:playlistCss">Ooops ! You have already created a playlist today</h3>
+        <div>
+            <div class="row" data-bind="css:loginCss">
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <a class="btn btn-primary btn-xl" href="#" data-bind="click:login">Login</a>
+                </div>
+                <div class="col-md-4"></div>
+            </div>
         </div>
-    </footer>
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded js-scroll-trigger" href="#page-top">
-        <i class="fa fa-angle-up"></i>
-    </a>
-<!-- Bootstrap core JavaScript -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
-<script src="https://e-cdns-files.dzcdn.net/js/min/dz.js"></script>
-<script src="/Content/js/home.js"></script>
-<script src="/Content/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- Plugin JavaScript -->
-<script src="/Content/jquery-easing/jquery.easing.min.js"></script>
-<!-- Custom scripts for this template -->
-<script src="/Content/js/stylish-portfolio.min.js"></script>
+    </div>
+</header>
+@EndSection
 <script>
     DZ.init({
         appId: '@Model.appid',
         channelUrl: '@Model.channel'
     });
 </script>
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-41991114-4"></script>
-<script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'UA-41991114-4');
-</script>
-
-</body>
-</html>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
+<script src="https://e-cdns-files.dzcdn.net/js/min/dz.js"></script>
+<script src='~/Content/js/nprogress.js'></script>
+<script src="~/Content/js/home.js"></script>
+@Section['Script']
+@EndSection
