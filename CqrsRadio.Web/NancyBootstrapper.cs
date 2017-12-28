@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Text;
+using CqrsRadio.Common.AssemblyScanner;
 using CqrsRadio.Common.Net;
 using CqrsRadio.Common.StatsD;
 using CqrsRadio.Deezer;
@@ -8,9 +10,11 @@ using CqrsRadio.Domain.Configuration;
 using CqrsRadio.Domain.Repositories;
 using CqrsRadio.Domain.Services;
 using CqrsRadio.Infrastructure.Providers;
-using CqrsRadio.Infrastructure.Repositories;
+using CqrsRadio.Web.Authentication;
 using Nancy;
+using Nancy.Authentication.Basic;
 using Nancy.Bootstrapper;
+using Nancy.Cryptography;
 using Nancy.Extensions;
 using Nancy.TinyIoc;
 using Newtonsoft.Json.Linq;
@@ -31,17 +35,9 @@ namespace CqrsRadio.Web
 
         protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
         {
-            var udpRequest = new StatsDRequest("127.0.0.1", 8125);
-
-            container.Register(_environment);
-            container.Register<IStatsDRequest>(udpRequest);
-            container.Register<IMetric, Metric>();
-            container.Register<IRequest, RadioRequest>();
-            container.Register<IDeezerApi, DeezerApi>();
-            container.Register<ISongRepository, SongRepository>();
-            container.Register<IPlaylistRepository, PlaylistRepository>();
-            container.Register((cContainer, overloads) => _environment.Name == EnvironmentType.Production
-                    ? (IProvider)new MonoSqliteProvider() : new SqliteProvider());
+            Register(container);
+            RegisterRepository(container);
+            RegisterCrypo(container);
 
             pipelines.OnError += (ctx, ex) =>
             {
@@ -70,7 +66,6 @@ namespace CqrsRadio.Web
 
                 return null;
             };
-
             pipelines.AfterRequest += (ctx) =>
             {
                 var isAjaxRequest = ctx.Request.IsAjaxRequest();
@@ -83,14 +78,23 @@ namespace CqrsRadio.Web
                         ctx.Response.Contents.Invoke(memStream);
                         var textResponse = Encoding.UTF8.GetString(memStream.ToArray());
 
-                        var rr = JObject.Parse(textResponse);
-
-                        var result = new JObject
+                        var result = new JObject();
+                        if (TryParseJObject(textResponse, out var jo))
                         {
-                            {"isSuccess", true},
-                            { "data",  rr}
-                        };
-
+                            result = new JObject
+                            {
+                                {"isSuccess", true},
+                                { "data", jo}
+                            };
+                        }
+                        else if (TryParseJArray(textResponse, out var ja))
+                        {
+                            result = new JObject
+                            {
+                                {"isSuccess", true},
+                                { "data", ja}
+                            };
+                        }
                         var newContent = result.ToString();
                         var output = Encoding.UTF8.GetBytes(newContent);
                         
@@ -98,6 +102,81 @@ namespace CqrsRadio.Web
                     }
                 }
             };
+
+            var hmacProvider = container.Resolve<IHmacProvider>();
+            var adminRepository = container.Resolve<IAdminRepository>();
+            var adminUserValidator = new AdminUserValidator(hmacProvider, adminRepository);
+
+            pipelines.EnableBasicAuthentication(new BasicAuthenticationConfiguration(adminUserValidator, "admin"));
+        }
+
+        private void Register(TinyIoCContainer container)
+        {
+            var isProd = _environment.Name == EnvironmentType.Production;
+
+            container.Register(_environment);
+            container.Register<IStatsDRequest>(new StatsDRequest("127.0.0.1", 8125));
+            container.Register<IMetric, Metric>();
+            container.Register<IRequest, RadioRequest>();
+            container.Register<IDeezerApi, DeezerApi>();
+            container.Register((cContainer, overloads) => isProd
+                ? (IProvider)new MonoSqliteProvider() : new SqliteProvider());
+            container.Register((cContainer, overloads) => isProd
+                ? (IDbParameter)new MonoSqliteDbParameter() : new SqliteDbParameter());
+        }
+
+        private void RegisterRepository(TinyIoCContainer container)
+        {
+            TypeScanner
+                .GetTypesOf<IRepository>()
+                .ForEach(type =>
+                {
+                    var interfaceType = type
+                        .GetInterfaces()
+                        .First(x => x != typeof(IRepository));
+
+                    var instance = Activator
+                        .CreateInstance(type, container.Resolve<IProvider>(), container.Resolve<IDbParameter>());
+
+                    container.Register(interfaceType, instance);
+                });
+        }
+
+        private void RegisterCrypo(TinyIoCContainer container)
+        {
+            var keyGenerator = new PassphraseKeyGenerator("forayer globular arse diminish highball wineskin",
+                new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 });
+            var hmacProvider = new DefaultHmacProvider(keyGenerator);
+
+            container.Register<IHmacProvider>(hmacProvider);
+        }
+
+        private bool TryParseJObject(string value, out JObject jobject)
+        {
+            jobject = null;
+            try
+            {
+                jobject = JObject.Parse(value);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        private bool TryParseJArray(string value, out JArray jarray)
+        {
+            jarray = null;
+            try
+            {
+                jarray = JArray.Parse(value);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }

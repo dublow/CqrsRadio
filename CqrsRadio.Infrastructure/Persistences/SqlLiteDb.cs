@@ -21,8 +21,12 @@ namespace CqrsRadio.Infrastructure.Persistences
             var playlistSongTable = "create table if not exists " +
                                     "playlist (userid int primary key, createdAt varchar(20))";
 
+            var adminTable = "create table if not exists " +
+                             "admin (login varchar(20) primary key, hash blob)";
+
             ExecuteCommand(connectionString, radioSongTable);
             ExecuteCommand(connectionString, playlistSongTable);
+            ExecuteCommand(connectionString, adminTable);
         }
 
         private static void ExecuteCommand(string connectionString, string commandText)

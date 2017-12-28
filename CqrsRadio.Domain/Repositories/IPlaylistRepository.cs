@@ -3,7 +3,7 @@ using CqrsRadio.Domain.ValueTypes;
 
 namespace CqrsRadio.Domain.Repositories
 {
-    public interface IPlaylistRepository    
+    public interface IPlaylistRepository : IRepository
     {
         void Add(UserId userId, PlaylistId isAny, string name);
         void Update(UserId userId);
