@@ -47,15 +47,17 @@
     </div>
 </header>
 @EndSection
+
+@Section['Scripts']
+<script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
+<script src="https://e-cdns-files.dzcdn.net/js/min/dz.js"></script>
 <script>
     DZ.init({
         appId: '@Model.appid',
         channelUrl: '@Model.channel'
     });
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
-<script src="https://e-cdns-files.dzcdn.net/js/min/dz.js"></script>
+
 <script src='~/Content/js/nprogress.js'></script>
 <script src="~/Content/js/home.js"></script>
-@Section['Script']
 @EndSection

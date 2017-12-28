@@ -2,8 +2,8 @@
 
 namespace CqrsRadio.Infrastructure.Providers
 {
-    public interface IProvider
+    public interface IDbParameter
     {
-        DbConnection Create();
+        DbParameter Create(string name, object value);
     }
 }

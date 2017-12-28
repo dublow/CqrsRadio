@@ -1,9 +1,9 @@
-﻿using System;
-
-namespace CqrsRadio.Domain.Repositories
+﻿namespace CqrsRadio.Domain.Repositories
 {
     public interface IAdminRepository : IRepository
     {
-        void Add(string login, byte[] salt, byte[] hash);
+        void Add(string login, byte[] hash);
+        bool Exists(string login);
+        byte[] GetPassword(string login);
     }
 }

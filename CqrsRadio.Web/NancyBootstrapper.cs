@@ -10,7 +10,9 @@ using CqrsRadio.Domain.Configuration;
 using CqrsRadio.Domain.Repositories;
 using CqrsRadio.Domain.Services;
 using CqrsRadio.Infrastructure.Providers;
+using CqrsRadio.Web.Authentication;
 using Nancy;
+using Nancy.Authentication.Basic;
 using Nancy.Bootstrapper;
 using Nancy.Cryptography;
 using Nancy.Extensions;
@@ -76,14 +78,23 @@ namespace CqrsRadio.Web
                         ctx.Response.Contents.Invoke(memStream);
                         var textResponse = Encoding.UTF8.GetString(memStream.ToArray());
 
-                        var rr = JObject.Parse(textResponse);
-
-                        var result = new JObject
+                        var result = new JObject();
+                        if (TryParseJObject(textResponse, out var jo))
                         {
-                            {"isSuccess", true},
-                            { "data",  rr}
-                        };
-
+                            result = new JObject
+                            {
+                                {"isSuccess", true},
+                                { "data", jo}
+                            };
+                        }
+                        else if (TryParseJArray(textResponse, out var ja))
+                        {
+                            result = new JObject
+                            {
+                                {"isSuccess", true},
+                                { "data", ja}
+                            };
+                        }
                         var newContent = result.ToString();
                         var output = Encoding.UTF8.GetBytes(newContent);
                         
@@ -91,17 +102,27 @@ namespace CqrsRadio.Web
                     }
                 }
             };
+
+            var hmacProvider = container.Resolve<IHmacProvider>();
+            var adminRepository = container.Resolve<IAdminRepository>();
+            var adminUserValidator = new AdminUserValidator(hmacProvider, adminRepository);
+
+            pipelines.EnableBasicAuthentication(new BasicAuthenticationConfiguration(adminUserValidator, "admin"));
         }
 
         private void Register(TinyIoCContainer container)
         {
+            var isProd = _environment.Name == EnvironmentType.Production;
+
             container.Register(_environment);
             container.Register<IStatsDRequest>(new StatsDRequest("127.0.0.1", 8125));
             container.Register<IMetric, Metric>();
             container.Register<IRequest, RadioRequest>();
             container.Register<IDeezerApi, DeezerApi>();
-            container.Register((cContainer, overloads) => _environment.Name == EnvironmentType.Production
+            container.Register((cContainer, overloads) => isProd
                 ? (IProvider)new MonoSqliteProvider() : new SqliteProvider());
+            container.Register((cContainer, overloads) => isProd
+                ? (IDbParameter)new MonoSqliteDbParameter() : new SqliteDbParameter());
         }
 
         private void RegisterRepository(TinyIoCContainer container)
@@ -115,7 +136,7 @@ namespace CqrsRadio.Web
                         .First(x => x != typeof(IRepository));
 
                     var instance = Activator
-                        .CreateInstance(type, container.Resolve<IProvider>());
+                        .CreateInstance(type, container.Resolve<IProvider>(), container.Resolve<IDbParameter>());
 
                     container.Register(interfaceType, instance);
                 });
@@ -128,6 +149,34 @@ namespace CqrsRadio.Web
             var hmacProvider = new DefaultHmacProvider(keyGenerator);
 
             container.Register<IHmacProvider>(hmacProvider);
+        }
+
+        private bool TryParseJObject(string value, out JObject jobject)
+        {
+            jobject = null;
+            try
+            {
+                jobject = JObject.Parse(value);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        private bool TryParseJArray(string value, out JArray jarray)
+        {
+            jarray = null;
+            try
+            {
+                jarray = JArray.Parse(value);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }

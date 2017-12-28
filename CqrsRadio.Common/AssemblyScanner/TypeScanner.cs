@@ -23,13 +23,9 @@ namespace CqrsRadio.Common.AssemblyScanner
 
         static IEnumerable<Assembly> GetLocalAssemblies()
         {
-            Assembly callingAssembly = Assembly.GetCallingAssembly();
-            string path = new Uri(Path.GetDirectoryName(callingAssembly.CodeBase)).AbsolutePath;
-
             return AppDomain.CurrentDomain.GetAssemblies()
                 .Where(x =>
-                    !x.IsDynamic
-                    && new Uri(x.CodeBase).AbsolutePath.Contains(path)).ToList();
+                    !x.IsDynamic).ToList();
         }
     }
 }
