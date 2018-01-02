@@ -11,7 +11,7 @@ namespace CqrsRadio.Tools
     {
         static void Main(string[] args)
         {
-            SqlLiteDb.CreateDomain();
+            //SqlLiteDb.CreateDomain();
 
             
             

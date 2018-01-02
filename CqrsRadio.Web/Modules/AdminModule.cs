@@ -1,24 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
+using CqrsRadio.Common.Net;
 using CqrsRadio.Domain.Repositories;
+using CqrsRadio.Domain.Services;
+using CqrsRadio.Domain.ValueTypes;
+using CqrsRadio.Infrastructure.Persistences;
+using CqrsRadio.Web.Hack;
 using CqrsRadio.Web.Models;
 using Nancy;
 using Nancy.Cryptography;
 using Nancy.ModelBinding;
 using Nancy.Security;
-using Newtonsoft.Json.Linq;
 
 namespace CqrsRadio.Web.Modules
 {
     public class AdminModule : NancyModule
     {
-        public AdminModule(IAdminRepository adminRepository, IHmacProvider hmacProvider) : base("admin")
+        public AdminModule(IAdminRepository adminRepository, 
+            IHmacProvider hmacProvider, IRequest request,
+            DatabaseSong dbsong, DatabaseDomain dbDomain,
+            IDeezerApi deezerApi, IRadioSongRepository radioSongRepository) : base("admin")
         {
             this.RequiresAuthentication();
 
@@ -43,72 +45,56 @@ namespace CqrsRadio.Web.Modules
 
             Get["/GetCoordinate"] = _ =>
             {
-                var jArray = new JArray();
-                File
-                    .ReadAllLines("/var/log/auth.log").Select(x =>
+                var hackManager = new HackManager(request);
+
+                var flattenAsDateIp = File.ReadAllLines("/var/log/auth.log").Select(x =>
                     {
-                        var dateIp = Parsor.Line(x);
+                        var dateIp = DateIpParsor.Line(x);
                         return dateIp;
                     })
                     .Where(x => !x.IsEmpty)
-                    .GroupBy(x => new {x.Date, x.Ip})
-                    .Take(100)
-                    .ToList()
-                    .ForEach(x =>
+                    .GroupBy(x => new { x.Date, x.Ip })
+                    .Select(x=>DateIp.Create(x.Key.Date, x.Key.Ip))
+                    .ToList();
+
+                var localizations = hackManager.GetLocalization(flattenAsDateIp);
+
+                return Response.AsJson(localizations);
+            };
+
+            Get["GenerateSong"] = _ =>
+            {
+                dbsong.Create();
+                var playlistIds = deezerApi
+                    .GetPlaylistIdsByUserId(
+                        "frKtbRGI9G18kljXooH4oQ0XbmntBD7oXeKBVBcVKIyjMMSDle0", 
+                        UserId.Parse("4934039"), s => s.ToLower().Contains("djam"));
+
+                
+                foreach (var playlistId in playlistIds)
+                {
+                    var songs = deezerApi.GetSongsByPlaylistId("frKtbRGI9G18kljXooH4oQ0XbmntBD7oXeKBVBcVKIyjMMSDle0", playlistId);
+
+                    foreach (var deezerSong in songs)
                     {
-                        var wr = WebRequest.Create($"http://ip-api.com/json/{x.Key.Ip}?fields=lat,lon");
-                        using (var response = wr.GetResponse())
+                        if (!radioSongRepository.SongExists(deezerSong.Id))
                         {
-                            using (var sr = new StreamReader(response.GetResponseStream()))
-                            {
-                                var end = sr.ReadToEnd();
-                                Console.WriteLine(end);
-                                var parsed = JObject.Parse(end);
-
-                                if (parsed.HasValues)
-                                    jArray.Add(parsed);
-                            }
+                            Console.WriteLine(deezerSong.Id);
+                            radioSongRepository.Add(deezerSong.Id, "NUSED", deezerSong.Title, deezerSong.Artist);
                         }
-                    });
+                    }
+                }
 
-                return Response.AsJson(jArray);
+                return "ok";
+            };
+
+            Get["GenerateDomain"] = _ =>
+            {
+                dbDomain.Create();
+
+                dbsong.Create();
+                return "ok";
             };
         }
-    }
-
-    public static class Parsor
-    {
-        private static readonly Regex RxDate = new Regex(@"^((?:J[au]n|Feb|Ma[ry]|Apr|Jul|Aug|Sep|Oct|Nov|Dec) \s+ \d+)", RegexOptions.IgnorePatternWhitespace);
-        private static readonly Regex RxIp = new Regex(@"((25[0-5])|(2[0-4][0-9])|(1[0-9][0-9])|([1-9][0-9])|([0-9]))[.]((25[0-5])|(2[0-4][0-9])|(1[0-9][0-9])|([1-9][0-9])|([0-9]))[.]((25[0-5])|(2[0-4][0-9])|(1[0-9][0-9])|([1-9][0-9])|([0-9]))[.]((25[0-5])|(2[0-4][0-9])|(1[0-9][0-9])|([1-9][0-9])|([0-9]))", RegexOptions.IgnorePatternWhitespace);
-
-        public static DateIp Line(string line)
-        {
-            var matchDate = RxDate.Match(line);
-            var matchIp = RxIp.Match(line);
-
-            if(matchIp.Success && matchDate.Success)
-                return DateIp.Create(matchDate.Value, matchIp.Value);
-
-            return DateIp.Empty;
-        }
-    }
-
-    public class DateIp
-    {
-        public readonly string Date;
-        public readonly string Ip;
-        public readonly bool IsEmpty;
-
-        private DateIp(string date, string ip)
-        {
-            Date = date;
-            Ip = ip;
-
-            IsEmpty = string.IsNullOrEmpty(Date) 
-                && string.IsNullOrEmpty(Ip);
-        }
-
-        public static DateIp Create(string date, string ip) => new DateIp(date, ip);
-        public static DateIp Empty => new DateIp(string.Empty, String.Empty);
     }
 }

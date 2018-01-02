@@ -85,11 +85,14 @@
   <ItemGroup>
     <Compile Include="Authentication\AdminUserValidator.cs" />
     <Compile Include="Configuration\HardCodedMagicPlaylistConfiguration.cs" />
+    <Compile Include="Hack\HackManager.cs" />
     <Compile Include="Handlers\StatusCode\StatusCodeHandler.cs" />
     <Compile Include="Models\AddUserViewModel.cs" />
     <Compile Include="Models\LoginViewModel.cs" />
     <Compile Include="Modules\AdminModule.cs" />
+    <Compile Include="Hack\DateIp.cs" />
     <Compile Include="Modules\HomeModule.cs" />
+    <Compile Include="Hack\DateIpParsor.cs" />
     <Compile Include="NancyBootstrapper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -98,63 +101,59 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
-    <EmbeddedResource Include="Content\font-awesome\fonts\fontawesome-webfont.eot">
+    <EmbeddedResource Include="Content\fonts\nucleo-outline.eot">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Content\font-awesome\fonts\fontawesome-webfont.ttf">
+    <EmbeddedResource Include="Content\fonts\nucleo-outline.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Content\font-awesome\fonts\fontawesome-webfont.woff">
+    <EmbeddedResource Include="Content\fonts\nucleo-outline.woff">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Content\font-awesome\fonts\fontawesome-webfont.woff2">
+    <EmbeddedResource Include="Content\fonts\nucleo-outline.woff2">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Content\font-awesome\fonts\FontAwesome.otf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <None Include="Content\font-awesome\less\animated.less" />
-    <None Include="Content\font-awesome\less\bordered-pulled.less" />
-    <None Include="Content\font-awesome\less\core.less" />
-    <None Include="Content\font-awesome\less\fixed-width.less" />
-    <None Include="Content\font-awesome\less\font-awesome.less" />
-    <None Include="Content\font-awesome\less\icons.less" />
-    <None Include="Content\font-awesome\less\larger.less" />
-    <None Include="Content\font-awesome\less\list.less" />
-    <None Include="Content\font-awesome\less\mixins.less" />
-    <None Include="Content\font-awesome\less\path.less" />
-    <None Include="Content\font-awesome\less\rotated-flipped.less" />
-    <None Include="Content\font-awesome\less\screen-reader.less" />
-    <None Include="Content\font-awesome\less\stacked.less" />
-    <None Include="Content\font-awesome\less\variables.less" />
-    <None Include="Content\font-awesome\scss\font-awesome.scss" />
-    <None Include="Content\font-awesome\scss\_animated.scss" />
-    <None Include="Content\font-awesome\scss\_bordered-pulled.scss" />
-    <None Include="Content\font-awesome\scss\_core.scss" />
-    <None Include="Content\font-awesome\scss\_fixed-width.scss" />
-    <None Include="Content\font-awesome\scss\_icons.scss" />
-    <None Include="Content\font-awesome\scss\_larger.scss" />
-    <None Include="Content\font-awesome\scss\_list.scss" />
-    <None Include="Content\font-awesome\scss\_mixins.scss" />
-    <None Include="Content\font-awesome\scss\_path.scss" />
-    <None Include="Content\font-awesome\scss\_rotated-flipped.scss" />
-    <None Include="Content\font-awesome\scss\_screen-reader.scss" />
-    <None Include="Content\font-awesome\scss\_stacked.scss" />
-    <None Include="Content\font-awesome\scss\_variables.scss" />
-    <EmbeddedResource Include="Content\simple-line-icons\fonts\Simple-Line-Icons.eot">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\simple-line-icons\fonts\Simple-Line-Icons.ttf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\simple-line-icons\fonts\Simple-Line-Icons.woff">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\simple-line-icons\fonts\Simple-Line-Icons.woff2">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <None Include="Content\simple-line-icons\less\simple-line-icons.less" />
-    <None Include="Content\simple-line-icons\scss\simple-line-icons.scss" />
+    <None Include="Content\sass\now-ui-kit.scss" />
+    <None Include="Content\sass\now-ui-kit\mixins\_badges.scss" />
+    <None Include="Content\sass\now-ui-kit\mixins\_buttons.scss" />
+    <None Include="Content\sass\now-ui-kit\mixins\_datepicker.scss" />
+    <None Include="Content\sass\now-ui-kit\mixins\_dropdown.scss" />
+    <None Include="Content\sass\now-ui-kit\mixins\_inputs.scss" />
+    <None Include="Content\sass\now-ui-kit\mixins\_modals.scss" />
+    <None Include="Content\sass\now-ui-kit\mixins\_navbar.scss" />
+    <None Include="Content\sass\now-ui-kit\mixins\_pages.scss" />
+    <None Include="Content\sass\now-ui-kit\mixins\_popovers.scss" />
+    <None Include="Content\sass\now-ui-kit\mixins\_transparency.scss" />
+    <None Include="Content\sass\now-ui-kit\mixins\_vendor-prefixes.scss" />
+    <None Include="Content\sass\now-ui-kit\plugins\_plugin-bootstrap-switch.scss" />
+    <None Include="Content\sass\now-ui-kit\plugins\_plugin-datepicker.scss" />
+    <None Include="Content\sass\now-ui-kit\plugins\_plugin-nouislider.scss" />
+    <None Include="Content\sass\now-ui-kit\_alerts.scss" />
+    <None Include="Content\sass\now-ui-kit\_badges.scss" />
+    <None Include="Content\sass\now-ui-kit\_buttons.scss" />
+    <None Include="Content\sass\now-ui-kit\_cards.scss" />
+    <None Include="Content\sass\now-ui-kit\_carousel.scss" />
+    <None Include="Content\sass\now-ui-kit\_checkboxes-radio.scss" />
+    <None Include="Content\sass\now-ui-kit\_dropdown.scss" />
+    <None Include="Content\sass\now-ui-kit\_example-pages.scss" />
+    <None Include="Content\sass\now-ui-kit\_footers.scss" />
+    <None Include="Content\sass\now-ui-kit\_images.scss" />
+    <None Include="Content\sass\now-ui-kit\_inputs.scss" />
+    <None Include="Content\sass\now-ui-kit\_misc.scss" />
+    <None Include="Content\sass\now-ui-kit\_mixins.scss" />
+    <None Include="Content\sass\now-ui-kit\_modals.scss" />
+    <None Include="Content\sass\now-ui-kit\_navbar.scss" />
+    <None Include="Content\sass\now-ui-kit\_nucleo-outline.scss" />
+    <None Include="Content\sass\now-ui-kit\_pagination.scss" />
+    <None Include="Content\sass\now-ui-kit\_pills.scss" />
+    <None Include="Content\sass\now-ui-kit\_popups.scss" />
+    <None Include="Content\sass\now-ui-kit\_progress.scss" />
+    <None Include="Content\sass\now-ui-kit\_responsive.scss" />
+    <None Include="Content\sass\now-ui-kit\_sections.scss" />
+    <None Include="Content\sass\now-ui-kit\_social-buttons.scss" />
+    <None Include="Content\sass\now-ui-kit\_tabs.scss" />
+    <None Include="Content\sass\now-ui-kit\_typography.scss" />
+    <None Include="Content\sass\now-ui-kit\_variables.scss" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -176,11 +175,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Views\Home\index.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Content\js\home.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
@@ -207,94 +201,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\bootstrap\css\bootstrap-grid.css">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\bootstrap\css\bootstrap-grid.min.css">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\bootstrap\css\bootstrap-reboot.css">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\bootstrap\css\bootstrap-reboot.min.css">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\bootstrap\css\bootstrap.css">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\bootstrap\css\bootstrap.min.css">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\bootstrap\js\bootstrap.bundle.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\bootstrap\js\bootstrap.bundle.min.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\bootstrap\js\bootstrap.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\bootstrap\js\bootstrap.min.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\css\stylish-portfolio.css">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\css\stylish-portfolio.min.css">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\font-awesome\css\font-awesome.css">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\font-awesome\css\font-awesome.min.css">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\font-awesome\fonts\fontawesome-webfont.svg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\img\bg-callout.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\img\bg-masthead.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\img\portfolio-1.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\img\portfolio-2.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\img\portfolio-3.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\img\portfolio-4.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\jquery-easing\jquery.easing.compatibility.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\jquery-easing\jquery.easing.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\jquery-easing\jquery.easing.min.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\js\stylish-portfolio.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\js\stylish-portfolio.min.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Content\simple-line-icons\css\simple-line-icons.css">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Content\simple-line-icons\fonts\Simple-Line-Icons.svg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Views\Errors\404.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -302,16 +208,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Views\Errors\500.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Content\js\nprogress.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Content\css\nprogress.css">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -331,6 +227,72 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Views\Admin\Index.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\img\apple-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\css\bootstrap.min.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\css\demo.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\css\now-ui-kit.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\img\favicon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\img\header.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\js\core\bootstrap.min.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\js\core\jquery.3.2.1.min.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\js\core\popper.min.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\js\now-ui-kit.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\js\plugins\bootstrap-datepicker.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\js\plugins\bootstrap-switch.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\js\plugins\jquery.sharrre.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Content\js\plugins\nouislider.min.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\js\home.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Content\img\blurred-image-1.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="sitemap.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="robots.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>

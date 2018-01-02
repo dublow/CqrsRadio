@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data.SQLite;
 using CqrsRadio.Domain.Repositories;
 using CqrsRadio.Domain.ValueTypes;
 using CqrsRadio.Infrastructure.Providers;

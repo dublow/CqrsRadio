@@ -1,51 +1,29 @@
 ﻿@Master['master.html']
 @Section['Content']
 <div id="dz-root"></div>
-<a class="menu-toggle rounded d-none" href="#" data-bind="css:logoutCss">
-    <i class="fa fa-bars"></i>
-</a>
-<nav class="d-none" id="sidebar-wrapper" data-bind="css:logoutCss">
-    <ul class="sidebar-nav">
-        <li class="sidebar-brand">
-            <a class="js-scroll-trigger" href="#page-top">MagicPlaylist</a>
-        </li>
-        <li class="sidebar-nav-item">
-            <a class="js-scroll-trigger" href="#page-top" data-bind="click:logout">Logout</a>
-        </li>
-    </ul>
-</nav>
-<!-- Header -->
-<header class="masthead d-flex">
-    <div class="container text-center my-auto">
-        <h1 class="mb-1">MagicPlaylist</h1>
-        <h3 class="mb-5">
-            <em>A Free Deezer playlist generator</em>
-        </h3>
-        <div class="d-none" data-bind="css:logoutAndPlaylistCss">
-            <div class="row">
-                <div class="col-md-4"></div>
-                <div class="col-md-4">
-                    <input type="text" class="form-control" id="playlistname" placeholder="Playlist name" data-bind="value: playlist, css:invalidModel">
-                    <p class="text-danger" data-bind="text: errorMessage"></p>
+
+<div>
+    <div class="form-group d-none" data-bind="css:logoutAndPlaylistCss">
+        <input type="text" value="" placeholder="Playlist name..." class="form-control" data-bind="value: playlist">
+        <p class="text-danger" data-bind="text: errorMessage"></p>
+        <button class="btn btn-primary" type="button" data-bind="click:createPlaylist">Generate Playlist</button>
+        <div class="progress-container progress-success d-none" data-bind="css:progressbarCss">
+            <div class="progress">
+                <div class="progress-bar progress-bar-warning"
+                     role="progressbar" 
+                     aria-valuemin="0" aria-valuemax="100"
+                     data-bind="style: { width: progressbar }">
                 </div>
-                <div class="col-md-4"></div>
-            </div>
-            <div class="container text-center my-auto">
-                <a class="btn btn-primary btn-xl" href="#" data-bind="click:createPlaylist">Generate</a>
-            </div>
-        </div>
-        <h3 class="text-danger" data-bind="css:playlistCss">Ooops ! You have already created a playlist today</h3>
-        <div>
-            <div class="row" data-bind="css:loginCss">
-                <div class="col-md-4"></div>
-                <div class="col-md-4">
-                    <a class="btn btn-primary btn-xl" href="#" data-bind="click:login">Login</a>
-                </div>
-                <div class="col-md-4"></div>
             </div>
         </div>
     </div>
-</header>
+    <div class="form-group" data-bind="css:playlistCreatedCss">
+        <i>Yeahhh ! You have a new awesome playlist on Deezer !</i>
+    </div>
+    <div class="form-group d-none" data-bind="css:playlistCss">
+        <i>Ooops ! You have already created a playlist today</i>
+    </div>
+</div>
 @EndSection
 
 @Section['Scripts']
@@ -57,7 +35,5 @@
         channelUrl: '@Model.channel'
     });
 </script>
-
-<script src='~/Content/js/nprogress.js'></script>
 <script src="~/Content/js/home.js"></script>
 @EndSection

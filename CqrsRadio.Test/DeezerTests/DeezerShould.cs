@@ -155,7 +155,7 @@ namespace CqrsRadio.Test.DeezerTests
                 .SetPlaylistIdsByUserId(new[] { playlistId })
                 .Build();
             // act
-            var actual = deezerService.GetPlaylistIdsByUserId(accessToken, userId);
+            var actual = deezerService.GetPlaylistIdsByUserId(accessToken, userId, s => true);
             // assert
             Assert.AreEqual(1, actual.Count());
             Assert.AreEqual(playlistId, actual.First());

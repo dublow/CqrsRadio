@@ -1,38 +1,54 @@
 ﻿var home = (function () {
     var loadMe = (response, model) => {
-        NProgress.start();
         if (response.authResponse) {
             var accessToken = response.authResponse.accessToken;
             DZ.api('/user/me', function (response) {
                 if (response.error) {
-                    NProgress.done();
-                    NProgress.remove();
+                    DZ.logout();
+                    model.isLogged(false);
+                    model.canCreatePlaylist(true);
                     return;
                 }
                 $.get('/CanCreatePlaylist/' + response.id,
-                        function (responsePlaylist) {
-                            model.canCreatePlaylist(responsePlaylist.data.canCreatePlaylist);
-                            model.isLogged(true);
-                            model.accessToken(accessToken);
-                            model.userId(response.id);
-                            model.name(response.name);
-                            model.email(response.email);
-                            NProgress.done();
-                            NProgress.remove();
-                        })
+                    function (responsePlaylist) {
+                        model.canCreatePlaylist(responsePlaylist.data.canCreatePlaylist);
+                        model.isLogged(true);
+                        model.accessToken(accessToken);
+                        model.userId(response.id);
+                        model.name(response.name);
+                        model.email(response.email);
+                    })
                     .fail(function (response) {
                         model.isValid(false);
                         model.errorMessage(response.statusText);
-                        NProgress.done();
-                        NProgress.remove();
                     });
             });
         } else {
             console.log('User cancelled login or did not fully authorize.');
-            NProgress.done();
-            NProgress.remove();
         }
     };
+    var loader = {
+        start: function (model, value) {
+            if (value === 0) {
+                model.showProgressbar(true);
+            }
+            setTimeout(function () {
+                    if (value <= 90) {
+                        console.log(value);
+                        model.progressbar(value + "%");
+                        loader.start(model, value + 10);
+                    }
+                },
+                500);
+        },
+        end: function (model) {
+            model.progressbar("100%");
+            setTimeout(function () {
+                    model.showProgressbar(false);
+                },
+                200);
+        }
+    }
     var deezer = {
         getLoginStatus: (model) => {
             DZ.getLoginStatus(function (response) {
@@ -47,18 +63,19 @@
                     loadMe(response, model);
                 }, { perms: 'basic_access,email,manage_library' });
             }
-           
         },
         logout: (model) => {
             DZ.logout();
             model.isLogged(false);
             model.canCreatePlaylist(true);
+            model.isPlaylistCreated(false);
         },
         createPlaylist: (model) => {
             if (!model.playlist() || model.playlist().trim() === '')
                 model.isValid(false);
             else {
-                NProgress.start();
+                loader.start(model, 0);
+
                 $.post('/Login',
                     {
                         accessToken: model.accessToken(),
@@ -67,21 +84,21 @@
                         email: model.email(),
                         playlistName: model.playlist()
                     },
-                    function(response) {
+                    function (response) {
+                        loader.end(model);
                         model.isValid(response.isSuccess);
                         model.errorMessage('');
                         model.playlist('');
-                        if (response.data.playlistCreated) 
-                            model.canCreatePlaylist(false);
-                        NProgress.done();
-                        NProgress.remove();
+                        if (response.data.playlistCreated) {
+                            model.isPlaylistCreated(true);
+                        }
+                            
                     })
                     .fail(function (response) {
+                        loader.end(model);
                         model.isValid(false);
                         model.errorMessage(response.statusText);
-                        NProgress.done();
-                        NProgress.remove();
-                });
+                    });
             }
         }
     };
@@ -96,14 +113,17 @@
             email: ko.observable(''),
             playlist: ko.observable(''),
             errorMessage: ko.observable(''),
-            canCreatePlaylist: ko.observable(true), 
+            isPlaylistCreated: ko.observable(false),
+            canCreatePlaylist: ko.observable(true),
+            showProgressbar: ko.observable(false),
+            progressbar: ko.observable('0%'),
             init: () => deezer.getLoginStatus(public.model),
             login: deezer.login,
             logout: deezer.logout,
             createPlaylist: deezer.createPlaylist
         }
     };
-    public.model.loginCss = ko.pureComputed(function() {
+    public.model.loginCss = ko.pureComputed(function () {
         return this.isLogged() ? 'd-none' : '';
     }, public.model);
 
@@ -112,7 +132,11 @@
     }, public.model);
 
     public.model.logoutAndPlaylistCss = ko.pureComputed(function () {
-        return this.isLogged() && this.canCreatePlaylist() ? '' : 'd-none';
+        return this.isLogged() && this.canCreatePlaylist() && !this.isPlaylistCreated() ? '' : 'd-none';
+    }, public.model);
+
+    public.model.playlistCreatedCss = ko.pureComputed(function () {
+        return this.isPlaylistCreated() ? '' : 'd-none';
     }, public.model);
 
     public.model.invalidModel = ko.pureComputed(function () {
@@ -121,6 +145,10 @@
 
     public.model.playlistCss = ko.pureComputed(function () {
         return this.canCreatePlaylist() ? 'd-none' : '';
+    }, public.model);
+
+    public.model.progressbarCss = ko.pureComputed(function () {
+        return this.showProgressbar() ? '' : 'd-none';
     }, public.model);
 
     ko.applyBindings(public.model);

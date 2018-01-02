@@ -17,7 +17,7 @@ namespace CqrsRadio.Common.AssemblyScanner
             return manyTypes
                 .Where(x => typeof(T).IsAssignableFrom(x)
                             && x.IsClass)
-                .Where(x => x != typeof(T))
+                
                 .ToList();
         }
 
