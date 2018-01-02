@@ -78,7 +78,6 @@ namespace CqrsRadio.Deezer
             var trackItemDeezer = new List<TrackItemDeezer>();
             while (!string.IsNullOrEmpty(uri))
             {
-                
                 var trackDeezer = GetT(uri);
                 trackItemDeezer.AddRange(trackDeezer.Tracks);
                 uri = trackDeezer.Next;
@@ -87,7 +86,7 @@ namespace CqrsRadio.Deezer
             return trackItemDeezer.Select(x=> new DeezerSong(SongId.Parse(x.Id), x.Title, x.Artist.Name));
         }
 
-        public IEnumerable<PlaylistId> GetPlaylistIdsByUserId(string accessToken, UserId userId)
+        public IEnumerable<PlaylistId> GetPlaylistIdsByUserId(string accessToken, UserId userId, Predicate<string> filterTitle)
         {
             var uri = string.Format(Endpoints.GetPlaylists, userId.Value, accessToken);
 
@@ -100,7 +99,7 @@ namespace CqrsRadio.Deezer
             while (!string.IsNullOrEmpty(uri))
             {
                 var playlistDeezer = GetP(uri);
-                playlistIds.AddRange(playlistDeezer.Playlists.Select(x=>PlaylistId.Parse(x.Id)));
+                playlistIds.AddRange(playlistDeezer.Playlists.Where(x=> filterTitle(x.Title)).Select(x=>PlaylistId.Parse(x.Id)));
                 uri = playlistDeezer.Next;
             }
 

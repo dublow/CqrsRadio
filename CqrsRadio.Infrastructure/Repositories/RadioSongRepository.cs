@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data.SQLite;
 using CqrsRadio.Domain.Repositories;
 using CqrsRadio.Domain.ValueTypes;
 using CqrsRadio.Infrastructure.Providers;
@@ -9,9 +8,12 @@ namespace CqrsRadio.Infrastructure.Repositories
     public class RadioSongRepository : IRadioSongRepository
     {
         private readonly IProvider _provider;
-        public RadioSongRepository(IProvider provider)
+        private readonly IDbParameter _dbParameter;
+
+        public RadioSongRepository(IProvider provider, IDbParameter dbParameter)
         {
             _provider = provider;
+            _dbParameter = dbParameter;
         }
         public void Add(SongId songId, string radioName, string title, string artist)
         {

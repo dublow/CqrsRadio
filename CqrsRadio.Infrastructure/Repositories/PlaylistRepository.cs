@@ -11,9 +11,12 @@ namespace CqrsRadio.Infrastructure.Repositories
     public class PlaylistRepository : IPlaylistRepository
     {
         private readonly IProvider _provider;
-        public PlaylistRepository(IProvider provider)
+        private readonly IDbParameter _dbParameter;
+
+        public PlaylistRepository(IProvider provider, IDbParameter dbParameter)
         {
             _provider = provider;
+            _dbParameter = dbParameter;
         }
         public void Add(UserId userId, PlaylistId playlistId, SongId songId, string title, string artist)
         {

@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Common;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data.Common;
 
 namespace CqrsRadio.Infrastructure.Providers
 {
     public interface IProvider
     {
+        string Dbname { get; }
         DbConnection Create();
+        void CreateFile(string filename);
     }
 }
