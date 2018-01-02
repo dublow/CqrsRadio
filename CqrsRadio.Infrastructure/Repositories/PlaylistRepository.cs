@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using CqrsRadio.Domain.Entities;
 using CqrsRadio.Domain.Repositories;
 using CqrsRadio.Domain.ValueTypes;
 using CqrsRadio.Infrastructure.Providers;
@@ -18,37 +15,8 @@ namespace CqrsRadio.Infrastructure.Repositories
             _provider = provider;
             _dbParameter = dbParameter;
         }
-        public void Add(UserId userId, PlaylistId playlistId, SongId songId, string title, string artist)
-        {
-            Console.WriteLine(
-                $"UserId:{userId.Value} PlaylistId: {playlistId.Value} SongId: {songId.Value} Title:{title} Artist: {artist}");
-        }
 
-        public IEnumerable<Song> GetRandomSongs(int size)
-        {
-            using (var cnx = _provider.Create())
-            {
-                
-                var commandText = $"select songid, title, artist from radiosong order by random() limit {size}";
-                cnx.Open();
-                using (var command = cnx.CreateCommand())
-                {
-                    command.CommandText = commandText;
-                    using (var reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            var songId = SongId.Parse(reader[0].ToString());
-                            var title = reader[1].ToString();
-                            var artist = reader[2].ToString();
-                            yield return new Song(songId, title, artist);
-                        }
-                    }
-                }
-            }
-        }
-
-        public void Add(UserId userId, PlaylistId isAny, string name)
+        public void Add(UserId userId, PlaylistId playlistId, string name)
         {
             using (var cnx = _provider.Create())
             {

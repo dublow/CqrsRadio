@@ -16,21 +16,13 @@ namespace CqrsRadio.Web.Modules
 {
     public class HomeModule : NancyModule
     {
-        private readonly IDeezerApi _deezerApi;
-        private readonly ISongRepository _songRepository;
-        private readonly IPlaylistRepository _playlistRepository;
-        private readonly Environment _environment;
-        private readonly IMetric _metric;
-
         public HomeModule(IDeezerApi deezerApi, ISongRepository songRepository, 
             IPlaylistRepository playlistRepository, Environment environment,
             IMetric metric)
         {
-            _deezerApi = deezerApi;
-            _songRepository = songRepository;
-            _playlistRepository = playlistRepository;
-            _environment = environment;
-            _metric = metric;
+            var playlistRepository1 = playlistRepository;
+            var environment1 = environment;
+            var metric1 = metric;
             var eventStream = new MemoryEventStream();
             var eventPublisher = new EventBus(eventStream);
 
@@ -38,12 +30,12 @@ namespace CqrsRadio.Web.Modules
 
             Get["/"] = _ =>
             {
-                using (var timer = _metric.Timer("home"))
+                using (var timer = metric1.Timer("home"))
                 {
                     var model = new
                     {
-                        appid = _environment.AppId,
-                        channel = _environment.Channel
+                        appid = environment1.AppId,
+                        channel = environment1.Channel
                     };
 
                     return View["index", model];
@@ -52,7 +44,7 @@ namespace CqrsRadio.Web.Modules
 
             Get["/channel"] = _ =>
             {
-                using (var timer = _metric.Timer("channel"))
+                using (var timer = metric1.Timer("channel"))
                 {
                     var cacheExpire = 60 * 60 * 24 * 365;
 
@@ -65,13 +57,13 @@ namespace CqrsRadio.Web.Modules
 
             Post["/login"] = _ =>
             {
-                using (var timer = _metric.Timer("createplaylist"))
+                using (var timer = metric1.Timer("createplaylist"))
                 {
                     var model = this.Bind<LoginViewModel>();
 
-                    var user = User.Create(eventStream, eventPublisher, _deezerApi, _songRepository,
-                        _playlistRepository, model.Email, model.Nickname, model.UserId, model.AccessToken,
-                        _environment.Size);
+                    var user = User.Create(eventStream, eventPublisher, deezerApi, songRepository,
+                        playlistRepository1, model.Email, model.Nickname, model.UserId, model.AccessToken,
+                        environment1.Size);
 
                     user.AddPlaylist(model.PlaylistName);
                     Console.WriteLine(user.Playlist.PlaylistId.Value);
@@ -81,10 +73,10 @@ namespace CqrsRadio.Web.Modules
 
             Get["/canCreatePlaylist/{userId}"] = parameters =>
             {
-                using (var timer = _metric.Timer("hasplaylist"))
+                using (var timer = metric1.Timer("hasplaylist"))
                 {
                     var userId = UserId.Parse((string) parameters.userId);
-                    var canCreatePlaylist = _playlistRepository
+                    var canCreatePlaylist = playlistRepository1
                         .CanCreatePlaylist(userId, DateTime.UtcNow.AddDays(-1));
 
                     return Response.AsJson(new {canCreatePlaylist});

@@ -4,8 +4,8 @@ namespace CqrsRadio.Infrastructure.Providers
 {
     public interface IProvider
     {
-        string Dbname { get; }
+        string DbName { get; }
         DbConnection Create();
-        void CreateFile(string filename);
+        void CreateDb(string dbname);
     }
 }
