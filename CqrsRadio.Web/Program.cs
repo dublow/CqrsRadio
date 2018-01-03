@@ -14,6 +14,7 @@ namespace CqrsRadio.Web
             using (var host = new NancyHost(new Uri(currentEnvironment.Url), new NancyBootstrapper(currentEnvironment)))
             {
                 host.Start();
+                Console.WriteLine($"web server running on {currentEnvironment.Url}");
                 Console.ReadLine();
             }
         }

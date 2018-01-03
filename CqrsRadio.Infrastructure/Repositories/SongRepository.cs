@@ -19,8 +19,7 @@ namespace CqrsRadio.Infrastructure.Repositories
         }
         public void Add(UserId userId, PlaylistId playlistId, SongId songId, string title, string artist)
         {
-            Console.WriteLine(
-                $"UserId:{userId.Value} PlaylistId: {playlistId.Value} SongId: {songId.Value} Title:{title} Artist: {artist}");
+            
         }
 
         public IEnumerable<Song> GetRandomSongs(int size)

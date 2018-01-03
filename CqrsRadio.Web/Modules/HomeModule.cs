@@ -66,7 +66,6 @@ namespace CqrsRadio.Web.Modules
                         environment1.Size);
 
                     user.AddPlaylist(model.PlaylistName);
-                    Console.WriteLine(user.Playlist.PlaylistId.Value);
                     return Response.AsJson(new {playlistCreated = !user.Playlist.PlaylistId.IsEmpty});
                 }
             };

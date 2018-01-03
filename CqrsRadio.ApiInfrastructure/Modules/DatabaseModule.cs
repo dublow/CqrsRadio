@@ -24,12 +24,10 @@ namespace CqrsRadio.ApiInfrastructure.Modules
 
                 foreach (var playlistId in playlistIds)
                 {
-                    Console.WriteLine($"PlaylistId: {playlistId.Value}");
                     var songs = deezerApi.GetSongsByPlaylistId(model.AccessToken, playlistId);
 
                     foreach (var deezerSong in songs)
                     {
-                        Console.WriteLine($"SongId: {deezerSong.Id.Value}");
                         if (!radioSongRepository.SongExists(deezerSong.Id))
                         {
                             radioSongRepository.Add(deezerSong.Id, "NUSED", deezerSong.Title, deezerSong.Artist);

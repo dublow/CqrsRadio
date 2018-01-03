@@ -97,11 +97,5 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CqrsRadio.Common\CqrsRadio.Common.csproj">
-      <Project>{F04A5A26-8C79-431E-B79D-F64862B75B8C}</Project>
-      <Name>CqrsRadio.Common</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
