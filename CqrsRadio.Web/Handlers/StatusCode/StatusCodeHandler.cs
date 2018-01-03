@@ -7,8 +7,8 @@ namespace CqrsRadio.Web.Handlers.StatusCode
 {
     public class Status404CodeHandler : DefaultViewRenderer, IStatusCodeHandler
     {
-        private readonly Environment _environment;
-        public Status404CodeHandler(IViewFactory factory, Environment environment) : base(factory)
+        private readonly RadioEnvironment _environment;
+        public Status404CodeHandler(IViewFactory factory, RadioEnvironment environment) : base(factory)
         {
             _environment = environment;
         }
@@ -29,8 +29,8 @@ namespace CqrsRadio.Web.Handlers.StatusCode
 
     public class Status500CodeHandler : DefaultViewRenderer, IStatusCodeHandler
     {
-        private readonly Environment _environment;
-        public Status500CodeHandler(IViewFactory factory, Environment environment) : base(factory)
+        private readonly RadioEnvironment _environment;
+        public Status500CodeHandler(IViewFactory factory, RadioEnvironment environment) : base(factory)
         {
             _environment = environment;
         }

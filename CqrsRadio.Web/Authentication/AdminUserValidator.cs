@@ -12,9 +12,9 @@ namespace CqrsRadio.Web.Authentication
     {
         private readonly IHmacProvider _hmacProvider;
         private readonly IAdminRepository _adminRepository;
-        private readonly Environment _environment;
+        private readonly RadioEnvironment _environment;
 
-        public AdminUserValidator(IHmacProvider hmacProvider, IAdminRepository adminRepository, Environment environment)
+        public AdminUserValidator(IHmacProvider hmacProvider, IAdminRepository adminRepository, RadioEnvironment environment)
         {
             _hmacProvider = hmacProvider;
             _adminRepository = adminRepository;

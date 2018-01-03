@@ -19,7 +19,7 @@ namespace CqrsRadio.Web
             }
         }
 
-        static Domain.Configuration.Environment GetCurrentEnvironment()
+        static Domain.Configuration.RadioEnvironment GetCurrentEnvironment()
         {
             var environmentType = Type.GetType("Mono.Runtime") != null
                 ? EnvironmentType.Production
@@ -31,7 +31,7 @@ namespace CqrsRadio.Web
                 .Single(x => x.Name == environmentType);
         }
 
-        static Domain.Configuration.Environment GetHardCodedEnvironment()
+        static Domain.Configuration.RadioEnvironment GetHardCodedEnvironment()
         {
             var environmentType = Type.GetType("Mono.Runtime") != null
                 ? EnvironmentType.Production

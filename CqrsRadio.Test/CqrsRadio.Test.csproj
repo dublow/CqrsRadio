@@ -33,8 +33,20 @@
     <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <HintPath>..\EventSourcing\packages\Castle.Core.4.2.1\lib\net45\Castle.Core.dll</HintPath>
     </Reference>
+    <Reference Include="CsQuery, Version=1.3.3.5, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CsQuery.1.3.3\lib\net40\CsQuery.dll</HintPath>
+    </Reference>
     <Reference Include="Moq, Version=4.7.145.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>..\EventSourcing\packages\Moq.4.7.145\lib\net45\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="Nancy, Version=1.4.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nancy.1.4.4\lib\net40\Nancy.dll</HintPath>
+    </Reference>
+    <Reference Include="Nancy.Testing, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nancy.Testing.1.4.1\lib\net40\Nancy.Testing.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework, Version=3.9.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\EventSourcing\packages\NUnit.3.9.0\lib\net45\nunit.framework.dll</HintPath>
@@ -59,6 +71,7 @@
     <Compile Include="HandlerTests\RadioSongHandlerShould.cs" />
     <Compile Include="HandlerTests\SongHandlerShould.cs" />
     <Compile Include="HandlerTests\UserHandlerShould.cs" />
+    <Compile Include="Mocks\MetricBuilder.cs" />
     <Compile Include="Mocks\UserRepositoryBuilder.cs" />
     <Compile Include="Mocks\SongRepositoryBuilder.cs" />
     <Compile Include="Mocks\RadioSongRepositoryBuilder.cs" />
@@ -66,6 +79,7 @@
     <Compile Include="Mocks\PlaylistRepositoryBuilder.cs" />
     <Compile Include="Mocks\DeezerApiBuilder.cs" />
     <Compile Include="Mocks\RadioEngineBuilder.cs" />
+    <Compile Include="Modules\HomeModuleTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RadioTest\RadioShould.cs" />
     <Compile Include="SongEngine\ISongEngine.cs" />
@@ -82,6 +96,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CqrsRadio.Common\CqrsRadio.Common.csproj">
+      <Project>{F04A5A26-8C79-431E-B79D-F64862B75B8C}</Project>
+      <Name>CqrsRadio.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CqrsRadio.Domain\CqrsRadio.Domain.csproj">
       <Project>{FEF41B95-8212-4312-BBE5-D3EE409BF6F4}</Project>
       <Name>EventSourcing.Domain</Name>
@@ -97,6 +115,10 @@
     <ProjectReference Include="..\CqrsRadio.Main\CqrsRadio.Main.csproj">
       <Project>{00D84C3F-0C8C-4392-ADFC-1AD55FC51706}</Project>
       <Name>EventSourcing.Main</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CqrsRadio.Web\CqrsRadio.Web.csproj">
+      <Project>{06E455E6-4E31-4E8C-BEFF-8484A161479F}</Project>
+      <Name>CqrsRadio.Web</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

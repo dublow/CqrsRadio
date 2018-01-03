@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 
@@ -7,7 +6,7 @@ namespace CqrsRadio.Domain.Configuration
 {
     public interface IMagicPlaylistConfiguration
     {
-        List<Environment> Environments { get; }
+        List<RadioEnvironment> Environments { get; }
     }
 
     public class MagicPlaylistConfiguration: IMagicPlaylistConfiguration
@@ -20,7 +19,7 @@ namespace CqrsRadio.Domain.Configuration
         }
 
         public static IMagicPlaylistConfiguration Current => new MagicPlaylistConfiguration();
-        public List<Environment> Environments => Section.Environments.ToList();
+        public List<RadioEnvironment> Environments => Section.Environments.ToList();
     }
 
     public class MagicPlaylistSection : ConfigurationSection
@@ -33,28 +32,28 @@ namespace CqrsRadio.Domain.Configuration
         }
     }
 
-    public class EnvironmentCollection : ConfigurationElementCollection, IEnumerable<Environment>
+    public class EnvironmentCollection : ConfigurationElementCollection, IEnumerable<RadioEnvironment>
     {
         protected override ConfigurationElement CreateNewElement()
         {
-            return new Environment();
+            return new RadioEnvironment();
         }
 
         protected override object GetElementKey(ConfigurationElement element)
         {
-            return ((Environment) element).Name;
+            return ((RadioEnvironment) element).Name;
         }
 
-        IEnumerator<Environment> IEnumerable<Environment>.GetEnumerator()
+        IEnumerator<RadioEnvironment> IEnumerable<RadioEnvironment>.GetEnumerator()
         {
             foreach (var item in BaseGetAllKeys())
             {
-                yield return (Environment)BaseGet(item);
+                yield return (RadioEnvironment)BaseGet(item);
             }
         }
     }
 
-    public class Environment : ConfigurationElement
+    public class RadioEnvironment : ConfigurationElement
     {
         [ConfigurationProperty("name", IsKey = true, IsRequired = true)]
         public EnvironmentType Name
