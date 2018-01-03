@@ -17,7 +17,7 @@ namespace CqrsRadio.Infrastructure.Repositories
 
         public void Add(SongId songId, string radioName, string title, string artist)
         {
-            var success = _request.Post("http://127.0.0.1:1236/RadioSong/Add", new Dictionary<string, object>
+            var success = _request.Post("http://127.0.0.1:1236/RadioSong/Add", "application/x-www-form-urlencoded", new Dictionary<string, object>
             {
                 {"songId", songId.Value},
                 {"radioName", radioName},
@@ -26,13 +26,13 @@ namespace CqrsRadio.Infrastructure.Repositories
             }, s =>
             {
                 var parsed = JObject.Parse(s);
-                return parsed["result"].Value<bool>();
+                return parsed["success"].Value<bool>();
             });
         }
 
         public void AddToDuplicate(string radioName, string title, string artist)
         {
-            var success = _request.Post("http://127.0.0.1:1236/RadioSong/AddToDuplicate", new Dictionary<string, object>
+            var success = _request.Post("http://127.0.0.1:1236/RadioSong/AddToDuplicate", "application/x-www-form-urlencoded", new Dictionary<string, object>
             {
                 {"radioName", radioName},
                 {"title", title},
@@ -40,26 +40,26 @@ namespace CqrsRadio.Infrastructure.Repositories
             }, s =>
             {
                 var parsed = JObject.Parse(s);
-                return parsed["result"].Value<bool>();
+                return parsed["success"].Value<bool>();
             });
         }
 
         public void AddToError(string radioName, string error)
         {
-            var success = _request.Post("http://127.0.0.1:1236/RadioSong/AddToError", new Dictionary<string, object>
+            var success = _request.Post("http://127.0.0.1:1236/RadioSong/AddToError", "application/x-www-form-urlencoded", new Dictionary<string, object>
             {
                 {"radioName", radioName},
                 {"error", error}
             }, s =>
             {
                 var parsed = JObject.Parse(s);
-                return parsed["result"].Value<bool>();
+                return parsed["success"].Value<bool>();
             });
         }
 
         public bool SongExists(SongId songId)
         {
-            return _request.Get($"http://127.0.0.1:1236/Playlist/SongExists/{songId.Value}", s =>
+            return _request.Get($"http://127.0.0.1:1236/RadioSong/SongExists/{songId.Value}", s =>
             {
                 var parsed = JObject.Parse(s);
                 return parsed["result"].Value<bool>();

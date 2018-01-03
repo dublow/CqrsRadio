@@ -21,6 +21,8 @@ namespace CqrsRadio.Infrastructure.Bus
         {
             _history.Add(evt);
 
+            var types = _subscribers.Select(x => x.GetType());
+
             foreach (var subscriber in _subscribers.OfType<IHandler<TEvent>>())
             {
                 subscriber.Handle(evt);
@@ -32,6 +34,4 @@ namespace CqrsRadio.Infrastructure.Bus
             _subscribers.Add(handler);
         }
     }
-
-    
 }

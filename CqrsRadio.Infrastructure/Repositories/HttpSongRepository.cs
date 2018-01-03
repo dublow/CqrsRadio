@@ -18,7 +18,7 @@ namespace CqrsRadio.Infrastructure.Repositories
 
         public void Add(UserId userId, PlaylistId playlistId, SongId songId, string title, string artist)
         {
-            var success = _request.Post("http://127.0.0.1:1236/Song/Add", new Dictionary<string, object>
+            var success = _request.Post("http://127.0.0.1:1236/Song/Add", "application/x-www-form-urlencoded", new Dictionary<string, object>
             {
                 {"userId", userId.Value},
                 {"playlistId", playlistId.Value},

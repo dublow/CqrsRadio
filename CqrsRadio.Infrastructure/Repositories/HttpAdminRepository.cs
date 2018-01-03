@@ -16,7 +16,7 @@ namespace CqrsRadio.Infrastructure.Repositories
 
         public void Add(string login, byte[] hash)
         {
-            var success = _request.Post("http://127.0.0.1:1236/Admin/Add", new Dictionary<string, object>
+            var success = _request.Post("http://127.0.0.1:1236/Admin/Add", "application/x-www-form-urlencoded", new Dictionary<string, object>
             {
                 {"login", login},
                 {"password", hash}

@@ -24,7 +24,7 @@ namespace CqrsRadio.Deezer
 
         public PlaylistId CreatePlaylist(string accessToken, UserId userId, string playlistName)
         {
-            return _request.Post(string.Format(Endpoints.CreatePlaylist, userId.Value, playlistName, accessToken), response =>
+            return _request.Post(string.Format(Endpoints.CreatePlaylist, userId.Value, playlistName, accessToken), string.Empty, response =>
             {
                 if (!JObject
                     .Parse(response)
@@ -49,7 +49,7 @@ namespace CqrsRadio.Deezer
 
             songsAsBuilder.Length--;
 
-            var post = _request.Post(string.Format(Endpoints.AddSongsToPlaylist, playlistId.Value, songsAsBuilder, accessToken), response =>
+            var post = _request.Post(string.Format(Endpoints.AddSongsToPlaylist, playlistId.Value, songsAsBuilder, accessToken), string.Empty, response =>
             {
                 return response;
             });

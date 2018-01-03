@@ -5,6 +5,7 @@ using CqrsRadio.Domain.Events;
 using CqrsRadio.Domain.EventStores;
 using CqrsRadio.Domain.Handlers;
 using CqrsRadio.Domain.Services;
+using CqrsRadio.Domain.ValueTypes;
 
 namespace CqrsRadio.Domain.Aggregates
 {
@@ -54,10 +55,18 @@ namespace CqrsRadio.Domain.Aggregates
             {
                 var song = _radioEngine.Parse(Url);
 
+                if (song == RadioSong.Empty)
+                    return;
+                
                 if (_decision.RadioSongExists(Name, song))
                     _publisher.Publish(new RadioSongDuplicate(Name, song.Title, song.Artist));
                 else
-                    _publisher.Publish(new RadioSongParsed(Name, song.Title, song.Artist));
+                {
+                    if(song.SongId == SongId.Empty)
+                        _publisher.Publish(new RadioSongParsed(Name, song.Title, song.Artist));
+                    else
+                        _publisher.Publish(new RadioSongWithDeezerSongIdParsed(Name, song.SongId, song.Title, song.Artist));
+                }
             }
             catch (Exception e)
             {

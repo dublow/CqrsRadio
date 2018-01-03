@@ -22,11 +22,12 @@ namespace CqrsRadio.Test.HandlerTests
 
             var mockedRadioSongRepository = RadioSongRepositoryBuilder.Create();
             var radioSongRepository = mockedRadioSongRepository.Build();
+            var metric = MetricBuilder.Create().Build();
             var deezerApi = DeezerApiBuilder
                 .Create()
                 .SetSong(new DeezerSong(songId, title, artist))
                 .Build();
-            var radioSongHandler = new RadioSongHandler(radioSongRepository, deezerApi);
+            var radioSongHandler = new RadioSongHandler(radioSongRepository, deezerApi, metric);
             // act
             var radioSongParsed = new RadioSongParsed(radioName, title, artist);
             radioSongHandler.Handle(radioSongParsed);
@@ -49,14 +50,15 @@ namespace CqrsRadio.Test.HandlerTests
 
             var mockedRadioSongRepository = RadioSongRepositoryBuilder.Create();
             var radioSongRepository = mockedRadioSongRepository.Build();
+            var metric = MetricBuilder.Create().Build();
             var deezerApi = DeezerApiBuilder
                 .Create()
                 .SetSong(new DeezerSong(songId, title, artist))
                 .Build();
-            var radioSongHandler = new RadioSongHandler(radioSongRepository, deezerApi);
+            var radioSongHandler = new RadioSongHandler(radioSongRepository, deezerApi, metric);
 
             // act
-            var radioSongParsed = new RadioSongWithDeezerSongIdParsed(radioName, songId);
+            var radioSongParsed = new RadioSongWithDeezerSongIdParsed(radioName, songId, title, artist);
             radioSongHandler.Handle(radioSongParsed);
             // assert
             var (actualSongId, actualName, actualTitle, actualArtist) = mockedRadioSongRepository.RadioSongs.First();
@@ -73,10 +75,11 @@ namespace CqrsRadio.Test.HandlerTests
             // arrange
             var mockedRadioSongRepository = RadioSongRepositoryBuilder.Create();
             var radioSongRepository = mockedRadioSongRepository.Build();
+            var metric = MetricBuilder.Create().Build();
             var deezerApi = DeezerApiBuilder
                 .Create()
                 .Build();
-            var radioSongHandler = new RadioSongHandler(radioSongRepository, deezerApi);
+            var radioSongHandler = new RadioSongHandler(radioSongRepository, deezerApi, metric);
             (string name, string title, string artist) = ("djam", "title", "artist");
             // act
             radioSongHandler.Handle(new RadioSongDuplicate("djam", "title", "artist"));
@@ -93,10 +96,11 @@ namespace CqrsRadio.Test.HandlerTests
             // arrange
             var mockedRadioSongRepository = RadioSongRepositoryBuilder.Create();
             var radioSongRepository = mockedRadioSongRepository.Build();
+            var metric = MetricBuilder.Create().Build();
             var deezerApi = DeezerApiBuilder
                 .Create()
                 .Build();
-            var radioSongHandler = new RadioSongHandler(radioSongRepository, deezerApi);
+            var radioSongHandler = new RadioSongHandler(radioSongRepository, deezerApi, metric);
             (string name, string error) = ("djam", "error");
             // act
             radioSongHandler.Handle(new RadioSongError("djam", "error"));
