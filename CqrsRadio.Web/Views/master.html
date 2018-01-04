@@ -73,12 +73,15 @@
     <script src="~/Content/js/core/bootstrap.min.js" type="text/javascript"></script>
     <script src="~/Content/js/plugins/bootstrap-switch.js"></script>
     <script src="~/Content/js/now-ui-kit.js"></script>
-    <script type="text/javascript">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-41991114-4"></script>
+    <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
+        function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
+
         gtag('config', 'UA-41991114-4');
     </script>
+
     @Section['Scripts'];
 </body>
 </html>
