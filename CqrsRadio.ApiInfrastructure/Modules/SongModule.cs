@@ -1,4 +1,5 @@
-﻿using CqrsRadio.ApiInfrastructure.ViewModel;
+﻿using System.Linq;
+using CqrsRadio.ApiInfrastructure.ViewModel;
 using CqrsRadio.Domain.Repositories;
 using CqrsRadio.Domain.ValueTypes;
 using Nancy;
@@ -15,7 +16,11 @@ namespace CqrsRadio.ApiInfrastructure.Modules
                 var size = (int) parameters.size;
                 var songs = songRepository.GetRandomSongs(size);
 
-                return Response.AsJson(songs);
+                return Response.AsJson(new
+                {
+                    success = true,
+                    result = songs.Select(x => new {songId = x.SongId.Value, title = x.Title, artist = x.Artist}).ToList()
+                });
             };
 
             Post["/Add"] = _ =>
@@ -29,8 +34,6 @@ namespace CqrsRadio.ApiInfrastructure.Modules
 
                 return Response.AsJson(new { success = true }); ;
             };
-
-            
         }
     }
 }

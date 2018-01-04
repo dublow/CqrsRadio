@@ -17,7 +17,7 @@ namespace CqrsRadio.Infrastructure.Repositories
 
         public void Add(SongId songId, string radioName, string title, string artist)
         {
-            var success = _request.Post("http://127.0.0.1:1236/RadioSong/Add", "application/x-www-form-urlencoded", new Dictionary<string, object>
+            _request.Post("http://127.0.0.1:1236/RadioSong/Add", "application/x-www-form-urlencoded", new Dictionary<string, object>
             {
                 {"songId", songId.Value},
                 {"radioName", radioName},
@@ -32,7 +32,7 @@ namespace CqrsRadio.Infrastructure.Repositories
 
         public void AddToDuplicate(string radioName, string title, string artist)
         {
-            var success = _request.Post("http://127.0.0.1:1236/RadioSong/AddToDuplicate", "application/x-www-form-urlencoded", new Dictionary<string, object>
+            _request.Post("http://127.0.0.1:1236/RadioSong/AddToDuplicate", "application/x-www-form-urlencoded", new Dictionary<string, object>
             {
                 {"radioName", radioName},
                 {"title", title},
@@ -46,7 +46,7 @@ namespace CqrsRadio.Infrastructure.Repositories
 
         public void AddToError(string radioName, string error)
         {
-            var success = _request.Post("http://127.0.0.1:1236/RadioSong/AddToError", "application/x-www-form-urlencoded", new Dictionary<string, object>
+            _request.Post("http://127.0.0.1:1236/RadioSong/AddToError", "application/x-www-form-urlencoded", new Dictionary<string, object>
             {
                 {"radioName", radioName},
                 {"error", error}

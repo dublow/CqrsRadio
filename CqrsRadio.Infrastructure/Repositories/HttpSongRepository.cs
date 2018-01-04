@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using CqrsRadio.Common.Net;
 using CqrsRadio.Domain.Entities;
 using CqrsRadio.Domain.Repositories;
@@ -18,7 +19,7 @@ namespace CqrsRadio.Infrastructure.Repositories
 
         public void Add(UserId userId, PlaylistId playlistId, SongId songId, string title, string artist)
         {
-            var success = _request.Post("http://127.0.0.1:1236/Song/Add", "application/x-www-form-urlencoded", new Dictionary<string, object>
+            _request.Post("http://127.0.0.1:1236/Song/Add", "application/x-www-form-urlencoded", new Dictionary<string, object>
             {
                 {"userId", userId.Value},
                 {"playlistId", playlistId.Value},
@@ -28,7 +29,7 @@ namespace CqrsRadio.Infrastructure.Repositories
             }, s =>
             {
                 var parsed = JObject.Parse(s);
-                return parsed["result"].Value<bool>();
+                return parsed["success"].Value<bool>();
             });
         }
 
@@ -36,8 +37,10 @@ namespace CqrsRadio.Infrastructure.Repositories
         {
             return _request.Get($"http://127.0.0.1:1236/Song/GetRandomSongs/{size}", s =>
             {
-                var parsed = JObject.Parse(s);
-                return parsed["result"].Value<Song[]>();
+                return JObject.Parse(s)["result"].Select(x => new Song(
+                    SongId.Parse(x["songId"].Value<string>()),
+                    x["title"].Value<string>(), 
+                    x["artist"].Value<string>()));
             });
         }
     }

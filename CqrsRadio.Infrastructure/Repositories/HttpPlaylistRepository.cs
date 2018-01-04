@@ -18,7 +18,7 @@ namespace CqrsRadio.Infrastructure.Repositories
 
         public void Add(UserId userId, PlaylistId playlistId, string name)
         {
-            var success = _request.Post("http://127.0.0.1:1236/Playlist/Add", "application/x-www-form-urlencoded", new Dictionary<string, object>
+            _request.Post("http://127.0.0.1:1236/Playlist/Add", "application/x-www-form-urlencoded", new Dictionary<string, object>
             {
                 {"userId", userId.Value},
                 {"playlistId", playlistId.Value},
@@ -26,25 +26,25 @@ namespace CqrsRadio.Infrastructure.Repositories
             }, s =>
             {
                 var parsed = JObject.Parse(s);
-                return parsed["result"].Value<bool>();
+                return parsed["success"].Value<bool>();
             });
         }
 
         public void Update(UserId userId)
         {
-            var success = _request.Post("http://127.0.0.1:1236/Playlist/Update", "application/x-www-form-urlencoded", new Dictionary<string, object>
+            _request.Post("http://127.0.0.1:1236/Playlist/Update", "application/x-www-form-urlencoded", new Dictionary<string, object>
             {
                 {"userId", userId.Value}
             }, s =>
             {
                 var parsed = JObject.Parse(s);
-                return parsed["result"].Value<bool>();
+                return parsed["success"].Value<bool>();
             });
         }
 
         public void Delete(UserId userId, PlaylistId playlistId, string name)
         {
-            var success = _request.Post("http://127.0.0.1:1236/Playlist/Delete", "application/x-www-form-urlencoded", new Dictionary<string, object>
+            _request.Post("http://127.0.0.1:1236/Playlist/Delete", "application/x-www-form-urlencoded", new Dictionary<string, object>
             {
                 {"userId", userId.Value},
                 {"playlistId", playlistId.Value},
@@ -52,7 +52,7 @@ namespace CqrsRadio.Infrastructure.Repositories
             }, s =>
             {
                 var parsed = JObject.Parse(s);
-                return parsed["result"].Value<bool>();
+                return parsed["success"].Value<bool>();
             });
         }
 
