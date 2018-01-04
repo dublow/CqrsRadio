@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{00D84C3F-0C8C-4392-ADFC-1AD55FC51706}</ProjectGuid>
+    <ProjectGuid>{ACB6F515-CD5B-48AD-ABF2-138377163B14}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>CqrsRadio.Main</RootNamespace>
-    <AssemblyName>CqrsRadio.Main</AssemblyName>
+    <RootNamespace>CqrsRadio.Process</RootNamespace>
+    <AssemblyName>CqrsRadio.Process</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -33,10 +33,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ValueTuple.4.4.0\lib\net461\System.ValueTuple.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -50,16 +48,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CqrsRadio.Domain\CqrsRadio.Domain.csproj">
-      <Project>{FEF41B95-8212-4312-BBE5-D3EE409BF6F4}</Project>
-      <Name>EventSourcing.Domain</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CqrsRadio.Infrastructure\CqrsRadio.Infrastructure.csproj">
-      <Project>{F99A77B5-79C3-47D0-802D-2BB0D8C5CC63}</Project>
-      <Name>EventSourcing.Infrastructure</Name>
+    <ProjectReference Include="..\CqrsRadio.Common\CqrsRadio.Common.csproj">
+      <Project>{F04A5A26-8C79-431E-B79D-F64862B75B8C}</Project>
+      <Name>CqrsRadio.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -31,7 +31,7 @@ namespace CqrsRadio.Handlers
         public void Handle(RadioSongWithDeezerSongIdParsed evt)
         {
             //var song = _deezerApi.GetSong("", evt.SongId);
-
+            Console.WriteLine(evt.SongId.Value);
             if (!_radioSongRepository.SongExists(evt.SongId))
             {
                 _metric.Count("radiosongwithdeezersongidparsed");

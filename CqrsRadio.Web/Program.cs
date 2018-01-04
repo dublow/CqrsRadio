@@ -10,8 +10,13 @@ namespace CqrsRadio.Web
     {
         static void Main(string[] args)
         {
-            var currentEnvironment = GetHardCodedEnvironment();
-            using (var host = new NancyHost(new Uri(currentEnvironment.Url), new NancyBootstrapper(currentEnvironment)))
+            var environmentType = Type.GetType("Mono.Runtime") != null
+                ? EnvironmentType.Production
+                : EnvironmentType.Local;
+
+            var currentEnvironment = GetHardCodedEnvironment(environmentType);
+            var nancyBootstrapper = new NancyBootstrapper(currentEnvironment);
+            using (var host = new NancyHost(new Uri(currentEnvironment.Url), nancyBootstrapper))
             {
                 host.Start();
                 Console.WriteLine($"web server running on {currentEnvironment.Url}");
@@ -19,24 +24,16 @@ namespace CqrsRadio.Web
             }
         }
 
-        static RadioEnvironment GetCurrentEnvironment()
+        static RadioEnvironment GetCurrentEnvironment(EnvironmentType environmentType)
         {
-            var environmentType = Type.GetType("Mono.Runtime") != null
-                ? EnvironmentType.Production
-                : EnvironmentType.Local;
-
             return MagicPlaylistConfiguration
                 .Current
                 .Environments
                 .Single(x => x.Name == environmentType);
         }
 
-        static RadioEnvironment GetHardCodedEnvironment()
+        static RadioEnvironment GetHardCodedEnvironment(EnvironmentType environmentType)
         {
-            var environmentType = Type.GetType("Mono.Runtime") != null
-                ? EnvironmentType.Production
-                : EnvironmentType.Local;
-
             return new HardCodedMagicPlaylistConfiguration()
                 .Environments
                 .Single(x => x.Name == environmentType);
