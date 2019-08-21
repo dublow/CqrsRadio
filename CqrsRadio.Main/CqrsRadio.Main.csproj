@@ -53,10 +53,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CqrsRadio.Di\CqrsRadio.Di.csproj">
-      <Project>{F69097F3-EBB9-4EE3-8F24-85A59BC1E0FD}</Project>
-      <Name>EventSourcing.Di</Name>
-    </ProjectReference>
     <ProjectReference Include="..\CqrsRadio.Domain\CqrsRadio.Domain.csproj">
       <Project>{FEF41B95-8212-4312-BBE5-D3EE409BF6F4}</Project>
       <Name>EventSourcing.Domain</Name>

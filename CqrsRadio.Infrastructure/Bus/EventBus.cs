@@ -32,6 +32,4 @@ namespace CqrsRadio.Infrastructure.Bus
             _subscribers.Add(handler);
         }
     }
-
-    
 }

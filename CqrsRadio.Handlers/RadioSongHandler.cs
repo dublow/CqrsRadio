@@ -1,3 +1,5 @@
+using System;
+using CqrsRadio.Common.StatsD;
 using CqrsRadio.Domain.Entities;
 using CqrsRadio.Domain.EventHandlers;
 using CqrsRadio.Domain.Events;
@@ -10,33 +12,45 @@ namespace CqrsRadio.Handlers
     {
         private readonly IRadioSongRepository _radioSongRepository;
         private readonly IDeezerApi _deezerApi;
+        private readonly IMetric _metric;
 
-        public RadioSongHandler(IRadioSongRepository radioSongRepository, IDeezerApi deezerApi)
+        public RadioSongHandler(IRadioSongRepository radioSongRepository, IDeezerApi deezerApi, IMetric metric)
         {
             _radioSongRepository = radioSongRepository;
             _deezerApi = deezerApi;
+            _metric = metric;
         }
 
         public void Handle(RadioSongParsed evt)
         {
-            var song = _deezerApi.GetSong("accessToken", evt.Title, evt.Artist);
-            StoreSong(evt.RadioName, song);
+            _metric.Count("radiosongparsed");
+            //var song = _deezerApi.GetSong("accessToken", evt.Title, evt.Artist);
+            //StoreSong(evt.RadioName, song);
         }
 
         public void Handle(RadioSongWithDeezerSongIdParsed evt)
         {
-            var song = _deezerApi.GetSong("", evt.SongId);
-            StoreSong(evt.RadioName, song);
+            //var song = _deezerApi.GetSong("", evt.SongId);
+            Console.WriteLine(evt.SongId.Value);
+            if (!_radioSongRepository.SongExists(evt.SongId))
+            {
+                _metric.Count("radiosongwithdeezersongidparsed");
+                StoreSong(evt.RadioName, new DeezerSong(evt.SongId, evt.Title, evt.Artist));
+            }
+            else
+                _metric.Count("radiosongduplicate");
         }
 
         public void Handle(RadioSongDuplicate evt)
         {
-            _radioSongRepository.AddToDuplicate(evt.RadioName, evt.Title, evt.Artist);
+            
+            //_radioSongRepository.AddToDuplicate(evt.RadioName, evt.Title, evt.Artist);
         }
 
         public void Handle(RadioSongError evt)
         {
-            _radioSongRepository.AddToError(evt.RadioName, evt.Error);
+            _metric.Count("radiosongerror");
+            //_radioSongRepository.AddToError(evt.RadioName, evt.Error);
         }
 
         private void StoreSong(string radioName, DeezerSong song)

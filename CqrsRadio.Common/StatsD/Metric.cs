@@ -26,7 +26,7 @@ namespace CqrsRadio.Common.StatsD
             });
         }
 
-        public void Gauge(string keyname, int value)
+        public void Gauge(string keyname, long value)
         {
             _request.Send($"{Base}.{keyname.ToLower()}:{value}|g");
         }

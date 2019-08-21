@@ -21,7 +21,7 @@ namespace CqrsRadio.Domain.Entities
             => new Playlist(PlaylistId.Empty, string.Empty);
 
         public bool IsEmpty
-            => PlaylistId.IsEmpty || string.IsNullOrEmpty(Name);
+            => string.IsNullOrEmpty(Name);
 
         public void AddSong(Song song)
         {

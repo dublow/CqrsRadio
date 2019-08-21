@@ -77,7 +77,7 @@ namespace CqrsRadio.Domain.Aggregates
 
             var songs = _songRepository.GetRandomSongs(_songByPlaylist).ToList();
 
-            if (songs.Any() && songs.Count == _songByPlaylist)
+            if (songs.Any())
             {
                 songs.ForEach(Playlist.AddSong);
 

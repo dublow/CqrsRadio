@@ -91,7 +91,7 @@ namespace CqrsRadio.Test.UserTests
             var deezerApi = DeezerApiBuilder.Create().SetCreatePlaylist(PlaylistId.Parse("100")).Build();
             var songRepository = SongRepositoryBuilder.Create()
                 .SetRandomSongs(1, new[] {new Song(SongId.Parse("100"), "title", "artist")}).Build();
-            var playlistRepository = PlaylistRepositoryBuilder.Create().Build();
+            var playlistRepository = PlaylistRepositoryBuilder.Create().SetCanCreatePlaylist(true).Build();
             stream.Add(new UserCreated(Identity.Parse("nicolas.dfr@gmail.com", "dublow", "12345", "accessToken")));
 
             var publisher = new EventBus(stream);
@@ -100,7 +100,7 @@ namespace CqrsRadio.Test.UserTests
 
             user.AddPlaylist("playlistName");
 
-            Assert.IsTrue(stream.GetEvents().Contains(new PlaylistAdded(UserId.Parse("12345"), PlaylistId.Parse("100"), "playlistName")));
+            Assert.IsFalse(user.Playlist.IsEmpty);
         }
 
         [Test]

@@ -21,10 +21,11 @@ namespace CqrsRadio.Common.Net
             }
         }
 
-        public T Post<T>(string url, Dictionary<string, object> values, Func<string, T> parser)
+        public T Post<T>(string url, string contentType, Dictionary<string, object> values, Func<string, T> parser)
         {
             var httpWebRequest = WebRequest.Create(url);
             httpWebRequest.Method = "POST";
+            httpWebRequest.ContentType = contentType;
 
             var body = GetBody(values);
             if (body.Any())
@@ -46,10 +47,11 @@ namespace CqrsRadio.Common.Net
             }
         }
 
-        public T Post<T>(string url, Func<string, T> parser)
+        public T Post<T>(string url, string contentType, Func<string, T> parser)
         {
             var httpWebRequest = WebRequest.Create(url);
             httpWebRequest.Method = "POST";
+            httpWebRequest.ContentType = contentType;
 
             using (var response = httpWebRequest.GetResponse())
             {
@@ -66,7 +68,7 @@ namespace CqrsRadio.Common.Net
                 return Enumerable.Empty<byte>().ToArray();
 
             var body = values.Aggregate(new StringBuilder(),
-                            (builder, pair) => builder.Append($"{pair.Key}={pair.Value};"),
+                            (builder, pair) => builder.Append($"{pair.Key}={pair.Value}&"),
                             builder => builder.ToString());
 
             return Encoding.UTF8.GetBytes(body);

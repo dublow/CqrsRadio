@@ -76,19 +76,20 @@
   <ItemGroup>
     <Compile Include="Bus\EventBus.cs" />
     <Compile Include="EventStores\MemoryEventsStream.cs" />
-    <Compile Include="Persistences\DatabaseSong.cs" />
-    <Compile Include="Persistences\IDatabase.cs" />
-    <Compile Include="Persistences\DatabaseDomain.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Providers\Dbs\MonoSongProvider.cs" />
-    <Compile Include="Providers\Dbs\SongProvider.cs" />
+    <Compile Include="Providers\Dbs\Domain.cs" />
+    <Compile Include="Providers\Dbs\Tables.cs" />
     <Compile Include="Providers\IDbParameter.cs" />
     <Compile Include="Providers\IProvider.cs" />
     <Compile Include="Providers\MonoCustomDbParameter.cs" />
-    <Compile Include="Providers\Dbs\MonoDomainProvider.cs" />
+    <Compile Include="Providers\Dbs\MonoProvider.cs" />
     <Compile Include="Providers\CustomDbParameter.cs" />
-    <Compile Include="Providers\Dbs\DomainProvider.cs" />
+    <Compile Include="Providers\Dbs\Provider.cs" />
     <Compile Include="Repositories\AdminRepository.cs" />
+    <Compile Include="Repositories\HttpAdminRepository.cs" />
+    <Compile Include="Repositories\HttpPlaylistRepository.cs" />
+    <Compile Include="Repositories\HttpRadioSongRepository.cs" />
+    <Compile Include="Repositories\HttpSongRepository.cs" />
     <Compile Include="Repositories\PlaylistRepository.cs" />
     <Compile Include="Repositories\RadioSongRepository.cs" />
     <Compile Include="Repositories\SongRepository.cs" />

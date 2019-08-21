@@ -1,17 +1,13 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Text;
-using CqrsRadio.Common.AssemblyScanner;
 using CqrsRadio.Common.Net;
 using CqrsRadio.Common.StatsD;
 using CqrsRadio.Deezer;
 using CqrsRadio.Domain.Configuration;
 using CqrsRadio.Domain.Repositories;
 using CqrsRadio.Domain.Services;
-using CqrsRadio.Infrastructure.Persistences;
-using CqrsRadio.Infrastructure.Providers;
-using CqrsRadio.Infrastructure.Providers.Dbs;
+using CqrsRadio.Infrastructure.Repositories;
 using CqrsRadio.Web.Authentication;
 using Nancy;
 using Nancy.Authentication.Basic;
@@ -21,16 +17,15 @@ using Nancy.Extensions;
 using Nancy.TinyIoc;
 using Newtonsoft.Json.Linq;
 using NLog;
-using Environment = CqrsRadio.Domain.Configuration.Environment;
 
 namespace CqrsRadio.Web
 {
     public class NancyBootstrapper : DefaultNancyBootstrapper
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-        private readonly Environment _environment;
+        private readonly RadioEnvironment _environment;
 
-        public NancyBootstrapper(Environment environment)
+        public NancyBootstrapper(RadioEnvironment environment)
         {
             _environment = environment;
         }
@@ -38,17 +33,50 @@ namespace CqrsRadio.Web
         protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
         {
             Register(container);
-            if (_environment.Name == EnvironmentType.Production)
-                RegisterMonoPersistence(container);
-            else
-                RegisterPersistence(container);
-
-
-            
             RegisterRepository(container);
             RegisterCrypo(container);
+            EnableBasicAuthentication(container, pipelines);
+            EnableOnError(container, pipelines);
+            EnableAfterRequest(pipelines);
+        }
 
-            
+        private void Register(TinyIoCContainer container)
+        {
+            container.Register(_environment);
+            container.Register<IStatsDRequest>(new StatsDRequest("127.0.0.1", 8125));
+            container.Register<IMetric, Metric>();
+            container.Register<IRequest, RadioRequest>();
+            container.Register<IDeezerApi, DeezerApi>();
+        }
+
+        private void RegisterRepository(TinyIoCContainer container)
+        {
+            container.Register<ISongRepository, HttpSongRepository>();
+            container.Register<IRadioSongRepository, HttpRadioSongRepository>();
+            container.Register<IAdminRepository, HttpAdminRepository>();
+            container.Register<IPlaylistRepository, HttpPlaylistRepository>();
+        }
+
+        private void RegisterCrypo(TinyIoCContainer container)
+        {
+            var keyGenerator = new PassphraseKeyGenerator("forayer globular arse diminish highball wineskin",
+                new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 });
+            var hmacProvider = new DefaultHmacProvider(keyGenerator);
+
+            container.Register<IHmacProvider>(hmacProvider);
+        }
+
+        private void EnableBasicAuthentication(TinyIoCContainer container, IPipelines pipelines)
+        {
+            var hmacProvider = container.Resolve<IHmacProvider>();
+            var adminRepository = container.Resolve<IAdminRepository>();
+            var adminUserValidator = new AdminUserValidator(hmacProvider, adminRepository, _environment);
+
+            pipelines.EnableBasicAuthentication(new BasicAuthenticationConfiguration(adminUserValidator, "admin"));
+        }
+
+        private void EnableOnError(TinyIoCContainer container, IPipelines pipelines)
+        {
             pipelines.OnError += (ctx, ex) =>
             {
                 container.Resolve<IMetric>().Count("error");
@@ -76,6 +104,10 @@ namespace CqrsRadio.Web
 
                 return null;
             };
+        }
+
+        private void EnableAfterRequest(IPipelines pipelines)
+        {
             pipelines.AfterRequest += (ctx) =>
             {
                 var isAjaxRequest = ctx.Request.IsAjaxRequest();
@@ -107,79 +139,11 @@ namespace CqrsRadio.Web
                         }
                         var newContent = result.ToString();
                         var output = Encoding.UTF8.GetBytes(newContent);
-                        
+
                         ctx.Response.Contents = stream => stream.Write(output, 0, output.Length);
                     }
                 }
             };
-
-            var hmacProvider = container.Resolve<IHmacProvider>();
-            var adminRepository = container.Resolve<IAdminRepository>();
-            var adminUserValidator = new AdminUserValidator(hmacProvider, adminRepository, _environment);
-
-            pipelines.EnableBasicAuthentication(new BasicAuthenticationConfiguration(adminUserValidator, "admin"));
-        }
-
-        private void Register(TinyIoCContainer container)
-        {
-            container.Register(_environment);
-            container.Register<IStatsDRequest>(new StatsDRequest("127.0.0.1", 8125));
-            container.Register<IMetric, Metric>();
-            container.Register<IRequest, RadioRequest>();
-            container.Register<IDeezerApi, DeezerApi>();
-
-
-        }
-
-        private void RegisterRepository(TinyIoCContainer container)
-        {
-            var v = TypeScanner
-                .GetTypesOf<IRepository>();
-
-                v.ForEach(type =>
-                {
-                    var interfaceType = type
-                        .GetInterfaces()
-                        .First(x => x != typeof(IRepository));
-
-                    var isRadioSong = typeof(ISongRepository) == interfaceType 
-                                      || typeof(IRadioSongRepository) == interfaceType;
-
-                    var instance = Activator
-                        .CreateInstance(type, container.Resolve<IProvider>(isRadioSong ? "song" : "domain"),
-                            container.Resolve<IDbParameter>());
-
-                    container.Register(interfaceType, instance);
-                });
-        }
-
-        private void RegisterCrypo(TinyIoCContainer container)
-        {
-            var keyGenerator = new PassphraseKeyGenerator("forayer globular arse diminish highball wineskin",
-                new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 });
-            var hmacProvider = new DefaultHmacProvider(keyGenerator);
-
-            container.Register<IHmacProvider>(hmacProvider);
-        }
-
-        private void RegisterMonoPersistence(TinyIoCContainer container)
-        {
-            container.Register<IProvider, MonoDomainProvider>("domain");
-            container.Register<IProvider, MonoSongProvider>("song");
-            container.Register<IDbParameter, MonoCustomDbParameter>();
-            container.Register(new DatabaseDomain(new MonoDomainProvider()));
-            container.Register(new DatabaseSong(new MonoSongProvider(),
-                container.Resolve<IDeezerApi>()));
-        }
-
-        private void RegisterPersistence(TinyIoCContainer container)
-        {
-            container.Register<IProvider, DomainProvider>("domain");
-            container.Register<IProvider, SongProvider>("song");
-            container.Register<IDbParameter, CustomDbParameter>();
-            container.Register(new DatabaseDomain(new DomainProvider()));
-            container.Register(new DatabaseSong(new SongProvider(),
-                container.Resolve<IDeezerApi>()));
         }
 
         private bool TryParseJObject(string value, out JObject jobject)

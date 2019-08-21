@@ -76,7 +76,7 @@
             else {
                 loader.start(model, 0);
 
-                $.post('/Login',
+                $.post('/createPlaylist',
                     {
                         accessToken: model.accessToken(),
                         userId: model.userId(),

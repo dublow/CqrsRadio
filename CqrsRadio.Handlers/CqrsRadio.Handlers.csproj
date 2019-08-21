@@ -51,6 +51,10 @@
     <Compile Include="UserHandler.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CqrsRadio.Common\CqrsRadio.Common.csproj">
+      <Project>{F04A5A26-8C79-431E-B79D-F64862B75B8C}</Project>
+      <Name>CqrsRadio.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CqrsRadio.Domain\CqrsRadio.Domain.csproj">
       <Project>{FEF41B95-8212-4312-BBE5-D3EE409BF6F4}</Project>
       <Name>CqrsRadio.Domain</Name>

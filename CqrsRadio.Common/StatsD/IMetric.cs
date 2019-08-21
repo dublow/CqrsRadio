@@ -8,6 +8,6 @@ namespace CqrsRadio.Common.StatsD
         
         void Count(string keyname);
         IDisposable Timer(string keyname);
-        void Gauge(string keyname, int value);
+        void Gauge(string keyname, long value);
     }
 }
